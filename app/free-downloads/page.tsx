@@ -139,25 +139,25 @@ export default function FreeDownloadsPage() {
     <div className="min-h-screen bg-cream">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-6 sm:py-8">
           {/* Back to Home */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-sage-500 mb-6"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-sage-500"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
 
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sage-100">
-              <Gift className="h-8 w-8 text-sage-500" />
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-sage-100 sm:h-16 sm:w-16">
+              <Gift className="h-6 w-6 text-sage-500 sm:h-8 sm:w-8" />
             </div>
             <div>
-              <h1 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+              <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
                 Free Downloads
               </h1>
-              <p className="mt-2 text-lg text-soft-charcoal">
+              <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
                 Claim <span className="font-semibold text-sage-500">one</span> piece of premium digital art — completely free!
               </p>
             </div>
@@ -168,14 +168,14 @@ export default function FreeDownloadsPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         {/* Info Banner */}
-        <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-8 shadow-sm">
+        <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
               <Sparkles className="h-6 w-6 text-sage-500" />
             </div>
             <div className="flex-1">
-              <h2 className="font-serif text-2xl font-semibold text-charcoal">How It Works</h2>
-              <p className="mt-2 text-lg leading-relaxed text-soft-charcoal">
+              <h2 className="font-serif text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
+              <p className="mt-2 text-base leading-relaxed text-soft-charcoal sm:text-lg">
                 Choose your favorite piece and claim it as your own. You can only claim{" "}
                 <strong className="text-sage-500">one gift</strong>, so pick wisely! Once claimed, the high-resolution file
                 will download automatically to your device.
@@ -185,7 +185,7 @@ export default function FreeDownloadsPage() {
         </div>
 
         {/* Art Grid */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
           {artWithVariants.map((art) => (
             <div
               key={art.id}
@@ -215,8 +215,8 @@ export default function FreeDownloadsPage() {
               </div>
 
               {/* Card Content */}
-              <div className="space-y-3 p-5">
-                <h3 className="line-clamp-2 font-serif text-xl font-bold leading-snug text-charcoal">
+              <div className="space-y-3 p-4 sm:p-5">
+                <h3 className="line-clamp-2 font-serif text-lg font-bold leading-snug text-charcoal sm:text-xl">
                   {art.title}
                 </h3>
                 <p className="text-sm text-sage-500">by {art.artist}</p>
@@ -248,7 +248,7 @@ export default function FreeDownloadsPage() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base text-muted-foreground sm:text-lg">
             Looking for more art?
           </p>
           <Link
@@ -264,7 +264,7 @@ export default function FreeDownloadsPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">Claim Your Free Gift?</DialogTitle>
+            <DialogTitle className="font-serif text-xl sm:text-2xl">Claim Your Free Gift?</DialogTitle>
             <DialogDescription className="pt-2 text-base">
               You can only claim <strong>one</strong> piece of digital art for free. Once you claim{" "}
               <strong className="text-sage-500">{selectedArt?.title}</strong>, you won&apos;t be able to

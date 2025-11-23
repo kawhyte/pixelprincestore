@@ -59,14 +59,14 @@ export default function ProductCard({
       </div>
 
       {/* Content Area - Minimal & Clean */}
-      <div className="space-y-2 p-5">
+      <div className="space-y-2 p-4 sm:p-5">
         {/* Title - Serif, Truncated 2 Lines */}
-        <h3 className="line-clamp-2 font-serif text-lg font-semibold leading-snug text-charcoal transition-colors group-hover:text-sage-500">
+        <h3 className="line-clamp-2 font-serif text-base font-semibold leading-snug text-charcoal transition-colors group-hover:text-sage-500 sm:text-lg">
           {title}
         </h3>
 
         {/* Price - Sans, Bold */}
-        <p className="font-sans text-xl font-bold text-charcoal">
+        <p className="font-sans text-lg font-bold text-charcoal sm:text-xl">
           ${price.toFixed(2)}
         </p>
 

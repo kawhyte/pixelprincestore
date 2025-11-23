@@ -89,16 +89,16 @@ export default function Home() {
         <div className="container mx-auto px-4">
           {/* Section Header */}
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
               Featured Collection
             </h2>
-            <p className="mt-4 text-lg text-soft-charcoal">
+            <p className="mt-4 text-base text-soft-charcoal sm:text-lg">
               Handpicked digital art to elevate your space
             </p>
           </div>
 
-          {/* Product Grid - Responsive: 2 cols mobile, 3 tablet, 4 desktop */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {/* Product Grid - Responsive: 1 col mobile, 2 tablet, 3 desktop, 4 wide */}
+          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
             {sampleProducts.map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
@@ -117,18 +117,18 @@ export default function Home() {
       </section>
 
       {/* Free Downloads Teaser */}
-      <section className="bg-gradient-to-br from-sage-100 via-lavender-50 to-clay-100 py-20">
+      <section className="bg-gradient-to-br from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="mx-auto max-w-2xl space-y-6">
-            <h2 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
               Start with a Free Gift
             </h2>
-            <p className="text-xl text-soft-charcoal">
+            <p className="text-lg text-soft-charcoal sm:text-xl">
               New to The Pixel Prince? Claim one piece of premium digital art—completely free. No strings attached.
             </p>
             <a
               href="/free-downloads"
-              className="inline-block rounded-2xl bg-sage-500 px-10 py-5 text-lg font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-xl"
+              className="inline-block rounded-2xl bg-sage-500 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-xl sm:px-10 sm:py-5 sm:text-lg"
             >
               Claim Your Free Art →
             </a>

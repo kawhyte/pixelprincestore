@@ -3,12 +3,12 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="border-t border-border/50 bg-charcoal text-cream">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-12 sm:py-16">
         {/* Main Footer Grid */}
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Brand */}
           <div className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold">The Pixel Prince</h2>
+            <h2 className="font-serif text-xl font-bold sm:text-2xl">The Pixel Prince</h2>
             <p className="text-sm leading-relaxed text-cream/70">
               Curated digital art for modern living. Transform your space with
               premium downloadable prints.
@@ -220,7 +220,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 border-t border-cream/10 pt-8">
+        <div className="mt-12 border-t border-cream/10 pt-8 sm:mt-16">
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-cream/70 md:flex-row">
             <p>© 2024 The Pixel Prince. All rights reserved.</p>
             <p>Designed with care for modern living.</p>

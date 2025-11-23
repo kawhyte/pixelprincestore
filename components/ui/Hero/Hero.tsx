@@ -39,12 +39,12 @@ export default function Hero() {
             </div>
 
             {/* Headline - Massive Serif */}
-            <h1 className="text-balance font-serif text-5xl font-bold leading-tight tracking-tight text-charcoal lg:text-7xl">
+            <h1 className="text-balance font-serif text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
                Digital Download Wall Art
             </h1>
 
             {/* Subheadline */}
-            <p className="text-balance text-xl leading-relaxed text-soft-charcoal lg:text-2xl">
+            <p className="text-balance text-lg leading-relaxed text-soft-charcoal sm:text-xl lg:text-2xl">
               Discover curated digital art for modern living. Premium posters,
               video game decor, and world maps—ready for instant download.
             </p>

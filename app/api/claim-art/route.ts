@@ -9,9 +9,11 @@ import { freeArtCollection, DOWNLOAD_COOKIE_NAME, COOKIE_MAX_AGE } from "@/confi
  *
  * This route:
  * 1. Validates the artId parameter
- * 2. Checks if user has already claimed (via cookie)
+ * 2. Checks if user has already claimed (via cookie) - unless DISABLE_DOWNLOAD_LIMIT is true
  * 3. Streams the file from the private/ folder
  * 4. Sets a persistent cookie to track the claim
+ *
+ * DEV MODE: Set DISABLE_DOWNLOAD_LIMIT=true in .env.local to allow unlimited downloads
  */
 
 export async function GET(request: NextRequest) {
@@ -38,17 +40,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if user has already claimed their free download
-    const hasClaimed = request.cookies.get(DOWNLOAD_COOKIE_NAME);
+    // Check if download limit is disabled (for development)
+    const downloadLimitDisabled = process.env.DISABLE_DOWNLOAD_LIMIT === 'true';
 
-    if (hasClaimed) {
-      return NextResponse.json(
-        {
-          error: "You have already claimed your free gift!",
-          message: "Each user can only claim one free art piece."
-        },
-        { status: 403 }
-      );
+    // Check if user has already claimed their free download (skip in dev mode)
+    if (!downloadLimitDisabled) {
+      const hasClaimed = request.cookies.get(DOWNLOAD_COOKIE_NAME);
+
+      if (hasClaimed) {
+        return NextResponse.json(
+          {
+            error: "You have already claimed your free gift!",
+            message: "Each user can only claim one free art piece."
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // Resolve the file path (in private/ folder, not public/)

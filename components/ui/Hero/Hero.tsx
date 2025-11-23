@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -7,17 +8,23 @@ import { Button } from "@/components/ui/button";
 // Dynamically import Lottie to avoid SSR issues
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-// Import your animation JSON
-// Note: After you upload your file, this will work automatically
-let animationData;
-try {
-  animationData = require("@/../public/animations/hero-art.json");
-} catch (e) {
-  // Fallback if animation not yet uploaded
-  animationData = null;
-}
-
 export default function Hero() {
+  const [animationData, setAnimationData] = useState(null);
+
+  useEffect(() => {
+    // Try to load the animation file when component mounts
+    fetch("/animations/hero-art.json")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Animation not found");
+      })
+      .then((data) => setAnimationData(data))
+      .catch(() => {
+        // Animation file not uploaded yet - fallback will be shown
+        setAnimationData(null);
+      });
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-cream py-20 lg:py-32">
       <div className="container mx-auto px-4">
@@ -100,9 +107,14 @@ export default function Hero() {
                     ) : (
                       // Fallback while animation is being uploaded
                       <div className="flex h-full w-full items-center justify-center">
-                        <p className="font-serif text-2xl text-charcoal/50">
-                          Upload hero-art.json
-                        </p>
+                        <div className="text-center">
+                          <p className="font-serif text-2xl text-charcoal/50">
+                            Upload Animation
+                          </p>
+                          <p className="mt-2 text-sm text-charcoal/30">
+                            /public/animations/hero-art.json
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>

@@ -1,6 +1,21 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
+
+// Dynamically import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
+// Import your animation JSON
+// Note: After you upload your file, this will work automatically
+let animationData;
+try {
+  animationData = require("@/../public/animations/hero-art.json");
+} catch (e) {
+  // Fallback if animation not yet uploaded
+  animationData = null;
+}
 
 export default function Hero() {
   return (
@@ -71,18 +86,25 @@ export default function Hero() {
               {/* Background Gradient Blob */}
               <div className="absolute -left-10 -top-10 h-96 w-96 rounded-full bg-gradient-to-br from-sage-200/40 via-lavender-200/40 to-clay-200/40 blur-3xl" />
 
-              {/* Main Art Mockup */}
+              {/* Main Lottie Animation */}
               <div className="relative z-10 transform transition-transform duration-700 hover:scale-105">
                 <div className="anthropic-card overflow-hidden shadow-2xl">
-                  <div className="relative aspect-[3/4]">
-                    <Image
-                      src="https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Curated+Art"
-                      alt="Featured Art Piece"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      priority
-                    />
+                  <div className="relative aspect-[3/4] bg-gradient-to-br from-sage-50 to-lavender-50">
+                    {animationData ? (
+                      <Lottie
+                        animationData={animationData}
+                        loop={true}
+                        autoplay={true}
+                        className="h-full w-full"
+                      />
+                    ) : (
+                      // Fallback while animation is being uploaded
+                      <div className="flex h-full w-full items-center justify-center">
+                        <p className="font-serif text-2xl text-charcoal/50">
+                          Upload hero-art.json
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="bg-card p-6">
                     <h3 className="font-serif text-xl font-semibold text-charcoal">
@@ -108,7 +130,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
     </section>
   );
 }

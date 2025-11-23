@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/product/free-print",
+        destination: "/free-downloads",
+        permanent: true, // 308 redirect for SEO preservation
+      },
+    ];
+  },
 };
 
 export default nextConfig;

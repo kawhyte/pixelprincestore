@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Download, Sparkles, Gift } from "lucide-react";
+import Link from "next/link";
+import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
@@ -17,6 +18,19 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
+// Assign earth-tone variants to each art piece
+const artWithVariants = freeArtCollection.map((art, index) => ({
+  ...art,
+  variant: (["sage", "clay", "lavender", "sage"] as const)[index % 4],
+}));
+
+const variantStyles = {
+  sage: "bg-sage-50 hover:bg-sage-100",
+  clay: "bg-clay-50 hover:bg-clay-100",
+  lavender: "bg-lavender-50 hover:bg-lavender-100",
+  cream: "bg-card hover:bg-secondary",
+};
+
 export default function FreeDownloadsPage() {
   const [selectedArt, setSelectedArt] = useState<FreeArt | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -30,7 +44,13 @@ export default function FreeDownloadsPage() {
   const triggerConfetti = () => {
     const duration = 3000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 0,
+      colors: ['#7a9d66', '#d4bfae', '#cbbfdd', '#f3f1e8'], // Earth-tone confetti!
+    };
 
     function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
@@ -116,31 +136,48 @@ export default function FreeDownloadsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-black text-white">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-black/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <Gift className="h-8 w-8 text-purple-500" />
-            <h1 className="text-3xl font-bold">Free Downloads</h1>
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-8">
+          {/* Back to Home */}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-sage-500 mb-6"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sage-100">
+              <Gift className="h-8 w-8 text-sage-500" />
+            </div>
+            <div>
+              <h1 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+                Free Downloads
+              </h1>
+              <p className="mt-2 text-lg text-soft-charcoal">
+                Claim <span className="font-semibold text-sage-500">one</span> piece of premium digital art — completely free!
+              </p>
+            </div>
           </div>
-          <p className="mt-2 text-zinc-400">
-            Claim <span className="font-semibold text-purple-400">one</span> piece of premium digital art — completely free!
-          </p>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         {/* Info Banner */}
-        <div className="mb-12 rounded-lg border border-purple-500/20 bg-purple-950/20 p-6">
+        <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-8 shadow-sm">
           <div className="flex items-start gap-4">
-            <Sparkles className="h-6 w-6 flex-shrink-0 text-purple-400" />
-            <div>
-              <h2 className="text-lg font-semibold text-purple-300">How It Works</h2>
-              <p className="mt-1 text-zinc-300">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
+              <Sparkles className="h-6 w-6 text-sage-500" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-serif text-2xl font-semibold text-charcoal">How It Works</h2>
+              <p className="mt-2 text-lg leading-relaxed text-soft-charcoal">
                 Choose your favorite piece and claim it as your own. You can only claim{" "}
-                <strong>one gift</strong>, so pick wisely! Once claimed, the high-resolution file
+                <strong className="text-sage-500">one gift</strong>, so pick wisely! Once claimed, the high-resolution file
                 will download automatically to your device.
               </p>
             </div>
@@ -149,14 +186,16 @@ export default function FreeDownloadsPage() {
 
         {/* Art Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {freeArtCollection.map((art) => (
+          {artWithVariants.map((art) => (
             <div
               key={art.id}
               onClick={() => handleCardClick(art)}
-              className="group cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:scale-[1.02] hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10"
+              className={`group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
+                variantStyles[art.variant]
+              }`}
             >
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-zinc-950">
+              <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                 <Image
                   src={art.previewImage}
                   alt={art.title}
@@ -164,11 +203,11 @@ export default function FreeDownloadsPage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 font-semibold text-white shadow-lg">
+                  <div className="flex items-center gap-2 rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white shadow-lg">
                     <Download className="h-5 w-5" />
                     <span>Claim Now</span>
                   </div>
@@ -176,17 +215,21 @@ export default function FreeDownloadsPage() {
               </div>
 
               {/* Card Content */}
-              <div className="p-5">
-                <h3 className="text-xl font-bold text-white">{art.title}</h3>
-                <p className="mt-1 text-sm text-purple-400">by {art.artist}</p>
-                <p className="mt-3 line-clamp-2 text-sm text-zinc-400">{art.description}</p>
+              <div className="space-y-3 p-5">
+                <h3 className="line-clamp-2 font-serif text-xl font-bold leading-snug text-charcoal">
+                  {art.title}
+                </h3>
+                <p className="text-sm text-sage-500">by {art.artist}</p>
+                <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                  {art.description}
+                </p>
 
                 {/* Tags */}
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {art.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300"
+                      className="rounded-full bg-white/60 px-3 py-1 text-xs font-medium text-soft-charcoal"
                     >
                       {tag}
                     </span>
@@ -194,7 +237,7 @@ export default function FreeDownloadsPage() {
                 </div>
 
                 {/* Specs */}
-                <div className="mt-4 flex items-center justify-between border-t border-zinc-800 pt-4 text-xs text-zinc-500">
+                <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs text-muted-foreground">
                   <span>{art.dimensions}</span>
                   <span>{art.fileSize}</span>
                 </div>
@@ -202,24 +245,37 @@ export default function FreeDownloadsPage() {
             </div>
           ))}
         </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <p className="text-lg text-muted-foreground">
+            Looking for more art?
+          </p>
+          <Link
+            href="/"
+            className="mt-4 inline-block rounded-2xl border-2 border-charcoal bg-transparent px-8 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream hover:shadow-lg"
+          >
+            Browse Full Collection
+          </Link>
+        </div>
       </main>
 
       {/* Confirmation Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Claim Your Free Gift?</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">Claim Your Free Gift?</DialogTitle>
             <DialogDescription className="pt-2 text-base">
               You can only claim <strong>one</strong> piece of digital art for free. Once you claim{" "}
-              <strong className="text-purple-400">{selectedArt?.title}</strong>, you won&apos;t be able to
+              <strong className="text-sage-500">{selectedArt?.title}</strong>, you won&apos;t be able to
               download any other pieces from this collection.
             </DialogDescription>
           </DialogHeader>
 
           {selectedArt && (
-            <div className="my-4 rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
+            <div className="my-4 rounded-2xl border border-border bg-sage-50/50 p-4">
               <div className="flex items-start gap-4">
-                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
                   <Image
                     src={selectedArt.previewImage}
                     alt={selectedArt.title}
@@ -229,9 +285,9 @@ export default function FreeDownloadsPage() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-white">{selectedArt.title}</h4>
-                  <p className="text-sm text-zinc-400">by {selectedArt.artist}</p>
-                  <div className="mt-2 flex gap-4 text-xs text-zinc-500">
+                  <h4 className="font-serif font-semibold text-charcoal">{selectedArt.title}</h4>
+                  <p className="text-sm text-muted-foreground">by {selectedArt.artist}</p>
+                  <div className="mt-2 flex gap-4 text-xs text-muted-foreground">
                     <span>{selectedArt.dimensions}</span>
                     <span>{selectedArt.fileSize}</span>
                   </div>
@@ -245,13 +301,14 @@ export default function FreeDownloadsPage() {
               variant="outline"
               onClick={() => setIsDialogOpen(false)}
               disabled={isDownloading}
+              className="rounded-2xl"
             >
               Cancel
             </Button>
             <Button
               onClick={handleClaim}
               disabled={isDownloading}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="rounded-2xl bg-sage-500 hover:bg-sage-400"
             >
               {isDownloading ? (
                 <>

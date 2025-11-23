@@ -159,9 +159,7 @@
     text-wrap: balance;
   }
 
-  .anthropic-card {
-    @apply bg-card rounded-2xl shadow-sm border border-border/50 transition-all duration-300;
-  }
+
 
   .anthropic-card:hover {
     @apply shadow-lg border-border;

@@ -34,13 +34,13 @@ export default function Hero() {
             {/* Eyebrow */}
             <div className="inline-block">
               <span className="rounded-full bg-sage-100 px-4 py-2 text-sm font-medium text-sage-500">
-                Curated Digital Art
+                The Pixel Prince
               </span>
             </div>
 
             {/* Headline - Massive Serif */}
             <h1 className="text-balance font-serif text-5xl font-bold leading-tight tracking-tight text-charcoal lg:text-7xl">
-              Art that defines your space.
+               Digital Download Wall Art
             </h1>
 
             {/* Subheadline */}
@@ -90,13 +90,12 @@ export default function Hero() {
           <div className="relative">
             {/* Floating Card Animation */}
             <div className="relative">
-              {/* Background Gradient Blob */}
-              <div className="absolute -left-10 -top-10 h-96 w-96 rounded-full bg-gradient-to-br from-sage-200/40 via-lavender-200/40 to-clay-200/40 blur-3xl" />
+             
 
               {/* Main Lottie Animation */}
               <div className="relative z-10 transform transition-transform duration-700 hover:scale-105">
-                <div className="anthropic-card overflow-hidden shadow-2xl">
-                  <div className="relative aspect-[3/4] bg-gradient-to-br from-sage-50 to-lavender-50">
+                <div className="overflow-hidden ">
+                  <div className="relative">
                     {animationData ? (
                       <Lottie
                         animationData={animationData}
@@ -118,26 +117,13 @@ export default function Hero() {
                       </div>
                     )}
                   </div>
-                  <div className="bg-card p-6">
-                    <h3 className="font-serif text-xl font-semibold text-charcoal">
-                      Ethereal Landscapes
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Digital Download • 3000×4000px
-                    </p>
-                  </div>
+               
                 </div>
               </div>
 
-              {/* Floating Badge */}
-              <div className="absolute -right-4 top-8 z-20 animate-bounce-slow rounded-2xl bg-lavender-100 px-6 py-4 shadow-lg">
-                <p className="text-sm font-semibold text-lavender-500">
-                  ✨ Instant Download
-                </p>
-              </div>
+         
 
-              {/* Bottom Accent Card */}
-              <div className="absolute -bottom-6 -left-6 z-0 h-64 w-48 rounded-2xl bg-clay-100 opacity-60 shadow-xl" />
+              
             </div>
           </div>
         </div>

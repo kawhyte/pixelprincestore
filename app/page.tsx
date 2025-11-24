@@ -1,4 +1,26 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
+
+// SEO Metadata for Home Page
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Free & Premium Digital Art Downloads",
+  description:
+    "The #1 source for printable video game art, world maps, and modern wall decor. Download high-res posters instantly. Perfect for gamers, man caves, and modern homes.",
+  keywords: [
+    "Printable Wall Art",
+    "Gamer Decor",
+    "Digital Art Downloads",
+    "Video Game Posters",
+    "World Map Prints",
+    "Man Cave Decor",
+    "Instant Download Art",
+    "Gaming Room Wall Art",
+    "Printable Video Game Art",
+    "High Resolution Prints",
+  ],
+  canonical: "https://www.thepixelprince.com/",
+});
 
 export default function Home() {
   return (

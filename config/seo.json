@@ -1,0 +1,68 @@
+{
+  "title": {
+    "template": "%s | The Pixel Prince",
+    "default": "The Pixel Prince - Premium Digital Art & Printable Decor"
+  },
+  "description": "Instantly download and print high-quality wall art. Featuring video game decor, world maps, and man cave essentials. Transform your space today.",
+  "keywords": [
+    "Digital Art Downloads",
+    "Printable Wall Art",
+    "Video Game Decor",
+    "Gamer Wall Art",
+    "Printable Posters",
+    "Man Cave Art",
+    "World Map Prints",
+    "Gaming Room Decor",
+    "Instant Download Art",
+    "High Resolution Prints"
+  ],
+  "applicationName": "The Pixel Prince",
+  "authors": [
+    {
+      "name": "The Pixel Prince",
+      "url": "https://www.thepixelprince.com"
+    }
+  ],
+  "creator": "The Pixel Prince",
+  "publisher": "The Pixel Prince",
+  "metadataBase": "https://www.thepixelprince.com",
+  "openGraph": {
+    "type": "website",
+    "locale": "en_US",
+    "siteName": "The Pixel Prince",
+    "title": "The Pixel Prince - Premium Digital Art & Printable Decor",
+    "description": "Instantly download and print high-quality wall art. Featuring video game decor, world maps, and man cave essentials. Transform your space today.",
+    "images": [
+      {
+        "url": "/og-image.jpg",
+        "width": 1200,
+        "height": 630,
+        "alt": "The Pixel Prince - Premium Digital Art Store"
+      }
+    ]
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@thepixelprince",
+    "creator": "@thepixelprince",
+    "title": "The Pixel Prince - Premium Digital Art & Printable Decor",
+    "description": "Instantly download and print high-quality wall art. Featuring video game decor, world maps, and man cave essentials.",
+    "images": ["/twitter-image.jpg"]
+  },
+  "robots": {
+    "index": true,
+    "follow": true,
+    "googleBot": {
+      "index": true,
+      "follow": true,
+      "maxImagePreview": "large",
+      "maxSnippet": -1,
+      "maxVideoPreview": -1
+    }
+  },
+  "verification": {
+    "google": "",
+    "yandex": "",
+    "bing": ""
+  }
+}

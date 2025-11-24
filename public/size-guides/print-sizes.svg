@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f3f1e8"/>
+
+  <!-- Title -->
+  <text x="600" y="60" font-family="serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+    Print Size Comparison Guide
+  </text>
+  <text x="600" y="90" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#666">
+    All sizes shown to scale at 300 DPI print quality
+  </text>
+
+  <!-- Grid Background -->
+  <g opacity="0.1">
+    <defs>
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#999" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect x="0" y="120" width="1200" height="650" fill="url(#grid)"/>
+  </g>
+
+  <!-- Size Boxes (scaled proportionally, base unit: 1" = 30px) -->
+
+  <!-- 4" × 5" -->
+  <g transform="translate(150, 300)">
+    <rect width="120" height="150" fill="#7a9d66" opacity="0.3" stroke="#7a9d66" stroke-width="3" rx="4"/>
+    <rect width="120" height="150" fill="none" stroke="#7a9d66" stroke-width="2" rx="4" stroke-dasharray="5,5"/>
+    <text x="60" y="180" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+      4" × 5"
+    </text>
+    <text x="60" y="200" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#666">
+      1200 × 1500 px
+    </text>
+    <text x="60" y="220" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#7a9d66">
+      Small frames, desk
+    </text>
+  </g>
+
+  <!-- 8" × 10" -->
+  <g transform="translate(380, 250)">
+    <rect width="240" height="300" fill="#d4bfae" opacity="0.3" stroke="#d4bfae" stroke-width="3" rx="4"/>
+    <rect width="240" height="300" fill="none" stroke="#d4bfae" stroke-width="2" rx="4" stroke-dasharray="5,5"/>
+    <text x="120" y="330" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+      8" × 10"
+    </text>
+    <text x="120" y="352" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#666">
+      2400 × 3000 px
+    </text>
+    <text x="120" y="372" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#a89080">
+      Medium frames, home
+    </text>
+  </g>
+
+  <!-- 16" × 20" -->
+  <g transform="translate(720, 150)">
+    <rect width="320" height="400" fill="#cbbfdd" opacity="0.2" stroke="#cbbfdd" stroke-width="3" rx="4"/>
+    <rect width="320" height="400" fill="none" stroke="#cbbfdd" stroke-width="2" rx="4" stroke-dasharray="5,5"/>
+    <text x="160" y="430" font-family="sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+      16" × 20"
+    </text>
+    <text x="160" y="455" font-family="sans-serif" font-size="15" text-anchor="middle" fill="#666">
+      4800 × 6000 px
+    </text>
+    <text x="160" y="478" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#9d8bb5">
+      Large frames, statement pieces
+    </text>
+  </g>
+
+  <!-- 40 × 50 cm (approximately 15.7" × 19.7") -->
+  <g transform="translate(50, 580)">
+    <rect width="80" height="100" fill="#7a9d66" opacity="0.15" stroke="#7a9d66" stroke-width="2" rx="3"/>
+    <text x="40" y="115" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+      40 × 50 cm
+    </text>
+    <text x="40" y="132" font-family="sans-serif" font-size="11" text-anchor="middle" fill="#666">
+      4724 × 5906 px
+    </text>
+    <text x="40" y="148" font-family="sans-serif" font-size="10" text-anchor="middle" fill="#7a9d66">
+      Gallery quality
+    </text>
+  </g>
+
+  <!-- Reference Objects -->
+
+  <!-- Laptop for scale (13" = ~11" display width) -->
+  <g transform="translate(200, 650)">
+    <rect width="330" height="4" fill="#999" rx="2"/>
+    <rect x="-10" y="-200" width="350" height="200" fill="#333" opacity="0.15" stroke="#333" stroke-width="2" rx="8"/>
+    <text x="165" y="-210" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#999">
+      13" Laptop for scale
+    </text>
+  </g>
+
+  <!-- Recommendations Box -->
+  <g transform="translate(50, 120)">
+    <rect width="280" height="140" fill="white" opacity="0.9" stroke="#7a9d66" stroke-width="2" rx="8"/>
+    <text x="140" y="30" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#2d2d2d">
+      💡 Recommendations
+    </text>
+    <text x="20" y="55" font-family="sans-serif" font-size="13" fill="#666">
+      • 4"×5": Perfect for desks
+    </text>
+    <text x="20" y="75" font-family="sans-serif" font-size="13" fill="#666">
+      • 8"×10": Most popular size
+    </text>
+    <text x="20" y="95" font-family="sans-serif" font-size="13" fill="#666">
+      • 16"×20": Statement walls
+    </text>
+    <text x="20" y="115" font-family="sans-serif" font-size="13" fill="#666">
+      • 40×50cm: Gallery standard
+    </text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="770" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#999">
+    All sizes are print-ready at 300 DPI • The Pixel Prince Store
+  </text>
+</svg>

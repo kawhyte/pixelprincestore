@@ -1,22 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
-import confetti from "canvas-confetti";
-import { toast } from "sonner";
 
-import { freeArtCollection, type FreeArt } from "@/config/free-art";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { freeArtCollection } from "@/config/free-art";
+import { useDownloadTracking } from "@/lib/use-download-tracking";
 
 // Assign earth-tone variants to each art piece
 const artWithVariants = freeArtCollection.map((art, index) => ({
@@ -32,108 +21,7 @@ const variantStyles = {
 };
 
 export default function FreeDownloadsPage() {
-  const [selectedArt, setSelectedArt] = useState<FreeArt | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-
-  const handleCardClick = (art: FreeArt) => {
-    setSelectedArt(art);
-    setIsDialogOpen(true);
-  };
-
-  const triggerConfetti = () => {
-    const duration = 3000;
-    const animationEnd = Date.now() + duration;
-    const defaults = {
-      startVelocity: 30,
-      spread: 360,
-      ticks: 60,
-      zIndex: 0,
-      colors: ['#7a9d66', '#d4bfae', '#cbbfdd', '#f3f1e8'], // Earth-tone confetti!
-    };
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min;
-    }
-
-    const interval: NodeJS.Timeout = setInterval(function () {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
-
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      });
-    }, 250);
-  };
-
-  const handleClaim = async () => {
-    if (!selectedArt) return;
-
-    setIsDownloading(true);
-
-    try {
-      const response = await fetch(`/api/claim-art?artId=${selectedArt.id}`);
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        if (response.status === 403) {
-          toast.error("You have already claimed your free gift!", {
-            description: "Each user can only claim one free art piece.",
-            duration: 5000,
-          });
-        } else {
-          toast.error("Something went wrong", {
-            description: error.error || "Please try again later.",
-          });
-        }
-
-        setIsDialogOpen(false);
-        return;
-      }
-
-      // Convert response to blob
-      const blob = await response.blob();
-
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${selectedArt.title.replace(/\s+/g, "-")}.png`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      // Success! Trigger confetti and toast
-      setIsDialogOpen(false);
-      triggerConfetti();
-
-      toast.success("🎉 Congratulations!", {
-        description: `${selectedArt.title} is now yours! Check your downloads folder.`,
-        duration: 6000,
-      });
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Download failed", {
-        description: "Please check your connection and try again.",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  const tracking = useDownloadTracking();
 
   return (
     <div className="min-h-screen bg-cream">
@@ -153,13 +41,18 @@ export default function FreeDownloadsPage() {
             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-sage-100 sm:h-16 sm:w-16">
               <Gift className="h-6 w-6 text-sage-500 sm:h-8 sm:w-8" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
                 Free Downloads
               </h1>
               <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
-                Claim <span className="font-semibold text-sage-500">one</span> piece of premium digital art — completely free!
+                Download <span className="font-semibold text-sage-500">3 sizes per week</span> — completely free!
               </p>
+              {!tracking.isLoading && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {tracking.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -176,9 +69,8 @@ export default function FreeDownloadsPage() {
             <div className="flex-1">
               <h2 className="font-serif text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
               <p className="mt-2 text-base leading-relaxed text-soft-charcoal sm:text-lg">
-                Choose your favorite piece and claim it as your own. You can only claim{" "}
-                <strong className="text-sage-500">one gift</strong>, so pick wisely! Once claimed, the high-resolution file
-                will download automatically to your device.
+                Browse our collection and download up to{" "}
+                <strong className="text-sage-500">3 sizes per week</strong>. Choose individual sizes or grab them all in a ZIP file. Each piece is available in 4 print-ready sizes, perfect for any frame or space.
               </p>
             </div>
           </div>
@@ -187,10 +79,10 @@ export default function FreeDownloadsPage() {
         {/* Art Grid */}
         <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
           {artWithVariants.map((art) => (
-            <div
+            <Link
               key={art.id}
-              onClick={() => handleCardClick(art)}
-              className={`group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
+              href={`/art/${art.id}`}
+              className={`group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
                 variantStyles[art.variant]
               }`}
             >
@@ -209,7 +101,7 @@ export default function FreeDownloadsPage() {
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <div className="flex items-center gap-2 rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white shadow-lg">
                     <Download className="h-5 w-5" />
-                    <span>Claim Now</span>
+                    <span>View Details</span>
                   </div>
                 </div>
               </div>
@@ -236,13 +128,14 @@ export default function FreeDownloadsPage() {
                   ))}
                 </div>
 
-                {/* Specs */}
-                <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs text-muted-foreground">
-                  <span>{art.dimensions}</span>
-                  <span>{art.fileSize}</span>
+                {/* Available Sizes */}
+                <div className="border-t border-border/50 pt-3">
+                  <p className="text-xs text-muted-foreground">
+                    {art.sizes.length} sizes available
+                  </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -259,72 +152,6 @@ export default function FreeDownloadsPage() {
           </Link>
         </div>
       </main>
-
-      {/* Confirmation Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-xl sm:text-2xl">Claim Your Free Gift?</DialogTitle>
-            <DialogDescription className="pt-2 text-base">
-              You can only claim <strong>one</strong> piece of digital art for free. Once you claim{" "}
-              <strong className="text-sage-500">{selectedArt?.title}</strong>, you won&apos;t be able to
-              download any other pieces from this collection.
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedArt && (
-            <div className="my-4 rounded-2xl border border-border bg-sage-50/50 p-4">
-              <div className="flex items-start gap-4">
-                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
-                  <Image
-                    src={selectedArt.previewImage}
-                    alt={selectedArt.title}
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-serif font-semibold text-charcoal">{selectedArt.title}</h4>
-                  <p className="text-sm text-muted-foreground">by {selectedArt.artist}</p>
-                  <div className="mt-2 flex gap-4 text-xs text-muted-foreground">
-                    <span>{selectedArt.dimensions}</span>
-                    <span>{selectedArt.fileSize}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setIsDialogOpen(false)}
-              disabled={isDownloading}
-              className="rounded-2xl"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleClaim}
-              disabled={isDownloading}
-              className="rounded-2xl bg-sage-500 hover:bg-sage-400"
-            >
-              {isDownloading ? (
-                <>
-                  <span className="animate-spin">⏳</span>
-                  <span className="ml-2">Claiming...</span>
-                </>
-              ) : (
-                <>
-                  <Download className="h-4 w-4" />
-                  <span className="ml-2">Claim & Download</span>
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

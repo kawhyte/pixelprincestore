@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
-import {
-  generateMetadata as generateSEOMetadata,
-  generateOrganizationSchema,
-  generateWebsiteSchema,
-} from "@/lib/seo";
+import { Toaster } from "@/components/ui/sonner";
+import Navigation from "@/components/common/Navigation/Navigation";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const merriweather = Merriweather({
+  variable: "--font-serif",
   subsets: ["latin"],
+  weight: ["300", "400", "700", "900"],
+  display: "swap",
 });
 
-// Generate default metadata from global SEO config
-export const metadata: Metadata = generateSEOMetadata();
+export const metadata: Metadata = {
+  title: "The Pixel Prince - Digital Art That Defines Your Space",
+  description: "Curated digital art downloads for modern living. Posters, video game decor, and world maps.",
+};
 
 export default function RootLayout({
   children,
@@ -29,26 +31,11 @@ export default function RootLayout({
   const websiteSchema = generateWebsiteSchema();
 
   return (
-    <html lang="en">
-      <head>
-        {/* JSON-LD Schema for Organization and Website */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
-        />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${inter.variable} ${merriweather.variable}`}>
+      <body className="antialiased">
+        <Navigation />
         {children}
+        <Toaster />
       </body>
     </html>
   );

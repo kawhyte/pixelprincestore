@@ -1,87 +1,143 @@
-import Image from "next/image";
-import type { Metadata } from "next";
-import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
+import Hero from "@/components/ui/Hero/Hero";
+import ProductCard from "@/components/product/ProductCard/ProductCard";
+import Footer from "@/components/common/Footer/Footer";
 
-// SEO Metadata for Home Page
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Free & Premium Digital Art Downloads",
-  description:
-    "The #1 source for printable video game art, world maps, and modern wall decor. Download high-res posters instantly. Perfect for gamers, man caves, and modern homes.",
-  keywords: [
-    "Printable Wall Art",
-    "Gamer Decor",
-    "Digital Art Downloads",
-    "Video Game Posters",
-    "World Map Prints",
-    "Man Cave Decor",
-    "Instant Download Art",
-    "Gaming Room Wall Art",
-    "Printable Video Game Art",
-    "High Resolution Prints",
-  ],
-  canonical: "https://www.thepixelprince.com/",
-});
+// Sample product data - Replace with your actual data source
+const sampleProducts = [
+  {
+    id: "1",
+    title: "Ethereal Landscapes Collection",
+    price: 24.99,
+    imageUrl: "https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Ethereal+Landscapes",
+    category: "Nature",
+    href: "#",
+    variant: "sage" as const,
+  },
+  {
+    id: "2",
+    title: "Retro Gaming Poster: Pixel Arcade",
+    price: 19.99,
+    imageUrl: "https://placehold.co/600x800/d4bfae/2a2a2a/png?text=Pixel+Arcade",
+    category: "Gaming",
+    href: "#",
+    variant: "clay" as const,
+  },
+  {
+    id: "3",
+    title: "Minimalist World Map - Earth Tones",
+    price: 29.99,
+    imageUrl: "https://placehold.co/600x800/cbbfdd/2a2a2a/png?text=World+Map",
+    category: "Maps",
+    href: "#",
+    variant: "lavender" as const,
+  },
+  {
+    id: "4",
+    title: "Abstract Botanical Print",
+    price: 22.99,
+    imageUrl: "https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Botanical",
+    category: "Abstract",
+    href: "#",
+    variant: "sage" as const,
+  },
+  {
+    id: "5",
+    title: "Zelda: Breath of the Wild Tribute",
+    price: 27.99,
+    imageUrl: "https://placehold.co/600x800/d4bfae/2a2a2a/png?text=Zelda+Art",
+    category: "Gaming",
+    href: "#",
+    variant: "clay" as const,
+  },
+  {
+    id: "6",
+    title: "Vintage Continental Map",
+    price: 32.99,
+    imageUrl: "https://placehold.co/600x800/cbbfdd/2a2a2a/png?text=Continental",
+    category: "Maps",
+    href: "#",
+    variant: "lavender" as const,
+  },
+  {
+    id: "7",
+    title: "Geometric Mountains Series",
+    price: 21.99,
+    imageUrl: "https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Mountains",
+    category: "Nature",
+    href: "#",
+    variant: "cream" as const,
+  },
+  {
+    id: "8",
+    title: "Stardew Valley Farm Life",
+    price: 18.99,
+    imageUrl: "https://placehold.co/600x800/d4bfae/2a2a2a/png?text=Stardew",
+    category: "Gaming",
+    href: "#",
+    variant: "clay" as const,
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <Hero />
+
+      {/* Product Collection Section */}
+      <section id="collection" className="bg-cream py-20">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+              Featured Collection
+            </h2>
+            <p className="mt-4 text-base text-soft-charcoal sm:text-lg">
+              Handpicked digital art to elevate your space
+            </p>
+          </div>
+
+          {/* Product Grid - Responsive: 1 col mobile, 2 tablet, 3 desktop, 4 wide */}
+          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+            {sampleProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="mt-16 text-center">
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="#"
+              className="inline-block rounded-2xl border-2 border-charcoal bg-transparent px-8 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream hover:shadow-lg"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
+              View All Products
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Free Downloads Teaser */}
+      <section className="bg-gradient-to-br from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
+        <div className="container mx-auto px-4 text-center">
+          <div className="mx-auto max-w-2xl space-y-6">
+            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+              Start with a Free Gift
+            </h2>
+            <p className="text-lg text-soft-charcoal sm:text-xl">
+              New to The Pixel Prince? Claim one piece of premium digital art—completely free. No strings attached.
+            </p>
             <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="/free-downloads"
+              className="inline-block rounded-2xl bg-sage-500 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-xl sm:px-10 sm:py-5 sm:text-lg"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Claim Your Free Art →
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

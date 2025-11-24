@@ -1,167 +1,330 @@
-import type { Metadata } from "next";
-import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
+import confetti from "canvas-confetti";
+import { toast } from "sonner";
 
-// SEO Metadata for Free Downloads Page
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Free Downloads - Digital Art & Printable Decor",
-  description:
-    "Download free printable wall art, gaming posters, and world maps. High-quality digital downloads at no cost. Perfect for decorating your space on a budget.",
-  keywords: [
-    "Free Printable Wall Art",
-    "Free Digital Downloads",
-    "Free Gaming Posters",
-    "Free World Maps",
-    "Free Printable Decor",
-    "No Cost Digital Art",
-  ],
-  canonical: "https://www.thepixelprince.com/free-downloads",
-});
+import { freeArtCollection, type FreeArt } from "@/config/free-art";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-// Mock free products data - replace with your actual data source
-const freeProducts = [
-  {
-    id: 1,
-    slug: "retro-gaming-pixel-art",
-    name: "Retro Gaming Pixel Art",
-    description: "Classic pixel art perfect for any gaming setup",
-    image: "/products/retro-gaming.jpg",
-    category: "Gaming",
-  },
-  {
-    id: 2,
-    slug: "minimalist-world-map",
-    name: "Minimalist World Map",
-    description: "Clean and modern world map design",
-    image: "/products/world-map.jpg",
-    category: "Maps",
-  },
-  {
-    id: 3,
-    slug: "8bit-mario-tribute",
-    name: "8-Bit Mario Tribute",
-    description: "Nostalgic 8-bit gaming tribute art",
-    image: "/products/mario-8bit.jpg",
-    category: "Gaming",
-  },
-  {
-    id: 4,
-    slug: "abstract-geometric",
-    name: "Abstract Geometric Pattern",
-    description: "Modern geometric wall art",
-    image: "/products/geometric.jpg",
-    category: "Abstract",
-  },
-  {
-    id: 5,
-    slug: "vintage-game-controller",
-    name: "Vintage Game Controller",
-    description: "Classic gaming controller illustration",
-    image: "/products/controller.jpg",
-    category: "Gaming",
-  },
-  {
-    id: 6,
-    slug: "pixel-art-landscape",
-    name: "Pixel Art Landscape",
-    description: "Beautiful pixelated landscape scene",
-    image: "/products/landscape.jpg",
-    category: "Nature",
-  },
-];
+// Assign earth-tone variants to each art piece
+const artWithVariants = freeArtCollection.map((art, index) => ({
+  ...art,
+  variant: (["sage", "clay", "lavender", "sage"] as const)[index % 4],
+}));
+
+const variantStyles = {
+  sage: "bg-sage-50 hover:bg-sage-100",
+  clay: "bg-clay-50 hover:bg-clay-100",
+  lavender: "bg-lavender-50 hover:bg-lavender-100",
+  cream: "bg-card hover:bg-secondary",
+};
 
 export default function FreeDownloadsPage() {
+  const [selectedArt, setSelectedArt] = useState<FreeArt | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleCardClick = (art: FreeArt) => {
+    setSelectedArt(art);
+    setIsDialogOpen(true);
+  };
+
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 0,
+      colors: ['#7a9d66', '#d4bfae', '#cbbfdd', '#f3f1e8'], // Earth-tone confetti!
+    };
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: NodeJS.Timeout = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+  };
+
+  const handleClaim = async () => {
+    if (!selectedArt) return;
+
+    setIsDownloading(true);
+
+    try {
+      const response = await fetch(`/api/claim-art?artId=${selectedArt.id}`);
+
+      if (!response.ok) {
+        const error = await response.json();
+
+        if (response.status === 403) {
+          toast.error("You have already claimed your free gift!", {
+            description: "Each user can only claim one free art piece.",
+            duration: 5000,
+          });
+        } else {
+          toast.error("Something went wrong", {
+            description: error.error || "Please try again later.",
+          });
+        }
+
+        setIsDialogOpen(false);
+        return;
+      }
+
+      // Convert response to blob
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${selectedArt.title.replace(/\s+/g, "-")}.png`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      // Success! Trigger confetti and toast
+      setIsDialogOpen(false);
+      triggerConfetti();
+
+      toast.success("🎉 Congratulations!", {
+        description: `${selectedArt.title} is now yours! Check your downloads folder.`,
+        duration: 6000,
+      });
+    } catch (error) {
+      console.error("Download error:", error);
+      toast.error("Download failed", {
+        description: "Please check your connection and try again.",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 md:text-5xl">
-            Free Downloads
-          </h1>
-          <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-            High-quality printable art at no cost. Download instantly and print
-            at home or your local print shop.
-          </p>
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-6 sm:py-8">
+          {/* Back to Home */}
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-sage-500"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-sage-100 sm:h-16 sm:w-16">
+              <Gift className="h-6 w-6 text-sage-500 sm:h-8 sm:w-8" />
+            </div>
+            <div>
+              <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+                Free Downloads
+              </h1>
+              <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
+                Claim <span className="font-semibold text-sage-500">one</span> piece of premium digital art — completely free!
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Products Grid */}
+      {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {freeProducts.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.slug}`}
-              className="group"
+        {/* Info Banner */}
+        <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
+              <Sparkles className="h-6 w-6 text-sage-500" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-serif text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
+              <p className="mt-2 text-base leading-relaxed text-soft-charcoal sm:text-lg">
+                Choose your favorite piece and claim it as your own. You can only claim{" "}
+                <strong className="text-sage-500">one gift</strong>, so pick wisely! Once claimed, the high-resolution file
+                will download automatically to your device.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Art Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+          {artWithVariants.map((art) => (
+            <div
+              key={art.id}
+              onClick={() => handleCardClick(art)}
+              className={`group cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
+                variantStyles[art.variant]
+              }`}
             >
-              <div className="overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:shadow-lg dark:bg-zinc-900 dark:shadow-zinc-800">
-                {/* Product Image */}
-                <div className="aspect-square relative overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                  <div className="flex h-full items-center justify-center">
-                    <span className="text-6xl">🎨</span>
+              {/* Image */}
+              <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                <Image
+                  src={art.previewImage}
+                  alt={art.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="flex items-center gap-2 rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white shadow-lg">
+                    <Download className="h-5 w-5" />
+                    <span>Claim Now</span>
                   </div>
-                  {/* Free Badge */}
-                  <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                    FREE
-                  </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-4">
-                  {/* Category */}
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
-                    {product.category}
-                  </p>
-
-                  {/* Product Name */}
-                  <h3 className="mt-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 line-clamp-1">
-                    {product.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  {/* Price Section */}
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-green-600 dark:text-green-500">
-                        FREE
-                      </span>
-                      <span className="text-sm text-zinc-500 dark:text-zinc-400 line-through">
-                        $9.99
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Download Button */}
-                  <button className="mt-4 w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200">
-                    Download Now
-                  </button>
                 </div>
               </div>
-            </Link>
+
+              {/* Card Content */}
+              <div className="space-y-3 p-4 sm:p-5">
+                <h3 className="line-clamp-2 font-serif text-lg font-bold leading-snug text-charcoal sm:text-xl">
+                  {art.title}
+                </h3>
+                <p className="text-sm text-sage-500">by {art.artist}</p>
+                <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                  {art.description}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2">
+                  {art.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-white/60 px-3 py-1 text-xs font-medium text-soft-charcoal"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Specs */}
+                <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs text-muted-foreground">
+                  <span>{art.dimensions}</span>
+                  <span>{art.fileSize}</span>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* CTA Section */}
-        <div className="mt-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-8 text-center text-white md:p-12">
-          <h2 className="text-3xl font-bold">Want More Premium Art?</h2>
-          <p className="mt-4 text-lg opacity-90">
-            Check out our premium collection for exclusive high-resolution
-            designs
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <p className="text-base text-muted-foreground sm:text-lg">
+            Looking for more art?
           </p>
           <Link
             href="/"
-            className="mt-6 inline-block rounded-lg bg-white px-8 py-3 font-semibold text-purple-600 transition-transform hover:scale-105"
+            className="mt-4 inline-block rounded-2xl border-2 border-charcoal bg-transparent px-8 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream hover:shadow-lg"
           >
-            Browse Premium Collection
+            Browse Full Collection
           </Link>
         </div>
       </main>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl sm:text-2xl">Claim Your Free Gift?</DialogTitle>
+            <DialogDescription className="pt-2 text-base">
+              You can only claim <strong>one</strong> piece of digital art for free. Once you claim{" "}
+              <strong className="text-sage-500">{selectedArt?.title}</strong>, you won&apos;t be able to
+              download any other pieces from this collection.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedArt && (
+            <div className="my-4 rounded-2xl border border-border bg-sage-50/50 p-4">
+              <div className="flex items-start gap-4">
+                <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
+                  <Image
+                    src={selectedArt.previewImage}
+                    alt={selectedArt.title}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-serif font-semibold text-charcoal">{selectedArt.title}</h4>
+                  <p className="text-sm text-muted-foreground">by {selectedArt.artist}</p>
+                  <div className="mt-2 flex gap-4 text-xs text-muted-foreground">
+                    <span>{selectedArt.dimensions}</span>
+                    <span>{selectedArt.fileSize}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setIsDialogOpen(false)}
+              disabled={isDownloading}
+              className="rounded-2xl"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleClaim}
+              disabled={isDownloading}
+              className="rounded-2xl bg-sage-500 hover:bg-sage-400"
+            >
+              {isDownloading ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  <span className="ml-2">Claiming...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4" />
+                  <span className="ml-2">Claim & Download</span>
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

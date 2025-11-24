@@ -152,15 +152,15 @@ export async function GET(request: NextRequest) {
     // Convert Node.js stream to Web ReadableStream
     const readableStream = new ReadableStream({
       start(controller) {
-        fileStream.on("data", (chunk: Buffer) => {
-          controller.enqueue(new Uint8Array(chunk));
+        fileStream.on("data", (chunk) => {
+          controller.enqueue(new Uint8Array(chunk as Buffer));
         });
 
         fileStream.on("end", () => {
           controller.close();
         });
 
-        fileStream.on("error", (error: Error) => {
+        fileStream.on("error", (error) => {
           controller.error(error);
         });
       },

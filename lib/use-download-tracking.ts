@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from "react";
-import * as Cookies from "js-cookie";
+import Cookies from "js-cookie";
 import {
   parseDownloadCookie,
   getStatusMessage,

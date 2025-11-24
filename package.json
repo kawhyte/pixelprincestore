@@ -7,7 +7,8 @@
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-zips": "node scripts/generate-zips.js"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
@@ -36,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "archiver": "^7.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4.1.17",

@@ -75,7 +75,7 @@ export default function Hero() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="h-10 w-10 rounded-full border-2 border-cream bg-gradient-to-br from-sage-300 to-lavender-300"
+                    className="h-10 w-10 rounded-full border-2 border-cream from-sage-300 to-lavender-300"
                   />
                 ))}
               </div>

@@ -66,9 +66,9 @@ export default function ProductCard({
         </h3>
 
         {/* Price - Sans, Bold */}
-        <p className="font-sans text-lg font-bold text-charcoal sm:text-xl">
+        {/* <p className="font-sans text-lg font-bold text-charcoal sm:text-xl">
           ${price.toFixed(2)}
-        </p>
+        </p> */}
 
         {/* Subtle "View Details" hint on hover */}
         <p className="text-sm text-muted-foreground opacity-0 transition-opacity duration-300 group-hover:opacity-100">

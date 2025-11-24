@@ -117,7 +117,7 @@ export default function Home() {
       </section>
 
       {/* Free Downloads Teaser */}
-      <section className="bg-gradient-to-br from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
+      <section className=" from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="mx-auto max-w-2xl space-y-6">
             <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">

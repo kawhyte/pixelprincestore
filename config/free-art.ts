@@ -30,14 +30,14 @@ export interface FreeArt {
 
 export const freeArtCollection: FreeArt[] = [
   {
-    id: "art_1",
-    title: "Ethereal Dreams",
+    id: "moon",
+    title: "Moon Dreams",
     artist: "The Pixel Prince",
     description: "A mesmerizing blend of abstract forms and vibrant colors that evoke a sense of wonder and tranquility.",
     longDescription: "Ethereal Dreams captures the essence of nature's beauty through abstract digital art. The flowing forms and vibrant color palette create a sense of movement and energy, perfect for bringing life to any space. This piece works beautifully in modern homes, offices, or creative spaces.",
-    previewImage: "/art-previews/card/ethereal-dreams.webp",
-    detailImage: "/art-previews/detail/ethereal-dreams.webp",
-    allSizesZip: "ethereal-dreams-all.zip",
+    previewImage: "/art-previews/card/moon-card.webp",
+    detailImage: "/art-previews/detail/moon-detail.webp",
+    allSizesZip: "moon.zip",
     tags: ["Abstract", "Digital", "Nature"],
     category: "Abstract",
     sizes: [
@@ -45,7 +45,7 @@ export const freeArtCollection: FreeArt[] = [
         id: "4x5",
         label: "4\" × 5\"",
         dimensions: "1200 × 1500 px",
-        fileName: "ethereal-dreams-4x5.png",
+        fileName: "moon-4x5.png",
         fileSize: "1.2 MB",
         recommendedFor: "Small frames, desk display"
       },
@@ -53,7 +53,7 @@ export const freeArtCollection: FreeArt[] = [
         id: "8x10",
         label: "8\" × 10\"",
         dimensions: "2400 × 3000 px",
-        fileName: "ethereal-dreams-8x10.png",
+        fileName: "moon-8x10.png",
         fileSize: "2.8 MB",
         recommendedFor: "Medium frames, home decor"
       },
@@ -61,7 +61,7 @@ export const freeArtCollection: FreeArt[] = [
         id: "16x20",
         label: "16\" × 20\"",
         dimensions: "4800 × 6000 px",
-        fileName: "ethereal-dreams-16x20.png",
+        fileName: "moon-16x20.png",
         fileSize: "8.5 MB",
         recommendedFor: "Large frames, statement pieces"
       },
@@ -69,7 +69,7 @@ export const freeArtCollection: FreeArt[] = [
         id: "40x50cm",
         label: "40 × 50 cm",
         dimensions: "4724 × 5906 px",
-        fileName: "ethereal-dreams-40x50cm.png",
+        fileName: "moon-40x50cm.png",
         fileSize: "8.2 MB",
         recommendedFor: "Gallery-quality, professional display"
       }

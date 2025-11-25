@@ -95,13 +95,20 @@ export default function Hero() {
               {/* Main Lottie Animation */}
               <div className="relative z-10 transform transition-transform duration-700 hover:scale-105">
                 <div className="overflow-hidden ">
-                  <div className="relative">
+                  <div className="relative" style={{ background: 'transparent' }}>
                     {animationData ? (
                       <Lottie
                         animationData={animationData}
                         loop={true}
                         autoplay={true}
                         className="h-full w-full"
+                        style={{
+                          background: 'transparent',
+                          mixBlendMode: 'multiply'
+                        }}
+                        rendererSettings={{
+                          preserveAspectRatio: 'xMidYMid meet'
+                        }}
                       />
                     ) : (
                       // Fallback while animation is being uploaded

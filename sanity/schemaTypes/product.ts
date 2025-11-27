@@ -72,8 +72,42 @@ export const product = defineType({
       title: 'Available Sizes',
       type: 'array',
       of: [{ type: 'artSize' }],
-      description: 'Different size options for this art piece',
+      description: 'Different size options for this art piece (pre-filled with standard sizes)',
       validation: (Rule) => Rule.required().min(1),
+      initialValue: [
+        {
+          id: '4x5',
+          label: '4" × 5"',
+          dimensions: '1200 × 1500 px',
+          fileName: '', // User must fill this in
+          fileSize: '1.2 MB',
+          recommendedFor: 'Small frames, desk display',
+        },
+        {
+          id: '8x10',
+          label: '8" × 10"',
+          dimensions: '2400 × 3000 px',
+          fileName: '', // User must fill this in
+          fileSize: '2.8 MB',
+          recommendedFor: 'Medium frames, home decor',
+        },
+        {
+          id: '16x20',
+          label: '16" × 20"',
+          dimensions: '4800 × 6000 px',
+          fileName: '', // User must fill this in
+          fileSize: '8.5 MB',
+          recommendedFor: 'Large frames, statement pieces',
+        },
+        {
+          id: '40x50cm',
+          label: '40 × 50 cm',
+          dimensions: '4724 × 5906 px',
+          fileName: '', // User must fill this in
+          fileSize: '8.2 MB',
+          recommendedFor: 'Gallery-quality, professional display',
+        },
+      ],
     }),
     defineField({
       name: 'allSizesZip',

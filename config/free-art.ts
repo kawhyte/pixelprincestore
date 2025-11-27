@@ -76,7 +76,7 @@ export const freeArtCollection: FreeArt[] = [
     ]
   },
   {
-    id: "art_2",
+    id: "world-map-black-and-white",
     title: "Vintage Map Collection",
     artist: "The Pixel Prince",
     description: "A beautifully rendered vintage world map with warm earth tones and intricate cartographic details.",

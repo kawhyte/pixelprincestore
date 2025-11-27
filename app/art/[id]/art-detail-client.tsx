@@ -7,7 +7,7 @@ import { ArrowLeft, Download, Package } from "lucide-react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
-import { type FreeArt, type ArtSize } from "@/config/free-art";
+import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { useDownloadTracking } from "@/lib/use-download-tracking";
 

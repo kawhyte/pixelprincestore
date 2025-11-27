@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createReadStream, existsSync } from "fs";
 import { stat } from "fs/promises";
 import path from "path";
-import {
-  freeArtCollection,
-  DOWNLOAD_COOKIE_NAME,
-  COOKIE_MAX_AGE,
-} from "@/config/free-art";
+import { getProductBySlug } from "@/sanity/lib/client";
+import { DOWNLOAD_COOKIE_NAME, COOKIE_MAX_AGE } from "@/config/free-art";
 import {
   parseDownloadCookie,
   canDownload,
@@ -51,8 +48,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Find the art piece
-    const artPiece = freeArtCollection.find((art) => art.id === artId);
+    // Find the art piece from Sanity
+    const artPiece = await getProductBySlug(artId);
 
     if (!artPiece) {
       return NextResponse.json(

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { freeArtCollection } from "@/config/free-art";
+import { getAllProducts, getProductBySlug } from "@/sanity/lib/client";
 import ArtDetailClient from "./art-detail-client";
 
 interface PageProps {
@@ -8,16 +8,19 @@ interface PageProps {
   }>;
 }
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 // Generate static params for all art pieces (for static generation)
-export function generateStaticParams() {
-  return freeArtCollection.map((art) => ({
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((art) => ({
     id: art.id,
   }));
 }
 
 export default async function ArtDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const art = freeArtCollection.find((item) => item.id === id);
+  const art = await getProductBySlug(id);
 
   // If art not found, show 404
   if (!art) {

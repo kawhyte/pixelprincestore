@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { Gift } from 'lucide-react'
+import { GeminiGenerator } from '../components/GeminiGenerator'
 
 export const product = defineType({
   name: 'product',
@@ -34,6 +35,25 @@ export const product = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'previewImage',
+      title: 'Preview Image',
+      type: 'image',
+      description: 'Card preview image (600x800 recommended)',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'aiHelper',
+      title: 'AI Description Generator',
+      type: 'string',
+      description: 'Generate descriptions using AI',
+      components: {
+        input: GeminiGenerator,
+      },
+    }),
+    defineField({
       name: 'description',
       title: 'Short Description',
       type: 'text',
@@ -47,16 +67,6 @@ export const product = defineType({
       type: 'text',
       description: 'Detailed description for the detail page',
       rows: 5,
-    }),
-    defineField({
-      name: 'previewImage',
-      title: 'Preview Image',
-      type: 'image',
-      description: 'Card preview image (600x800 recommended)',
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'detailImage',

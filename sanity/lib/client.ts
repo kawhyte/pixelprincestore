@@ -13,6 +13,14 @@ export const client = createClient({
 /**
  * TypeScript interfaces matching the Sanity schema
  */
+export interface HighResAsset {
+  assetType: 'cloudinary' | 'external'
+  cloudinaryUrl?: string
+  externalUrl?: string
+  filename: string
+  uploadedAt?: string
+}
+
 export interface ArtSize {
   id: string
   label: string
@@ -20,6 +28,7 @@ export interface ArtSize {
   fileName: string
   fileSize: string
   recommendedFor?: string
+  highResAsset?: HighResAsset
 }
 
 export interface SanityProduct {
@@ -69,7 +78,15 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     longDescription,
     previewImage,
     detailImage,
-    sizes,
+    sizes[]{
+      id,
+      label,
+      dimensions,
+      fileName,
+      fileSize,
+      recommendedFor,
+      highResAsset
+    },
     allSizesZip,
     tags,
     category
@@ -111,7 +128,15 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     longDescription,
     previewImage,
     detailImage,
-    sizes,
+    sizes[]{
+      id,
+      label,
+      dimensions,
+      fileName,
+      fileSize,
+      recommendedFor,
+      highResAsset
+    },
     allSizesZip,
     tags,
     category

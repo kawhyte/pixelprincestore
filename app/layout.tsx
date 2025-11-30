@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import Navigation from "@/components/common/Navigation/Navigation";
+import ConditionalNavigation from "@/components/common/Navigation/ConditionalNavigation";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
 
 const inter = Inter({
@@ -54,7 +54,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Navigation />
+        <ConditionalNavigation />
         {children}
         <Toaster />
       </body>

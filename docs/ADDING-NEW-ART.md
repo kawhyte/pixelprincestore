@@ -1,16 +1,21 @@
 # Adding New Art to Free Downloads
 
-This guide walks you through adding a new digital art print to The Pixel Prince Store's free download system.
+This guide walks you through adding a new digital art print to The Pixel Prince Store using **Sanity CMS** and **cloud storage** (Cloudinary/Google Drive).
 
 ---
 
 ## Overview
 
 Each art piece requires:
-- **4 print-ready files** (4"×5", 8"×10", 16"×20", 40×50cm)
-- **2 preview images** (card and detail)
-- **1 ZIP bundle** (generated automatically)
-- **Config entry** in `config/free-art.ts`
+- **4 high-resolution PNG files** (4"×5", 8"×10", 16"×20", 40×50cm)
+- **2 preview images** (card and detail) - uploaded to Sanity
+- **1 ZIP bundle** (all sizes combined)
+- **Sanity Studio entry** - all metadata managed in CMS
+
+**Storage:**
+- ✅ **Cloudinary** for files under 10MB (recommended)
+- ✅ **Google Drive** for larger files
+- ❌ No local file storage - everything is cloud-based
 
 ---
 
@@ -64,7 +69,7 @@ Create 4 PNG files at these exact specifications:
 
 **File Naming Convention:**
 ```
-{artwork-id}-{size-id}.png
+{artwork-name}-{size-id}.png
 
 Examples:
 - midnight-bloom-4x5.png
@@ -73,464 +78,419 @@ Examples:
 - midnight-bloom-40x50cm.png
 ```
 
-**Save Location:**
+---
+
+### Step 3: Upload Files to Cloud Storage
+
+You have two options depending on file size:
+
+#### Option A: Cloudinary (Files < 10MB) ✅ Recommended
+
+1. Open **Sanity Studio** at `http://localhost:3333`
+2. Create a new **Free Art Product** (Step 4)
+3. Use the built-in **High-Res Asset Upload** for each size
+4. Files are automatically uploaded to Cloudinary
+5. URLs are saved automatically
+
+#### Option B: Google Drive (Files > 10MB)
+
+**Upload Files:**
+1. Go to [Google Drive](https://drive.google.com)
+2. Create a folder (e.g., "Midnight Bloom - High Res")
+3. Upload all 4 PNG files
+4. **For each file:**
+   - Right-click → Share → "Anyone with the link"
+   - Copy the share link
+   - Convert to direct download link:
+
+   **Original:** `https://drive.google.com/file/d/FILE_ID/view?usp=sharing`
+   **Direct Download:** `https://drive.google.com/uc?export=download&id=FILE_ID`
+
+**Upload ZIP:**
+1. Create ZIP with all 4 sizes + instructions
+2. Upload to Google Drive
+3. Share and get direct download link (same process)
+
+---
+
+### Step 4: Create Product in Sanity Studio
+
+#### 4a. Open Sanity Studio
+```bash
+cd pixelprincestore
+npm run sanity
+# Opens at http://localhost:3333
 ```
-/private/free/
+
+#### 4b. Create New Product
+
+1. Click **"Free Art Product"** in sidebar
+2. Click **"+ Create"** button
+3. Fill in the following fields:
+
+**Basic Information:**
+- **Title**: `Midnight Bloom`
+- **Slug**: Auto-generated from title (`midnight-bloom`)
+- **Artist**: `The Pixel Prince` (pre-filled)
+
+**Descriptions:**
+- **Short Description**: One compelling sentence (max 200 chars)
+  - Example: "A mystical garden awakens under moonlight with ethereal purples and blues."
+- **Long Description**: 2-3 paragraphs about the artwork
+  - Describe the visual elements
+  - Mention emotional impact
+  - Suggest use cases (bedroom, meditation space, etc.)
+
+**Preview Images:**
+- **Preview Image**: Upload card preview (600×800 recommended)
+  - This appears in the gallery grid
+  - Automatically served from Sanity CDN
+
+- **Detail Image**: Upload detail image (1200×1600 recommended)
+  - This appears on the product page
+  - Higher quality for closer viewing
+
+**Tags & Category:**
+- **Tags**: Add relevant tags (e.g., "Abstract", "Nature", "Night")
+- **Category**: Select primary category
+
+---
+
+### Step 5: Add Available Sizes
+
+For each of the 4 sizes, you'll see pre-filled fields. Update them:
+
+#### For Each Size (4x5, 8x10, 16x20, 40x50cm):
+
+1. **Label**: Already filled (e.g., "4" × 5"")
+2. **Dimensions**: Already filled (e.g., "1200 × 1500 px")
+3. **File Size**: Update with actual size (e.g., "1.2 MB")
+4. **Recommended For**: Already filled (e.g., "Small frames, desk display")
+
+5. **High Resolution Asset**: Click to expand
+   - **Asset Type**: Choose "Cloudinary" or "External Link"
+
+   **If Cloudinary:**
+   - Click **"Choose File to Upload"**
+   - Select your PNG file
+   - Upload happens automatically
+   - URL is saved
+
+   **If Google Drive:**
+   - Choose "External Link"
+   - Paste your direct download URL
+   - Enter filename (e.g., "midnight-bloom-4x5.png")
+
+---
+
+### Step 6: Add ZIP Download
+
+Scroll to **"ZIP Download URL"** field:
+
+1. Upload your ZIP to Google Drive or Cloudinary
+2. Get direct download link
+3. Paste URL into **"ZIP Download URL"** field
+
+**ZIP Contents Should Include:**
+- All 4 PNG files
+- `HOW-TO-OPEN.txt` with instructions for Mac/Windows
+- Optionally: License information, usage tips
+
+---
+
+### Step 7: Save & Publish
+
+1. Click **"Publish"** button (top right)
+2. Verify all required fields are filled
+3. Product is now live!
+
+**Your new artwork is immediately available at:**
+```
+https://your-domain.com/art/midnight-bloom
 ```
 
 ---
 
-### Step 3: Create Preview Images
+### Step 8: Test Your New Art
 
-#### 3a. Card Preview (Gallery View)
-
-```bash
-# Dimensions: 600 × 800 px
-# Format: WebP
-# Quality: 80-90%
-# Target size: 50-150 KB
-# Naming: {artwork-id}-card.webp
-# Location: /public/art-previews/card/
-```
-
-**Example ImageMagick Command:**
-```bash
-magick convert "midnight-bloom-8x10.png" \
-  -resize 600x800 \
-  -quality 85 \
-  "/public/art-previews/card/midnight-bloom-card.webp"
-```
-
-#### 3b. Detail Preview (Product Page)
-
-```bash
-# Dimensions: 1200 × 1600 px
-# Format: WebP
-# Quality: 85-95%
-# Target size: 200-400 KB
-# Naming: {artwork-id}-detail.webp
-# Location: /public/art-previews/detail/
-```
-
-**Example ImageMagick Command:**
-```bash
-magick convert "midnight-bloom-8x10.png" \
-  -resize 1200x1600 \
-  -quality 90 \
-  "/public/art-previews/detail/midnight-bloom-detail.webp"
-```
-
----
-
-### Step 4: Update Config File
-
-Open `/config/free-art.ts` and add your new art piece to `freeArtCollection`:
-
-```typescript
-{
-  id: "midnight_bloom",  // Use underscores for IDs
-  name: "Midnight Bloom",  // Display name
-  description: "A mystical garden awakens under moonlight",  // Short description
-  longDescription: `Midnight Bloom captures the enchanting moment when a secret garden comes alive under the full moon. Deep purples and midnight blues blend with ethereal silver highlights, creating a dreamlike atmosphere. Perfect for bedrooms, meditation spaces, or anywhere you want to add a touch of nocturnal magic.`,  // Detailed description for product page
-
-  artist: "The Pixel Prince",
-  tags: ["nature", "fantasy", "night"],  // For filtering/search
-
-  // Preview images
-  previewImage: "/art-previews/card/midnight-bloom-card.webp",
-  detailImage: "/art-previews/detail/midnight-bloom-detail.webp",
-
-  // Print sizes
-  sizes: [
-    {
-      id: "4x5",
-      label: "4\" × 5\"",
-      dimensions: "1200 × 1500 px",
-      fileName: "midnight-bloom-4x5.png",
-      fileSize: "1.2 MB",
-      recommendedFor: "Small frames, desk displays"
-    },
-    {
-      id: "8x10",
-      label: "8\" × 10\"",
-      dimensions: "2400 × 3000 px",
-      fileName: "midnight-bloom-8x10.png",
-      fileSize: "3.5 MB",
-      recommendedFor: "Standard frames, gallery walls"
-    },
-    {
-      id: "16x20",
-      label: "16\" × 20\"",
-      dimensions: "4800 × 6000 px",
-      fileName: "midnight-bloom-16x20.png",
-      fileSize: "8.7 MB",
-      recommendedFor: "Large wall art, focal points"
-    },
-    {
-      id: "40x50cm",
-      label: "40 × 50 cm",
-      dimensions: "4724 × 5906 px",
-      fileName: "midnight-bloom-40x50cm.png",
-      fileSize: "8.4 MB",
-      recommendedFor: "European standard frames"
-    }
-  ],
-
-  // ZIP bundle (will be generated in Step 5)
-  allSizesZip: "midnight-bloom-all.zip"
-},
-```
-
-**Important Config Notes:**
-- Use **underscores** in `id` (becomes URL: `/art/midnight_bloom`)
-- Use **spaces** in `name` (display title)
-- Use **hyphens** in file names (`midnight-bloom-8x10.png`)
-- List sizes in ascending order (small to large)
-- Provide accurate `fileSize` (helps users with bandwidth decisions)
-
----
-
-### Step 5: Generate ZIP Bundle
-
-Run the automated ZIP generation script:
-
-```bash
-npm run generate-zips
-```
-
-This will:
-1. Find all 4 size files in `/private/free/`
-2. Create a HOW-TO-OPEN.txt with Mac/PC instructions
-3. Generate `midnight-bloom-all.zip` with maximum compression
-4. Save to `/private/free/`
-5. Display file count and size
-
-**Expected Output:**
-```
-📦 Creating midnight-bloom-all.zip...
-   ✓ Added: HOW-TO-OPEN.txt
-   ✓ Added: midnight-bloom-4x5.png
-   ✓ Added: midnight-bloom-8x10.png
-   ✓ Added: midnight-bloom-16x20.png
-   ✓ Added: midnight-bloom-40x50cm.png
-✅ midnight-bloom-all.zip created successfully
-   Size: 18.2 MB
-   Files: 5
-```
-
----
-
-### Step 6: Verify File Structure
-
-Check that all files are in place:
-
-```
-pixelprincestore/
-├── private/
-│   └── free/
-│       ├── midnight-bloom-4x5.png          ✓
-│       ├── midnight-bloom-8x10.png         ✓
-│       ├── midnight-bloom-16x20.png        ✓
-│       ├── midnight-bloom-40x50cm.png      ✓
-│       └── midnight-bloom-all.zip          ✓
-│
-└── public/
-    └── art-previews/
-        ├── card/
-        │   └── midnight-bloom-card.webp    ✓
-        └── detail/
-            └── midnight-bloom-detail.webp  ✓
-```
-
----
-
-### Step 7: Test Locally
-
-#### 7a. Start Dev Server
-```bash
-npm run dev
-```
-
-#### 7b. Test Gallery Page
+#### 8a. View in Gallery
 1. Navigate to `http://localhost:3000/free-downloads`
 2. Verify new card appears
-3. Check image loads correctly
-4. Hover to see "View Details" overlay
+3. Check preview image loads
+4. Hover to see overlay effect
 
-#### 7c. Test Detail Page
-1. Click card to open `/art/midnight_bloom`
-2. Verify detail image loads
-3. Check all 4 sizes appear in selector
-4. Verify long description displays
-5. Verify tags appear
+#### 8b. Test Detail Page
+1. Click card to open product page
+2. Verify detail image displays
+3. Check all 4 sizes appear with "High-Res PNG" badges
+4. Verify descriptions display correctly
+5. Check tags render
 
-#### 7d. Test Downloads
-1. Select a size (e.g., 8"×10")
-2. Click "Download 8\" × 10\"" button
-3. Verify file downloads
-4. Check confetti animation plays
-5. Verify toast notification appears
-6. Confirm downloaded size shows checkmark badge
+#### 8c. Test Downloads
+1. **Select a size** (e.g., 8"×10")
+2. Click **"Download Selected Size"**
+3. Verify:
+   - File downloads correctly
+   - Confetti animation plays
+   - Success toast appears
+   - Size shows "Downloaded ✓"
 
-#### 7e. Test ZIP Download
-1. Click "Download All Sizes (ZIP)" button
-2. Verify ZIP file downloads
-3. Extract ZIP locally
-4. Verify all 4 files + HOW-TO-OPEN.txt present
-5. Check file integrity (can open images)
+#### 8d. Test ZIP Download
+1. Click **"Download All Sizes (ZIP)"**
+2. Verify ZIP downloads
+3. Extract and check all files present
+4. Verify files open correctly
 
-#### 7f. Test Weekly Limit
+#### 8e. Test Download Tracking
 1. Download 3 different sizes
-2. Verify status shows "0 downloads remaining"
+2. Verify count decreases: "2 remaining" → "1 remaining" → "0 remaining"
 3. Try downloading 4th size
-4. Verify blocked with error toast
-5. Check reset date displays correctly
+4. Verify blocked with error message
+5. Check reset date displays
 
 ---
 
-### Step 8: Quality Checklist
+## Quality Checklist
 
-Before committing, verify:
+Before marking complete, verify:
 
-**Files:**
-- [ ] All 4 print sizes exist in `/private/free/`
-- [ ] All files use correct naming convention
-- [ ] Card preview exists in `/public/art-previews/card/`
-- [ ] Detail image exists in `/public/art-previews/detail/`
-- [ ] ZIP bundle generated successfully
+### Content ✓
+- [ ] Title is compelling and clear
+- [ ] Short description is concise (under 200 chars)
+- [ ] Long description is detailed (2-3 paragraphs)
+- [ ] Tags are relevant and searchable
+- [ ] Artist name is correct
 
-**Config:**
-- [ ] ID uses underscores (`midnight_bloom`)
-- [ ] Name is display-ready ("Midnight Bloom")
-- [ ] Short description is 1 sentence
-- [ ] Long description is 2-3 paragraphs
-- [ ] All file paths are correct
-- [ ] File sizes are accurate
-- [ ] Tags are relevant
-- [ ] Artist name correct
-
-**Image Quality:**
-- [ ] Card preview: 600×800, WebP, under 150 KB
-- [ ] Detail image: 1200×1600, WebP, under 400 KB
-- [ ] Print files: Correct dimensions and DPI
+### Images ✓
+- [ ] Preview image uploaded to Sanity (600×800 recommended)
+- [ ] Detail image uploaded to Sanity (1200×1600 recommended)
+- [ ] Images are sharp and clear
+- [ ] Colors are vibrant and accurate
 - [ ] No visible compression artifacts
-- [ ] Colors accurate and vibrant
-- [ ] Images sharp and clear
 
-**Functionality:**
+### Files ✓
+- [ ] All 4 sizes uploaded to Cloudinary/Google Drive
+- [ ] All files are 300 DPI PNG format
+- [ ] File sizes are accurate in Sanity
+- [ ] ZIP includes all 4 files + instructions
+- [ ] ZIP URL is direct download link
+
+### Functionality ✓
 - [ ] Card appears in gallery
 - [ ] Detail page loads correctly
-- [ ] All sizes downloadable
+- [ ] All 4 sizes downloadable
 - [ ] ZIP downloads successfully
 - [ ] Confetti animation works
 - [ ] Toast notifications appear
+- [ ] Download tracking works
 - [ ] Weekly limit enforced
-- [ ] Downloaded sizes marked
 
-**SEO & Accessibility:**
-- [ ] Images have meaningful alt text (Next.js Image)
-- [ ] Page title uses artwork name
-- [ ] Meta description compelling
-- [ ] Links accessible via keyboard
-- [ ] Contrast ratios sufficient
+### URLs ✓
+- [ ] All Cloudinary URLs are HTTPS
+- [ ] Google Drive links are direct download format
+- [ ] No URLs are broken (test each one)
 
 ---
 
-### Step 9: Build & Deploy
+## File Size Guidelines
 
-#### 9a. Production Build Test
-```bash
-npm run build
-```
+### Preview Images (Sanity)
+- **Card Preview**: 600×800px, 50-150 KB
+- **Detail Image**: 1200×1600px, 200-400 KB
+- **Format**: JPEG or WebP (Sanity auto-optimizes)
 
-Verify:
-- No TypeScript errors
-- All pages build successfully
-- Static generation works for new art ID
+### Print Files (Cloudinary/Drive)
+- **4"×5"**: 1-2 MB
+- **8"×10"**: 2-4 MB
+- **16"×20"**: 7-10 MB
+- **40×50cm**: 7-10 MB
+- **Format**: PNG (lossless)
 
-#### 9b. Commit Changes
-```bash
-git add config/free-art.ts
-git add private/free/midnight-bloom-*
-git add public/art-previews/card/midnight-bloom-card.webp
-git add public/art-previews/detail/midnight-bloom-detail.webp
-
-git commit -m "feat: add Midnight Bloom free art download
-
-- Add 4 print sizes (4x5, 8x10, 16x20, 40x50cm)
-- Add card and detail preview images
-- Generate ZIP bundle with all sizes
-- Update config with full metadata"
-```
-
-#### 9c. Deploy
-```bash
-# Your deployment command (e.g., Vercel)
-vercel --prod
-```
-
-#### 9d. Post-Deploy Testing
-1. Test on production URL
-2. Verify all images load via CDN
-3. Test downloads work
-4. Check mobile responsiveness
-5. Verify weekly limit persists
+### ZIP Bundle
+- **Total Size**: 15-25 MB (all 4 files + instructions)
+- **Compression**: Maximum (use ZIP format)
 
 ---
 
-## Quick Reference Commands
+## Google Drive Direct Download URL Format
 
-### Batch Convert Multiple Artworks
+**Important:** Google Drive share links don't work for direct downloads. You must convert them:
 
-**Create All Preview Images:**
-```bash
-# Card previews (600×800 WebP)
-for file in private/free/*-8x10.png; do
-  basename=$(basename "$file" -8x10.png)
-  magick convert "$file" \
-    -resize 600x800 \
-    -quality 85 \
-    "public/art-previews/card/${basename}-card.webp"
-done
-
-# Detail images (1200×1600 WebP)
-for file in private/free/*-8x10.png; do
-  basename=$(basename "$file" -8x10.png)
-  magick convert "$file" \
-    -resize 1200x1600 \
-    -quality 90 \
-    "public/art-previews/detail/${basename}-detail.webp"
-done
+**Wrong (Share Link):**
+```
+https://drive.google.com/file/d/1ABC123XYZ/view?usp=sharing
 ```
 
-**Check File Sizes:**
-```bash
-# List all files with sizes
-ls -lh private/free/*.png
-ls -lh private/free/*.zip
-ls -lh public/art-previews/card/*.webp
-ls -lh public/art-previews/detail/*.webp
+**Correct (Direct Download):**
+```
+https://drive.google.com/uc?export=download&id=1ABC123XYZ
 ```
 
-**Verify Dimensions:**
-```bash
-# Check image dimensions
-magick identify private/free/midnight-bloom-*.png
-```
+Just copy the `FILE_ID` from the share link and use the format above.
+
+---
+
+## Sanity Studio Tips
+
+### Using the AI Description Generator
+1. Fill in the **Title** field first
+2. Click **"AI Description Generator"** field
+3. Wait for AI to generate suggestions
+4. Copy good suggestions to **Short Description** and **Long Description**
+5. Edit and refine as needed
+
+### High-Res Asset Upload
+- **For Cloudinary**: Just click and upload - it handles everything
+- **For External**: Make sure you test the URL before saving
+- **Filename**: Must match actual file (e.g., "midnight-bloom-4x5.png")
+
+### Saving Work
+- **Save**: Saves draft (not public)
+- **Publish**: Makes live on website
+- **Unpublish**: Removes from website (keeps draft)
 
 ---
 
 ## Troubleshooting
 
-### Issue: ZIP Generation Fails
-
-**Error:** `File not found: midnight-bloom-4x5.png`
+### Issue: "File URL not configured"
 
 **Solution:**
-1. Check file exists: `ls private/free/midnight-bloom-*.png`
-2. Verify naming matches config exactly (case-sensitive)
-3. Ensure all 4 sizes present before running script
+1. Check that **High Resolution Asset** is filled for each size
+2. Verify URLs are direct download links (not share links)
+3. Test URLs in browser (should trigger download)
+4. Save and re-publish product
 
 ---
 
-### Issue: Images Not Loading
-
-**Error:** 404 on preview images
+### Issue: Download fails with 404
 
 **Solution:**
-1. Verify files in correct directories:
-   - Cards: `/public/art-previews/card/`
-   - Details: `/public/art-previews/detail/`
-2. Check file names match config exactly
+1. Check Cloudinary URL is valid (should start with `https://res.cloudinary.com/`)
+2. For Google Drive, verify direct download format
+3. Test URL in incognito/private browser
+4. Check file permissions in Google Drive ("Anyone with link")
+
+---
+
+### Issue: Images not loading
+
+**Solution:**
+1. Verify images uploaded to Sanity (not local files)
+2. Check Sanity Studio shows image preview
+3. Re-publish product
+4. Clear browser cache
+5. Restart dev server
+
+---
+
+### Issue: Product doesn't appear in gallery
+
+**Solution:**
+1. Check product is **Published** (not just saved)
+2. Verify all required fields filled
 3. Restart dev server: `npm run dev`
-4. Clear Next.js cache: `rm -rf .next`
-
----
-
-### Issue: Downloads Fail
-
-**Error:** "File not available"
-
-**Solution:**
-1. Check `/private/free/` contains actual files
-2. Verify file names in config match exactly
-3. Check file permissions: `ls -la private/free/`
-4. Look at API logs: `/app/api/claim-art/route.ts`
-
----
-
-### Issue: Detail Page 404
-
-**Error:** Page not found for new art
-
-**Solution:**
-1. Rebuild app: `npm run build`
-2. Check `id` in config uses underscores (`midnight_bloom`)
-3. Verify ID added to `freeArtCollection` array
-4. Clear `.next` folder and rebuild
-
----
-
-### Issue: Download Limit Not Working
-
-**Error:** Can download unlimited times
-
-**Solution:**
-1. Check cookies enabled in browser
-2. Clear cookies and try again
-3. Verify `DISABLE_DOWNLOAD_LIMIT` not set in `.env.local`
 4. Check browser console for errors
 
 ---
 
-## Tips for Success
+## Batch Operations
 
-### Content Quality
-- Write compelling descriptions that highlight unique features
-- Use evocative language that matches the art style
-- Include practical use cases ("perfect for bedrooms")
-- Keep tags relevant and searchable
+### Converting Images for Sanity Upload
 
-### Technical Quality
-- Always use 300 DPI for print files
-- Maintain 3:4 aspect ratio across all sizes
-- Optimize preview images aggressively (users on mobile)
-- Keep print files lossless (PNG)
+**Create Card Previews (600×800):**
+```bash
+magick convert "midnight-bloom-8x10.png" \
+  -resize 600x800 \
+  -quality 85 \
+  "midnight-bloom-card.jpg"
+```
 
-### File Organization
-- Use consistent naming (kebab-case for files)
-- Group related files together
-- Document any special considerations
-- Keep backups of original high-res files
+**Create Detail Images (1200×1600):**
+```bash
+magick convert "midnight-bloom-8x10.png" \
+  -resize 1200x1600 \
+  -quality 90 \
+  "midnight-bloom-detail.jpg"
+```
 
-### Testing Thoroughness
-- Test on multiple browsers
-- Test on mobile devices
-- Test with slow internet (preview loading)
-- Test download limits thoroughly
+### Creating ZIP Bundle
+
+**Mac/Linux:**
+```bash
+zip -9 midnight-bloom-all.zip \
+  midnight-bloom-4x5.png \
+  midnight-bloom-8x10.png \
+  midnight-bloom-16x20.png \
+  midnight-bloom-40x50cm.png \
+  HOW-TO-OPEN.txt
+```
+
+**Windows:**
+```powershell
+Compress-Archive -Path *.png,HOW-TO-OPEN.txt -DestinationPath midnight-bloom-all.zip
+```
+
+---
+
+## Quick Reference
+
+### Sanity Studio
+```bash
+npm run sanity
+# Opens: http://localhost:3333
+```
+
+### Dev Server
+```bash
+npm run dev
+# Opens: http://localhost:3000
+```
+
+### Test URLs
+- Gallery: `http://localhost:3000/free-downloads`
+- Product: `http://localhost:3000/art/midnight-bloom`
+- API: `http://localhost:3000/api/claim-art?artId=midnight-bloom&sizeId=8x10`
 
 ---
 
 ## Additional Resources
 
-- **Image Guide**: `/docs/IMAGE-GUIDE.md` - Complete image preparation specs
+- **Sanity Setup**: `/docs/SANITY_SETUP.md` - CMS configuration
 - **Architecture**: `/docs/ARCHITECTURE.md` - How the system works
 - **Troubleshooting**: `/docs/TROUBLESHOOTING.md` - Common issues
-- **Implementation**: `/docs/IMPLEMENTATION-PHASES.md` - Development history
+- **Image Guide**: `/docs/IMAGE-GUIDE.md` - Image specs
+
+---
+
+## Migration from Old System
+
+If you have existing art in the old system:
+
+1. **Files are already ready** - just need to upload to cloud
+2. **Upload to Cloudinary** or Google Drive
+3. **Create Sanity product** with all metadata
+4. **Copy descriptions** from old `config/free-art.ts`
+5. **Test thoroughly** before removing old config
+
+**Old files locations (now deleted):**
+- ~~`/private/free/`~~ → Cloudinary/Google Drive
+- ~~`/public/art-previews/`~~ → Sanity CDN
+- ~~`config/free-art.ts` (FREE_ART array)~~ → Sanity Studio
 
 ---
 
 ## Support
 
-If you encounter issues not covered here:
+If you encounter issues:
 
-1. Check `/docs/TROUBLESHOOTING.md`
-2. Review browser console for errors
-3. Check Next.js build logs
-4. Verify file paths and naming conventions
-5. Test with dev mode bypass: `DISABLE_DOWNLOAD_LIMIT=true`
+1. Check Sanity Studio console for errors
+2. Verify all URLs are direct download format
+3. Test URLs in browser incognito mode
+4. Check Network tab in browser DevTools
+5. Review `/docs/TROUBLESHOOTING.md`
 
 ---
 
-**Last Updated**: 2025-11-24
-**Version**: 1.0
+**Last Updated**: 2025-11-30
+**Version**: 2.0 (Cloud-based with Sanity CMS)

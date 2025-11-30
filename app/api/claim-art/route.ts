@@ -130,7 +130,14 @@ export async function GET(request: NextRequest) {
       }
     } else {
       // Handle individual size download from Cloudinary or external URL
-      const highResAsset = size!.highResAsset;
+      if (!size) {
+        return NextResponse.json(
+          { error: "Size not found" },
+          { status: 404 }
+        );
+      }
+
+      const highResAsset = size.highResAsset;
 
       if (!highResAsset) {
         return NextResponse.json(
@@ -147,7 +154,7 @@ export async function GET(request: NextRequest) {
         : (highResAsset.externalUrl ?? null);
 
       contentType = "image/png";
-      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size!.label.replace(/[^a-zA-Z0-9]/g, "")}.png`;
+      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size.label.replace(/[^a-zA-Z0-9]/g, "")}.png`;
 
       if (!downloadUrl) {
         return NextResponse.json(

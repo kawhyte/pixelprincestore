@@ -29,10 +29,10 @@ export const artSize = defineType({
     }),
     defineField({
       name: 'fileName',
-      title: 'File Name',
+      title: 'File Name (Deprecated)',
       type: 'string',
-      description: 'Exact filename in private/free/ folder (e.g., "moon-4x5.png")',
-      validation: (Rule) => Rule.required(),
+      description: '[DEPRECATED] Legacy field - use highResAsset instead. Reference filename only.',
+      hidden: true,
     }),
     defineField({
       name: 'fileSize',

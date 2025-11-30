@@ -15,10 +15,46 @@ export const artSize = defineType({
     }),
     defineField({
       name: 'label',
-      title: 'Label',
+      title: 'Label (Legacy)',
       type: 'string',
-      description: 'Display label (e.g., "4" × 5"", "8" × 10"")',
+      description: '[LEGACY] Original label - use displayLabel and alternateLabel instead',
+      hidden: true,
+    }),
+    defineField({
+      name: 'displayLabel',
+      title: 'Display Label (Primary)',
+      type: 'string',
+      description: 'Primary display label in inches (e.g., "4″×5″", "8″×10″")',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'alternateLabel',
+      title: 'Alternate Label (CM)',
+      type: 'string',
+      description: 'Secondary label in centimeters (e.g., "10×13 cm", "20×25 cm")',
+    }),
+    defineField({
+      name: 'availability',
+      title: 'Availability Status',
+      type: 'string',
+      description: 'Is this size available for download or coming soon?',
+      options: {
+        list: [
+          { title: 'Available', value: 'available' },
+          { title: 'Coming Soon', value: 'coming-soon' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'available',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'comingSoonMessage',
+      title: 'Coming Soon Message',
+      type: 'string',
+      description: 'Message to display for coming soon sizes',
+      hidden: ({ parent }) => parent?.availability !== 'coming-soon',
+      initialValue: 'Premium sizes launching soon!',
     }),
     defineField({
       name: 'dimensions',
@@ -51,7 +87,7 @@ export const artSize = defineType({
       name: 'highResAsset',
       title: 'High Resolution Asset',
       type: 'object',
-      description: 'High-res downloadable file (Cloudinary or external link)',
+      description: '⚠️ OPTIONAL for "Coming Soon" sizes - Only required for "Available" sizes. Upload when ready to make downloadable.',
       components: {
         input: HighResAssetInput,
       },
@@ -104,8 +140,7 @@ export const artSize = defineType({
           name: 'filename',
           title: 'Filename',
           type: 'string',
-          description: 'Original filename for download (e.g., "moon-4x5.png")',
-          validation: (Rule) => Rule.required(),
+          description: 'Original filename for download (e.g., "moon-4x5.png"). Optional for "Coming Soon" sizes.',
         }),
         defineField({
           name: 'uploadedAt',
@@ -119,8 +154,17 @@ export const artSize = defineType({
   ],
   preview: {
     select: {
-      title: 'label',
+      title: 'displayLabel',
       subtitle: 'dimensions',
+      alternate: 'alternateLabel',
+      availability: 'availability',
+    },
+    prepare({ title, subtitle, alternate, availability }) {
+      const status = availability === 'coming-soon' ? '[Coming Soon]' : '[Available]';
+      return {
+        title: `${status} ${title || 'No label'}`,
+        subtitle: alternate ? `${subtitle} • ${alternate}` : subtitle,
+      };
     },
   },
 })

@@ -10,6 +10,12 @@ export interface HighResAsset {
   externalUrl?: string;
   filename: string;
   uploadedAt?: string;
+  // Auto-detected metadata from Cloudinary
+  metadata?: {
+    bytes?: number;
+    width?: number;
+    height?: number;
+  };
 }
 
 export interface AdminHighResUploadProps {
@@ -31,6 +37,8 @@ export interface CloudinaryUploadResult {
     secure_url?: string;
     original_filename?: string;
     bytes?: number;
+    width?: number;
+    height?: number;
     format?: string;
     public_id?: string;
   };

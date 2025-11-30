@@ -101,6 +101,12 @@ export function AdminHighResUpload({
             cloudinaryUrl: result.info.secure_url,
             filename: result.info.original_filename || 'download',
             uploadedAt: new Date().toISOString(),
+            // Capture metadata for auto-detection
+            metadata: {
+              bytes: result.info.bytes,
+              width: result.info.width,
+              height: result.info.height,
+            },
           };
 
           setAsset(newAsset);

@@ -13,7 +13,7 @@ import type { HighResAsset } from '@/lib/types/high-res-asset';
  * with Sanity's form system, handling value updates and persistence.
  */
 export function HighResAssetInput(props: ObjectInputProps) {
-  const { value, onChange } = props;
+  const { value, onChange, path } = props;
 
   // Convert Sanity value to our HighResAsset type
   const currentAsset: HighResAsset | null = value
@@ -27,12 +27,29 @@ export function HighResAssetInput(props: ObjectInputProps) {
     : null;
 
   /**
+   * Format bytes to human-readable MB
+   */
+  const formatFileSize = (bytes?: number): string => {
+    if (!bytes) return '0 MB';
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(1)} MB`;
+  };
+
+  /**
+   * Format dimensions
+   */
+  const formatDimensions = (width?: number, height?: number): string => {
+    if (!width || !height) return '';
+    return `${width} × ${height} px`;
+  };
+
+  /**
    * Handle asset changes from the AdminHighResUpload component
    */
   const handleAssetChange = useCallback(
     (newAsset: HighResAsset | null) => {
       if (newAsset) {
-        // Build patches array
+        // Build patches array for highResAsset fields
         const patches = [
           set(newAsset.assetType, ['assetType']),
           set(newAsset.filename, ['filename']),
@@ -46,6 +63,24 @@ export function HighResAssetInput(props: ObjectInputProps) {
         } else if (newAsset.assetType === 'external' && newAsset.externalUrl) {
           patches.push(set(newAsset.externalUrl, ['externalUrl']));
           patches.push(unset(['cloudinaryUrl']));
+        }
+
+        // AUTO-DETECTION: If metadata exists, also update parent fileSize and dimensions
+        if (newAsset.metadata && path.length > 0) {
+          const fileSize = formatFileSize(newAsset.metadata.bytes);
+          const dimensions = formatDimensions(newAsset.metadata.width, newAsset.metadata.height);
+
+          // Get the parent path (remove 'highResAsset' from the end)
+          const parentPath = path.slice(0, -1);
+
+          if (fileSize) {
+            // Patch sibling fileSize field
+            patches.push(set(fileSize, [...parentPath, 'fileSize']));
+          }
+          if (dimensions) {
+            // Patch sibling dimensions field
+            patches.push(set(dimensions, [...parentPath, 'dimensions']));
+          }
         }
 
         // Apply all patches

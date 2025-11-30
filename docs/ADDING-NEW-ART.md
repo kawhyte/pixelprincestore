@@ -7,9 +7,13 @@ This guide walks you through adding a new digital art print to The Pixel Prince 
 ## Overview
 
 Each art piece requires:
-- **4 high-resolution PNG files** (4"×5", 8"×10", 16"×20", 40×50cm)
+- **2 high-resolution PNG files** (4″×5″, 8″×10″) - **REQUIRED FOR LAUNCH**
+  - These are the free download sizes
+- **2 larger sizes** (16″×20″) - **OPTIONAL "Coming Soon"**
+  - No files needed until you're ready to make them available
+  - Just set availability to "coming-soon" in Sanity
 - **2 preview images** (card and detail) - uploaded to Sanity
-- **1 ZIP bundle** (all sizes combined)
+- **1 ZIP bundle** (available sizes only)
 - **Sanity Studio entry** - all metadata managed in CMS
 
 **Storage:**
@@ -33,38 +37,46 @@ Before starting, ensure you have:
 
 ### Step 2: Export Print-Ready Files
 
-Create 4 PNG files at these exact specifications:
+Create **at minimum 2 PNG files** for the available sizes:
 
-#### Size 1: 4"×5" (Small)
+#### Size 1: 4″×5″ (10×13 cm) - **REQUIRED** ✅
 ```bash
 # Dimensions: 1200 × 1500 px
 # DPI: 300
 # Format: PNG (lossless)
 # Target size: 1-2 MB
+# Status: Available for free download
+# File needed: YES
 ```
 
-#### Size 2: 8"×10" (Medium)
+#### Size 2: 8″×10″ (20×25 cm) - **REQUIRED** ✅
 ```bash
 # Dimensions: 2400 × 3000 px
 # DPI: 300
 # Format: PNG (lossless)
 # Target size: 2-4 MB
+# Status: Available for free download
+# File needed: YES
 ```
 
-#### Size 3: 16"×20" (Large)
+#### Size 3: 16″×20″ (40×50 cm) - **OPTIONAL** 🔜
 ```bash
 # Dimensions: 4800 × 6000 px
 # DPI: 300
 # Format: PNG (lossless)
 # Target size: 7-10 MB
+# Status: Coming soon (premium)
+# File needed: NO (upload later when ready)
 ```
 
-#### Size 4: 40×50cm (European)
+#### Size 4: 16″×20″ (40×50 cm) - **OPTIONAL** 🔜
 ```bash
 # Dimensions: 4724 × 5906 px
 # DPI: 300
 # Format: PNG (lossless)
 # Target size: 7-10 MB
+# Status: Coming soon (premium)
+# File needed: NO (upload later when ready)
 ```
 
 **File Naming Convention:**
@@ -162,12 +174,19 @@ For each of the 4 sizes, you'll see pre-filled fields. Update them:
 
 #### For Each Size (4x5, 8x10, 16x20, 40x50cm):
 
-1. **Label**: Already filled (e.g., "4" × 5"")
-2. **Dimensions**: Already filled (e.g., "1200 × 1500 px")
-3. **File Size**: Update with actual size (e.g., "1.2 MB")
-4. **Recommended For**: Already filled (e.g., "Small frames, desk display")
+1. **Display Label (Primary)**: Already filled with cm (e.g., "10×13 cm")
+2. **Alternate Label (Inches)**: Already filled (e.g., "4″×5″")
+3. **Availability Status**: Pre-set based on current availability
+   - 10×13 cm (4x5): **Available** ✅
+   - 20×25 cm (8x10): **Available** ✅
+   - 40×50 cm (16x20): **Coming Soon** 🔜
+   - 40×50 cm (40x50cm): **Coming Soon** 🔜
+4. **Coming Soon Message**: For coming-soon sizes, displays "Premium sizes launching soon!"
+5. **Dimensions**: Already filled (e.g., "1200 × 1500 px")
+6. **File Size**: Update with actual size (e.g., "1.2 MB")
+7. **Recommended For**: Already filled (e.g., "Small frames, desk display")
 
-5. **High Resolution Asset**: Click to expand
+8. **High Resolution Asset**: Click to expand
    - **Asset Type**: Choose "Cloudinary" or "External Link"
 
    **If Cloudinary:**
@@ -180,6 +199,8 @@ For each of the 4 sizes, you'll see pre-filled fields. Update them:
    - Choose "External Link"
    - Paste your direct download URL
    - Enter filename (e.g., "midnight-bloom-4x5.png")
+
+**Note:** Even for "Coming Soon" sizes, you can upload the files now. They will be displayed to users with a "Coming Soon" badge but won't be downloadable until you change their availability status to "Available".
 
 ---
 
@@ -222,9 +243,13 @@ https://your-domain.com/art/midnight-bloom
 #### 8b. Test Detail Page
 1. Click card to open product page
 2. Verify detail image displays
-3. Check all 4 sizes appear with "High-Res PNG" badges
-4. Verify descriptions display correctly
-5. Check tags render
+3. Check all 4 sizes appear:
+   - Available sizes (10×13 cm, 20×25 cm) show "High-Res PNG" badges
+   - Coming soon sizes (40×50 cm) show "Coming Soon" badges
+4. Verify size labels show both cm and inches (e.g., "10×13 cm" with "4″×5″" below)
+5. Verify descriptions display correctly
+6. Check tags render
+7. Verify coming-soon sizes are disabled (cannot be selected)
 
 #### 8c. Test Downloads
 1. **Select a size** (e.g., 8"×10")
@@ -300,10 +325,10 @@ Before marking complete, verify:
 - **Format**: JPEG or WebP (Sanity auto-optimizes)
 
 ### Print Files (Cloudinary/Drive)
-- **4"×5"**: 1-2 MB
-- **8"×10"**: 2-4 MB
-- **16"×20"**: 7-10 MB
-- **40×50cm**: 7-10 MB
+- **10×13 cm (4″×5″)**: 1-2 MB - **Available**
+- **20×25 cm (8″×10″)**: 2-4 MB - **Available**
+- **40×50 cm (16″×20″)**: 7-10 MB - **Coming Soon**
+- **40×50 cm (16″×20″)**: 7-10 MB - **Coming Soon**
 - **Format**: PNG (lossless)
 
 ### ZIP Bundle

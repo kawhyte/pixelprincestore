@@ -23,11 +23,15 @@ export interface HighResAsset {
 
 export interface ArtSize {
   id: string
-  label: string
+  label?: string // Legacy field, use displayLabel instead
+  displayLabel: string // Primary label in cm
+  alternateLabel?: string // Secondary label in inches
   dimensions: string
   fileName: string
   fileSize: string
   recommendedFor?: string
+  availability: 'available' | 'coming-soon'
+  comingSoonMessage?: string
   highResAsset?: HighResAsset
 }
 
@@ -83,10 +87,14 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     sizes[]{
       id,
       label,
+      displayLabel,
+      alternateLabel,
       dimensions,
       fileName,
       fileSize,
       recommendedFor,
+      availability,
+      comingSoonMessage,
       highResAsset
     },
     allSizesZip,
@@ -135,10 +143,14 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     sizes[]{
       id,
       label,
+      displayLabel,
+      alternateLabel,
       dimensions,
       fileName,
       fileSize,
       recommendedFor,
+      availability,
+      comingSoonMessage,
       highResAsset
     },
     allSizesZip,

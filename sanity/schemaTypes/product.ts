@@ -87,35 +87,45 @@ export const product = defineType({
       initialValue: [
         {
           id: '4x5',
-          label: '4" × 5"',
+          displayLabel: '4″×5″',
+          alternateLabel: '10×13 cm',
           dimensions: '1200 × 1500 px',
           fileName: '', // User must fill this in
           fileSize: '1.2 MB',
           recommendedFor: 'Small frames, desk display',
+          availability: 'available',
         },
         {
           id: '8x10',
-          label: '8" × 10"',
+          displayLabel: '8″×10″',
+          alternateLabel: '20×25 cm',
           dimensions: '2400 × 3000 px',
           fileName: '', // User must fill this in
           fileSize: '2.8 MB',
           recommendedFor: 'Medium frames, home decor',
+          availability: 'available',
         },
         {
           id: '16x20',
-          label: '16" × 20"',
+          displayLabel: '16″×20″',
+          alternateLabel: '40×50 cm',
           dimensions: '4800 × 6000 px',
           fileName: '', // User must fill this in
           fileSize: '8.5 MB',
           recommendedFor: 'Large frames, statement pieces',
+          availability: 'coming-soon',
+          comingSoonMessage: 'Premium sizes launching soon!',
         },
         {
           id: '40x50cm',
-          label: '40 × 50 cm',
+          displayLabel: '16″×20″',
+          alternateLabel: '40×50 cm',
           dimensions: '4724 × 5906 px',
           fileName: '', // User must fill this in
           fileSize: '8.2 MB',
           recommendedFor: 'Gallery-quality, professional display',
+          availability: 'coming-soon',
+          comingSoonMessage: 'Premium sizes launching soon!',
         },
       ],
     }),
@@ -129,12 +139,8 @@ export const product = defineType({
     defineField({
       name: 'zipUrl',
       title: 'ZIP Download URL',
-      type: 'string',
+      type: 'url',
       description: 'Direct URL to the ZIP file on Cloudinary or Google Drive containing all sizes',
-      validation: (Rule) => Rule.uri({
-        allowRelative: false,
-        scheme: ['https', 'http']
-      }),
     }),
     defineField({
       name: 'tags',

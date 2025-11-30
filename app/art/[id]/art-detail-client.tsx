@@ -20,9 +20,12 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const tracking = useDownloadTracking();
 
-  // Select first size by default
+  // Select first available size by default
   if (!selectedSize && art.sizes.length > 0) {
-    setSelectedSize(art.sizes[0]);
+    const firstAvailable = art.sizes.find(size => size.availability === 'available');
+    if (firstAvailable) {
+      setSelectedSize(firstAvailable);
+    }
   }
 
   const triggerConfetti = () => {
@@ -97,7 +100,7 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${art.title.replace(/\s+/g, "-")}-${selectedSize.label.replace(/[^a-zA-Z0-9]/g, "")}.png`;
+      a.download = `${art.title.replace(/\s+/g, "-")}-${selectedSize.id}.png`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -106,7 +109,7 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
       // Success! Trigger confetti and toast
       triggerConfetti();
       toast.success("🎉 Download successful!", {
-        description: `${art.title} (${selectedSize.label}) is now in your downloads folder.`,
+        description: `${art.title} (${selectedSize.displayLabel || selectedSize.label}) is now in your downloads folder.`,
         duration: 6000,
       });
 
@@ -251,12 +254,18 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
               <div className="grid gap-3 sm:grid-cols-2">
                 {art.sizes.map((size) => {
                   const isDownloaded = tracking.hasDownloadedSize(art.id, size.id);
+                  const isComingSoon = size.availability === 'coming-soon';
+                  const isAvailable = size.availability === 'available';
+
                   return (
                     <button
                       key={size.id}
-                      onClick={() => setSelectedSize(size)}
+                      onClick={() => isAvailable ? setSelectedSize(size) : null}
+                      disabled={isComingSoon}
                       className={`rounded-xl border-2 p-4 text-left transition-all ${
-                        selectedSize?.id === size.id
+                        isComingSoon
+                          ? "cursor-not-allowed border-border bg-muted/30 opacity-60"
+                          : selectedSize?.id === size.id
                           ? "border-sage-500 bg-sage-50 shadow-md"
                           : isDownloaded
                           ? "border-lavender-200 bg-lavender-50/50 opacity-75"
@@ -265,17 +274,29 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className={`font-semibold ${isDownloaded ? "text-muted-foreground" : "text-charcoal"}`}>
-                            {size.label}
-                          </span>
-                          {selectedSize?.id === size.id && !isDownloaded && (
+                          <div className="flex flex-col">
+                            <span className={`font-semibold ${isDownloaded || isComingSoon ? "text-muted-foreground" : "text-charcoal"}`}>
+                              {size.displayLabel || size.label}
+                            </span>
+                            {size.alternateLabel && (
+                              <span className="text-xs text-muted-foreground">
+                                {size.alternateLabel}
+                              </span>
+                            )}
+                          </div>
+                          {isComingSoon && (
+                            <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+                              Coming Soon
+                            </span>
+                          )}
+                          {!isComingSoon && selectedSize?.id === size.id && !isDownloaded && (
                             <div className="h-5 w-5 rounded-full bg-sage-500 flex items-center justify-center">
                               <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
                           )}
-                          {isDownloaded && (
+                          {!isComingSoon && isDownloaded && (
                             <span className="text-xs font-medium text-sage-600">
                               Downloaded ✓
                             </span>
@@ -284,7 +305,12 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                         <p className="text-sm text-muted-foreground">
                           {size.dimensions}
                         </p>
-                        {size.recommendedFor && (
+                        {isComingSoon && size.comingSoonMessage && (
+                          <p className="text-xs font-medium text-amber-600">
+                            {size.comingSoonMessage}
+                          </p>
+                        )}
+                        {!isComingSoon && size.recommendedFor && (
                           <p className="text-xs text-sage-600">
                             {size.recommendedFor}
                           </p>
@@ -293,10 +319,12 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                           <p className="text-xs font-medium text-charcoal">
                             {size.fileSize}
                           </p>
-                          <div className="flex items-center gap-1 text-xs font-medium text-lavender-600">
-                            <Sparkles className="h-3 w-3" />
-                            <span>High-Res PNG</span>
-                          </div>
+                          {!isComingSoon && (
+                            <div className="flex items-center gap-1 text-xs font-medium text-lavender-600">
+                              <Sparkles className="h-3 w-3" />
+                              <span>High-Res PNG</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </button>
@@ -309,7 +337,7 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
             <div className="space-y-3">
               <Button
                 onClick={handleDownloadSize}
-                disabled={!selectedSize || isDownloading || tracking.remaining === 0}
+                disabled={!selectedSize || selectedSize.availability !== 'available' || isDownloading || tracking.remaining === 0}
                 className="w-full rounded-2xl bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
@@ -327,7 +355,7 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                   <>
                     <Download className="h-5 w-5" />
                     <span className="ml-2">
-                      Download {selectedSize?.label || "Selected Size"}
+                      Download {selectedSize?.displayLabel || selectedSize?.label || "Selected Size"}
                     </span>
                   </>
                 )}
@@ -380,10 +408,10 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                 📦 ZIP includes all available sizes:
               </p>
               <ul className="space-y-1 text-sm text-soft-charcoal">
-                {art.sizes.map((size) => (
+                {art.sizes.filter(size => size.availability === 'available').map((size) => (
                   <li key={size.id} className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-sage-500" />
-                    {size.label} - {size.dimensions} ({size.fileSize})
+                    {size.displayLabel || size.label} {size.alternateLabel && `(${size.alternateLabel})`} - {size.dimensions} ({size.fileSize})
                   </li>
                 ))}
               </ul>

@@ -13,13 +13,13 @@
   --color-charcoal: #2a2a2a;
   --color-soft-charcoal: #4a4a4a;
 
-  /* Accent Colors - Pastel Earth Tones */
-  --color-sage-50: #f6f8f4;
-  --color-sage-100: #e8ede4;
-  --color-sage-200: #d1dcc9;
-  --color-sage-300: #b5c9a5;
-  --color-sage-400: #96b381;
-  --color-sage-500: #7a9d66;
+  /* Accent Colors - Cornflower Blue (Updated from Sage Green) */
+  --color-sage-50: #f0f4fb;
+  --color-sage-100: #e1eafa;
+  --color-sage-200: #c3d5f5;
+  --color-sage-300: #94b5ec;
+  --color-sage-400: #5b8fdb;
+  --color-sage-500: #4a7bc7;
 
   --color-clay-50: #faf7f5;
   --color-clay-100: #f2ebe6;
@@ -78,8 +78,8 @@
   --popover: #fdfcfa;
   --popover-foreground: #2a2a2a;
 
-  /* Primary: Sage green accent */
-  --primary: #7a9d66;
+  /* Primary: Cornflower blue accent */
+  --primary: #5b8fdb;
   --primary-foreground: #ffffff;
 
   /* Secondary: Clay tones */
@@ -87,7 +87,7 @@
   --secondary-foreground: #2a2a2a;
 
   /* Muted: Soft neutrals */
-  --muted: #e8ede4;
+  --muted: #e1eafa;
   --muted-foreground: #6b6b6b;
 
   /* Accent: Lavender highlights */
@@ -97,10 +97,10 @@
   --destructive: #c05555;
   --destructive-foreground: #ffffff;
 
-  /* Borders and inputs with warmth */
-  --border: #d1dcc9;
-  --input: #d1dcc9;
-  --ring: #96b381;
+  /* Borders and inputs with blue tint */
+  --border: #c3d5f5;
+  --input: #c3d5f5;
+  --ring: #5b8fdb;
 }
 
 .dark {
@@ -114,7 +114,7 @@
   --popover: #2a2a2a;
   --popover-foreground: #f3f1e8;
 
-  --primary: #96b381;
+  --primary: #94b5ec;
   --primary-foreground: #1a1a1a;
 
   --secondary: #3a3a3a;
@@ -131,7 +131,7 @@
 
   --border: #3a3a3a;
   --input: #3a3a3a;
-  --ring: #7a9d66;
+  --ring: #5b8fdb;
 }
 
 @layer base {

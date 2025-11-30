@@ -121,10 +121,20 @@ export const product = defineType({
     }),
     defineField({
       name: 'allSizesZip',
-      title: 'All Sizes ZIP Filename',
+      title: 'All Sizes ZIP Filename (Deprecated)',
       type: 'string',
-      description: 'Filename for the ZIP containing all sizes (e.g., "moon.zip")',
-      validation: (Rule) => Rule.required(),
+      description: '[DEPRECATED] Use zipUrl instead. Old filename for local storage.',
+      hidden: true,
+    }),
+    defineField({
+      name: 'zipUrl',
+      title: 'ZIP Download URL',
+      type: 'string',
+      description: 'Direct URL to the ZIP file on Cloudinary or Google Drive containing all sizes',
+      validation: (Rule) => Rule.uri({
+        allowRelative: false,
+        scheme: ['https', 'http']
+      }),
     }),
     defineField({
       name: 'tags',

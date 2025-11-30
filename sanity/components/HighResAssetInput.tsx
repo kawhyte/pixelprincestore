@@ -32,19 +32,24 @@ export function HighResAssetInput(props: ObjectInputProps) {
   const handleAssetChange = useCallback(
     (newAsset: HighResAsset | null) => {
       if (newAsset) {
-        // Set the new asset value in Sanity
-        onChange([
+        // Build patches array
+        const patches = [
           set(newAsset.assetType, ['assetType']),
           set(newAsset.filename, ['filename']),
           set(newAsset.uploadedAt || new Date().toISOString(), ['uploadedAt']),
-          // Conditionally set URL based on type
-          newAsset.assetType === 'cloudinary' && newAsset.cloudinaryUrl
-            ? set(newAsset.cloudinaryUrl, ['cloudinaryUrl'])
-            : unset(['cloudinaryUrl']),
-          newAsset.assetType === 'external' && newAsset.externalUrl
-            ? set(newAsset.externalUrl, ['externalUrl'])
-            : unset(['externalUrl']),
-        ]);
+        ];
+
+        // Conditionally add URL patches based on type
+        if (newAsset.assetType === 'cloudinary' && newAsset.cloudinaryUrl) {
+          patches.push(set(newAsset.cloudinaryUrl, ['cloudinaryUrl']));
+          patches.push(unset(['externalUrl']));
+        } else if (newAsset.assetType === 'external' && newAsset.externalUrl) {
+          patches.push(set(newAsset.externalUrl, ['externalUrl']));
+          patches.push(unset(['cloudinaryUrl']));
+        }
+
+        // Apply all patches
+        onChange(patches);
       } else {
         // Clear all values if asset is removed
         onChange([

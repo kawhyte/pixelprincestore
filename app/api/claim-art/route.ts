@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createReadStream, existsSync } from "fs";
-import { stat } from "fs/promises";
-import path from "path";
 import { getProductBySlug } from "@/sanity/lib/client";
 import { DOWNLOAD_COOKIE_NAME, COOKIE_MAX_AGE } from "@/config/free-art";
 import {
@@ -18,7 +15,7 @@ import {
  * This route:
  * 1. Validates artId and sizeId (or type=all for ZIP)
  * 2. Checks weekly download limit (3 per week)
- * 3. Streams the file from private/free/ folder
+ * 3. Streams the file from Cloudinary or external URL (Google Drive/Dropbox)
  * 4. Updates cookie with download record
  *
  * Query Parameters:
@@ -111,71 +108,100 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Determine file path
-    let fileName: string;
+    // Determine download URL and file details
+    let downloadUrl: string | null = null;
     let contentType: string;
     let downloadName: string;
 
     if (isZip) {
-      fileName = artPiece.allSizesZip;
+      // Handle ZIP download from Cloudinary or external URL
+      downloadUrl = artPiece.zipUrl || null;
       contentType = "application/zip";
       downloadName = `${artPiece.title.replace(/\s+/g, "-")}-all-sizes.zip`;
+
+      if (!downloadUrl) {
+        return NextResponse.json(
+          {
+            error: "ZIP file not available. Please contact support.",
+            details: downloadLimitDisabled ? "Missing zipUrl in artwork data" : undefined
+          },
+          { status: 404 }
+        );
+      }
     } else {
-      fileName = size!.fileName;
+      // Handle individual size download from Cloudinary or external URL
+      const highResAsset = size!.highResAsset;
+
+      if (!highResAsset) {
+        return NextResponse.json(
+          {
+            error: "This size is not available for download. Please contact support.",
+            details: downloadLimitDisabled ? "Missing highResAsset in size data" : undefined
+          },
+          { status: 404 }
+        );
+      }
+
+      downloadUrl = highResAsset.assetType === 'cloudinary'
+        ? highResAsset.cloudinaryUrl
+        : highResAsset.externalUrl;
+
       contentType = "image/png";
       downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size!.label.replace(/[^a-zA-Z0-9]/g, "")}.png`;
+
+      if (!downloadUrl) {
+        return NextResponse.json(
+          {
+            error: "File URL not configured. Please contact support.",
+            details: downloadLimitDisabled ? "Missing URL in highResAsset" : undefined
+          },
+          { status: 404 }
+        );
+      }
     }
 
-    const filePath = path.join(process.cwd(), "private", "free", fileName);
+    // Fetch the file from the external URL
+    let response: NextResponse;
+    try {
+      const fileResponse = await fetch(downloadUrl);
 
-    // Security: Check if file exists
-    if (!existsSync(filePath)) {
-      console.error(`[CLAIM-ART] File not found: ${filePath}`);
-      return NextResponse.json(
-        {
-          error: "File not available. Please contact support.",
-          details: downloadLimitDisabled ? `Path: ${filePath}` : undefined
+      if (!fileResponse.ok) {
+        console.error(`[CLAIM-ART] Failed to fetch from URL: ${downloadUrl}`);
+        return NextResponse.json(
+          {
+            error: "Unable to access file. Please try again later or contact support.",
+            details: downloadLimitDisabled ? `URL returned status: ${fileResponse.status}` : undefined
+          },
+          { status: 500 }
+        );
+      }
+
+      // Get the content as a stream
+      const fileStream = fileResponse.body;
+
+      if (!fileStream) {
+        return NextResponse.json(
+          { error: "Unable to stream file. Please try again." },
+          { status: 500 }
+        );
+      }
+
+      // Create response with the stream
+      response = new NextResponse(fileStream, {
+        status: 200,
+        headers: {
+          "Content-Type": contentType,
+          "Content-Disposition": `attachment; filename="${downloadName}"`,
+          "Cache-Control": "no-cache",
         },
+      });
+    } catch (error) {
+      console.error(`[CLAIM-ART] Error fetching from URL:`, error);
+      return NextResponse.json(
+        { error: "Unable to download file. Please check your connection and try again." },
         { status: 500 }
       );
     }
-
-    // Get file stats for Content-Length header
-    const fileStats = await stat(filePath);
-
-    // Create a readable stream
-    const fileStream = createReadStream(filePath);
-
-    // Convert Node.js stream to Web ReadableStream
-    const readableStream = new ReadableStream({
-      start(controller) {
-        fileStream.on("data", (chunk) => {
-          controller.enqueue(new Uint8Array(chunk as Buffer));
-        });
-
-        fileStream.on("end", () => {
-          controller.close();
-        });
-
-        fileStream.on("error", (error) => {
-          controller.error(error);
-        });
-      },
-      cancel() {
-        fileStream.destroy();
-      },
-    });
-
-    // Create response with file stream
-    const response = new NextResponse(readableStream, {
-      status: 200,
-      headers: {
-        "Content-Type": contentType,
-        "Content-Length": fileStats.size.toString(),
-        "Content-Disposition": `attachment; filename="${downloadName}"`,
-        "Cache-Control": "no-cache",
-      },
-    });
 
     // Update cookie with download record (unless disabled)
     if (!downloadLimitDisabled) {

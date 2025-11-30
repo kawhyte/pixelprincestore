@@ -44,7 +44,8 @@ export interface SanityProduct {
   previewImage: any
   detailImage?: any
   sizes: ArtSize[]
-  allSizesZip: string
+  allSizesZip: string // Deprecated: use zipUrl
+  zipUrl?: string // Cloudinary or Google Drive URL for ZIP
   tags?: string[]
   category?: string
 }
@@ -58,7 +59,8 @@ export interface FreeArt {
   previewImage: string
   detailImage?: string
   sizes: ArtSize[]
-  allSizesZip: string
+  allSizesZip: string // Deprecated: use zipUrl
+  zipUrl?: string // Cloudinary or Google Drive URL for ZIP
   tags: string[]
   category?: string
 }
@@ -88,6 +90,7 @@ export async function getAllProducts(): Promise<FreeArt[]> {
       highResAsset
     },
     allSizesZip,
+    zipUrl,
     tags,
     category
   }`
@@ -109,6 +112,7 @@ export async function getAllProducts(): Promise<FreeArt[]> {
       : undefined,
     sizes: product.sizes || [],
     allSizesZip: product.allSizesZip,
+    zipUrl: product.zipUrl,
     tags: product.tags || [],
     category: product.category,
   }))
@@ -138,6 +142,7 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
       highResAsset
     },
     allSizesZip,
+    zipUrl,
     tags,
     category
   }`
@@ -160,6 +165,7 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
       : undefined,
     sizes: product.sizes || [],
     allSizesZip: product.allSizesZip,
+    zipUrl: product.zipUrl,
     tags: product.tags || [],
     category: product.category,
   }

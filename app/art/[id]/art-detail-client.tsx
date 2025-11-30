@@ -3,14 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Download, Package } from "lucide-react";
+import { ArrowLeft, Download, Package, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
 import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { useDownloadTracking } from "@/lib/use-download-tracking";
-import { CustomerDownloadButton } from "@/components/admin/HighResManager";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -290,9 +289,15 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                             {size.recommendedFor}
                           </p>
                         )}
-                        <p className="text-xs font-medium text-charcoal">
-                          {size.fileSize}
-                        </p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-medium text-charcoal">
+                            {size.fileSize}
+                          </p>
+                          <div className="flex items-center gap-1 text-xs font-medium text-lavender-600">
+                            <Sparkles className="h-3 w-3" />
+                            <span>High-Res PNG</span>
+                          </div>
+                        </div>
                       </div>
                     </button>
                   );
@@ -362,85 +367,23 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
               )}
             </div>
 
-            {/* High-Res Downloads Section */}
-            {art.sizes.some((size) => size.highResAsset) && (
-              <div className="space-y-4 rounded-2xl border-2 border-lavender-300 bg-lavender-50 p-6">
-                <div className="flex items-start gap-3">
-                  <div className="rounded-full bg-lavender-500 p-2">
-                    <Download className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="mb-1 font-serif text-xl font-semibold text-charcoal">
-                      High-Resolution Downloads
-                    </h3>
-                    <p className="text-sm text-soft-charcoal">
-                      Professional quality files for printing and commercial use
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {art.sizes.map((size) => {
-                    if (!size.highResAsset) return null;
-
-                    const downloadUrl =
-                      size.highResAsset.assetType === 'cloudinary'
-                        ? size.highResAsset.cloudinaryUrl
-                        : size.highResAsset.externalUrl;
-
-                    if (!downloadUrl) return null;
-
-                    return (
-                      <div
-                        key={size.id}
-                        className="flex items-center justify-between rounded-xl border border-lavender-200 bg-white p-4"
-                      >
-                        <div className="flex-1">
-                          <p className="font-semibold text-charcoal">
-                            {size.label}
-                          </p>
-                          <p className="text-sm text-soft-charcoal">
-                            {size.dimensions}
-                          </p>
-                          <p className="mt-1 text-xs text-lavender-600">
-                            {size.highResAsset.assetType === 'cloudinary'
-                              ? 'Cloudinary CDN'
-                              : 'External Link'}
-                          </p>
-                        </div>
-                        <CustomerDownloadButton
-                          url={downloadUrl}
-                          filename={size.highResAsset.filename}
-                          size="sm"
-                          variant="primary"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="rounded-lg bg-white p-4">
-                  <p className="text-xs text-soft-charcoal">
-                    💡 <strong>Pro Tip:</strong> High-res files are perfect for large prints,
-                    commercial projects, and professional use. No download limits on these files!
-                  </p>
-                </div>
-              </div>
-            )}
-
             {/* Info Banner */}
             <div className="rounded-2xl border border-sage-200 bg-sage-50 p-6">
-              <h3 className="mb-2 font-semibold text-charcoal">
-                📦 What's in the ZIP?
+              <h3 className="mb-2 flex items-center gap-2 font-semibold text-charcoal">
+                <Sparkles className="h-5 w-5 text-sage-600" />
+                High-Resolution Printable Files
               </h3>
               <p className="mb-3 text-sm text-soft-charcoal">
-                The ZIP file includes all 4 sizes plus instructions for opening on Mac and Windows.
+                All downloads are professional quality PNG files, perfect for printing at home or at your local print shop.
+              </p>
+              <p className="mb-3 text-sm font-semibold text-charcoal">
+                📦 ZIP includes all available sizes:
               </p>
               <ul className="space-y-1 text-sm text-soft-charcoal">
                 {art.sizes.map((size) => (
                   <li key={size.id} className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-sage-500" />
-                    {size.label} ({size.fileSize})
+                    {size.label} - {size.dimensions} ({size.fileSize})
                   </li>
                 ))}
               </ul>

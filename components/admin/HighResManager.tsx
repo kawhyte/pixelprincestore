@@ -16,6 +16,7 @@ import type {
   HighResAsset,
   CloudinaryUploadResult
 } from '@/lib/types/high-res-asset';
+import { extractCloudinaryPublicId } from '@/lib/cloudinary-utils';
 
 /**
  * AdminHighResUpload Component
@@ -52,9 +53,22 @@ export function AdminHighResUpload({
    * If replacing an existing Cloudinary asset, delete the old one first
    */
   const openCloudinaryWidget = async () => {
+    console.log('[HighResManager] Opening Cloudinary widget. Current asset:', asset);
+
     // If replacing an existing Cloudinary asset, delete it first
-    if (asset?.assetType === 'cloudinary' && asset.cloudinaryPublicId) {
-      await deleteFromCloudinary(asset.cloudinaryPublicId);
+    if (asset?.assetType === 'cloudinary') {
+      // Try to get public_id from the stored field or extract from URL
+      let publicId = asset.cloudinaryPublicId;
+
+      if (!publicId && asset.cloudinaryUrl) {
+        console.log('[HighResManager] No public_id stored, extracting from URL...');
+        publicId = extractCloudinaryPublicId(asset.cloudinaryUrl) || undefined;
+      }
+
+      if (publicId) {
+        console.log('[HighResManager] Deleting old Cloudinary asset before uploading new one');
+        await deleteFromCloudinary(publicId);
+      }
     }
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -163,6 +177,8 @@ export function AdminHighResUpload({
    * Delete asset from Cloudinary
    */
   const deleteFromCloudinary = async (publicId: string) => {
+    console.log('[HighResManager] Attempting to delete asset with public_id:', publicId);
+
     try {
       const response = await fetch('/api/cloudinary/delete', {
         method: 'DELETE',
@@ -173,17 +189,20 @@ export function AdminHighResUpload({
       });
 
       const result = await response.json();
+      console.log('[HighResManager] Deletion API response:', { status: response.status, result });
 
       if (!response.ok) {
         console.error('[HighResManager] Failed to delete from Cloudinary:', result);
+        alert(`Failed to delete from Cloudinary: ${result.error || 'Unknown error'}\nCheck console for details.`);
         // Don't throw - we still want to allow the user to proceed
         return false;
       }
 
-      console.log('[HighResManager] Successfully deleted from Cloudinary:', publicId);
+      console.log('[HighResManager] ✅ Successfully deleted from Cloudinary:', publicId);
       return true;
     } catch (error) {
       console.error('[HighResManager] Error deleting from Cloudinary:', error);
+      alert(`Error deleting from Cloudinary: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     }
   };
@@ -193,9 +212,27 @@ export function AdminHighResUpload({
    * If the current asset is from Cloudinary, delete it first
    */
   const handleReset = async () => {
+    console.log('[HighResManager] Reset called. Current asset:', asset);
+
     // If current asset is from Cloudinary, delete it
-    if (asset?.assetType === 'cloudinary' && asset.cloudinaryPublicId) {
-      await deleteFromCloudinary(asset.cloudinaryPublicId);
+    if (asset?.assetType === 'cloudinary') {
+      // Try to get public_id from the stored field or extract from URL
+      let publicId = asset.cloudinaryPublicId;
+
+      if (!publicId && asset.cloudinaryUrl) {
+        console.log('[HighResManager] No public_id stored, extracting from URL...');
+        publicId = extractCloudinaryPublicId(asset.cloudinaryUrl) || undefined;
+        console.log('[HighResManager] Extracted public_id:', publicId);
+      }
+
+      if (publicId) {
+        console.log('[HighResManager] Deleting Cloudinary asset before reset');
+        await deleteFromCloudinary(publicId);
+      } else {
+        console.warn('[HighResManager] Could not determine public_id for deletion');
+      }
+    } else {
+      console.log('[HighResManager] No Cloudinary asset to delete. Asset type:', asset?.assetType);
     }
 
     setAsset(null);

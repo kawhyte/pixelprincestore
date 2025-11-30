@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { set, unset } from 'sanity';
+import { set, unset, type PatchEvent } from 'sanity';
 import { ObjectInputProps } from 'sanity';
 import { AdminHighResUpload } from '@/components/admin/HighResManager';
 import type { HighResAsset } from '@/lib/types/high-res-asset';
@@ -50,7 +50,7 @@ export function HighResAssetInput(props: ObjectInputProps) {
     (newAsset: HighResAsset | null) => {
       if (newAsset) {
         // Build patches array for highResAsset fields
-        const patches = [
+        const patches: Array<ReturnType<typeof set> | ReturnType<typeof unset>> = [
           set(newAsset.assetType, ['assetType']),
           set(newAsset.filename, ['filename']),
           set(newAsset.uploadedAt || new Date().toISOString(), ['uploadedAt']),

@@ -93,13 +93,13 @@ export default function Home() {
               Featured Collection
             </h2>
             <p className="mt-4 text-base text-soft-charcoal sm:text-lg">
-              Handpicked digital art to elevate your space
+              Handpicked Free digital art to elevate your space
             </p>
           </div>
 
-          {/* Product Grid - Responsive: 1 col mobile, 2 tablet, 3 desktop, 4 wide */}
-          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
-            {sampleProducts.map((product) => (
+          {/* Product Grid - Responsive: 1 col mobile, 2 tablet, 4 desktop (showing 4 items) */}
+          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
+            {sampleProducts.slice(0, 4).map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
           </div>

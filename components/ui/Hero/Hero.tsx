@@ -32,15 +32,15 @@ export default function Hero() {
           {/* Left: Text Content */}
           <div className="space-y-8">
             {/* Eyebrow */}
-            <div className="inline-block">
+            {/* <div className="inline-block">
               <span className="rounded-full bg-sage-100 px-4 py-2 text-sm font-medium text-sage-500">
                 The Pixel Prince
               </span>
-            </div>
+            </div> */}
 
             {/* Headline - Massive Serif */}
             <h1 className="text-balance font-serif text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
-               Digital Download Wall Art
+               Free Digital Download Wall Art
             </h1>
 
             {/* Subheadline */}

@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
         : (highResAsset.externalUrl ?? null);
 
       contentType = "image/png";
-      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size.label.replace(/[^a-zA-Z0-9]/g, "")}.png`;
+      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size.displayLabel.replace(/[^a-zA-Z0-9]/g, "")}.png`;
 
       if (!downloadUrl) {
         return NextResponse.json(

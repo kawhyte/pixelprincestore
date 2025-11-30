@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { HighResAssetInput } from '../components/HighResAssetInput'
 
 export const artSize = defineType({
   name: 'artSize',
@@ -51,6 +52,9 @@ export const artSize = defineType({
       title: 'High Resolution Asset',
       type: 'object',
       description: 'High-res downloadable file (Cloudinary or external link)',
+      components: {
+        input: HighResAssetInput,
+      },
       fields: [
         defineField({
           name: 'assetType',

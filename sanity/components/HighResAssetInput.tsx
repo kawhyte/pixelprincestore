@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { set, unset, type PatchEvent } from 'sanity';
+import { set, unset } from 'sanity';
 import { ObjectInputProps } from 'sanity';
 import { AdminHighResUpload } from '@/components/admin/HighResManager';
 import type { HighResAsset } from '@/lib/types/high-res-asset';

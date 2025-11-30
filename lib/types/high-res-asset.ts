@@ -7,6 +7,7 @@ export type AssetType = 'cloudinary' | 'external';
 export interface HighResAsset {
   assetType: AssetType;
   cloudinaryUrl?: string;
+  cloudinaryPublicId?: string; // For deletion purposes
   externalUrl?: string;
   filename: string;
   uploadedAt?: string;

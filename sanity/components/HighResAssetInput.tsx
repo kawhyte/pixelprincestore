@@ -20,6 +20,7 @@ export function HighResAssetInput(props: ObjectInputProps) {
     ? {
         assetType: value.assetType as 'cloudinary' | 'external',
         cloudinaryUrl: value.cloudinaryUrl,
+        cloudinaryPublicId: value.cloudinaryPublicId,
         externalUrl: value.externalUrl,
         filename: value.filename,
         uploadedAt: value.uploadedAt,
@@ -59,10 +60,14 @@ export function HighResAssetInput(props: ObjectInputProps) {
         // Conditionally add URL patches based on type
         if (newAsset.assetType === 'cloudinary' && newAsset.cloudinaryUrl) {
           patches.push(set(newAsset.cloudinaryUrl, ['cloudinaryUrl']));
+          if (newAsset.cloudinaryPublicId) {
+            patches.push(set(newAsset.cloudinaryPublicId, ['cloudinaryPublicId']));
+          }
           patches.push(unset(['externalUrl']));
         } else if (newAsset.assetType === 'external' && newAsset.externalUrl) {
           patches.push(set(newAsset.externalUrl, ['externalUrl']));
           patches.push(unset(['cloudinaryUrl']));
+          patches.push(unset(['cloudinaryPublicId']));
         }
 
         // AUTO-DETECTION: If metadata exists, also update parent fileSize and dimensions

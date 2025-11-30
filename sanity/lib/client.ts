@@ -16,6 +16,7 @@ export const client = createClient({
 export interface HighResAsset {
   assetType: 'cloudinary' | 'external'
   cloudinaryUrl?: string
+  cloudinaryPublicId?: string
   externalUrl?: string
   filename: string
   uploadedAt?: string

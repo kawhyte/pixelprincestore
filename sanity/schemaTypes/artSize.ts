@@ -122,6 +122,14 @@ export const artSize = defineType({
             }),
         }),
         defineField({
+          name: 'cloudinaryPublicId',
+          title: 'Cloudinary Public ID',
+          type: 'string',
+          description: 'Public ID for deletion (auto-populated)',
+          hidden: true,
+          readOnly: true,
+        }),
+        defineField({
           name: 'externalUrl',
           title: 'External Link',
           type: 'url',

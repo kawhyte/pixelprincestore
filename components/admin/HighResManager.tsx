@@ -49,8 +49,13 @@ export function AdminHighResUpload({
 
   /**
    * Open Cloudinary Upload Widget
+   * If replacing an existing Cloudinary asset, delete the old one first
    */
-  const openCloudinaryWidget = () => {
+  const openCloudinaryWidget = async () => {
+    // If replacing an existing Cloudinary asset, delete it first
+    if (asset?.assetType === 'cloudinary' && asset.cloudinaryPublicId) {
+      await deleteFromCloudinary(asset.cloudinaryPublicId);
+    }
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
@@ -99,6 +104,7 @@ export function AdminHighResUpload({
           const newAsset: HighResAsset = {
             assetType: 'cloudinary',
             cloudinaryUrl: result.info.secure_url,
+            cloudinaryPublicId: result.info.public_id, // Store for deletion
             filename: result.info.original_filename || 'download',
             uploadedAt: new Date().toISOString(),
             // Capture metadata for auto-detection
@@ -154,9 +160,44 @@ export function AdminHighResUpload({
   };
 
   /**
-   * Reset/Clear Asset
+   * Delete asset from Cloudinary
    */
-  const handleReset = () => {
+  const deleteFromCloudinary = async (publicId: string) => {
+    try {
+      const response = await fetch('/api/cloudinary/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ publicId }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('[HighResManager] Failed to delete from Cloudinary:', result);
+        // Don't throw - we still want to allow the user to proceed
+        return false;
+      }
+
+      console.log('[HighResManager] Successfully deleted from Cloudinary:', publicId);
+      return true;
+    } catch (error) {
+      console.error('[HighResManager] Error deleting from Cloudinary:', error);
+      return false;
+    }
+  };
+
+  /**
+   * Reset/Clear Asset
+   * If the current asset is from Cloudinary, delete it first
+   */
+  const handleReset = async () => {
+    // If current asset is from Cloudinary, delete it
+    if (asset?.assetType === 'cloudinary' && asset.cloudinaryPublicId) {
+      await deleteFromCloudinary(asset.cloudinaryPublicId);
+    }
+
     setAsset(null);
     setExternalUrl('');
     setFilename('');

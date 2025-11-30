@@ -14,6 +14,8 @@ import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
 
 export default defineConfig({
+  name: 'default',
+  title: 'The Pixel Prince Store',
   basePath: '/studio',
   projectId,
   dataset,

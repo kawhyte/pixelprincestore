@@ -46,6 +46,12 @@ export default function RootLayout({
             __html: JSON.stringify(websiteSchema),
           }}
         />
+        {/* Cloudinary Upload Widget - Required for High-Res Asset Manager */}
+        <script
+          src="https://upload-widget.cloudinary.com/global/all.js"
+          type="text/javascript"
+          async
+        />
       </head>
       <body className="antialiased">
         <Navigation />

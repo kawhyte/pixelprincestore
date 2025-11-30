@@ -71,6 +71,7 @@ export function HighResAssetInput(props: ObjectInputProps) {
         }
 
         // AUTO-DETECTION: If metadata exists, also update parent fileSize and dimensions
+        // This only works if we're in a simple object structure (not nested arrays)
         if (newAsset.metadata && path.length > 0) {
           const fileSize = formatFileSize(newAsset.metadata.bytes);
           const dimensions = formatDimensions(newAsset.metadata.width, newAsset.metadata.height);
@@ -78,13 +79,22 @@ export function HighResAssetInput(props: ObjectInputProps) {
           // Get the parent path (remove 'highResAsset' from the end)
           const parentPath = path.slice(0, -1);
 
-          if (fileSize) {
-            // Patch sibling fileSize field
-            patches.push(set(fileSize, [...parentPath, 'fileSize']));
-          }
-          if (dimensions) {
-            // Patch sibling dimensions field
-            patches.push(set(dimensions, [...parentPath, 'dimensions']));
+          // Verify parent path doesn't contain complex structures
+          const isSimplePath = parentPath.every((segment: any) =>
+            typeof segment === 'string' || typeof segment === 'number'
+          );
+
+          if (isSimplePath) {
+            if (fileSize && fileSize !== '0 MB') {
+              // Patch sibling fileSize field
+              patches.push(set(fileSize, [...parentPath, 'fileSize']));
+            }
+            if (dimensions) {
+              // Patch sibling dimensions field
+              patches.push(set(dimensions, [...parentPath, 'dimensions']));
+            }
+          } else {
+            console.log('[HighResAssetInput] Skipping auto-update of parent fields (complex path structure)');
           }
         }
 

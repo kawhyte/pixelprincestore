@@ -27,10 +27,10 @@ export default function Navigation() {
               Home
             </Link>
             <Link
-              href="#collection"
+              href="https://www.etsy.com/shop/thepixelprince"
               className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
             >
-              Shop
+              Etsy Shop
             </Link>
             <Link
               href="/free-downloads"

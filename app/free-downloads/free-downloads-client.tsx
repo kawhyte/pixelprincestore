@@ -50,7 +50,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
             </div>
             <div className="flex-1">
               <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
-                Free Downloads
+                Free Wall Art Downloads
               </h1>
               <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
                 Download <span className="font-semibold text-sage-500">3 sizes per week</span> — completely free!
@@ -68,7 +68,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         {/* Info Banner */}
-        <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
+        {/* <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
               <Sparkles className="h-6 w-6 text-sage-500" />
@@ -81,7 +81,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Art Grid */}
         {artWithVariants.length === 0 ? (

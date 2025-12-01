@@ -6,10 +6,10 @@ import Footer from "@/components/common/Footer/Footer";
 const sampleProducts = [
   {
     id: "1",
-    title: "Ethereal Landscapes Collection",
+    title: "Motivational Quotes",
     price: 24.99,
-    imageUrl: "https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Ethereal+Landscapes",
-    category: "Nature",
+    imageUrl: "/categories/quotes.webp",
+    category: "Quotes",
     href: "#",
     variant: "sage" as const,
   },
@@ -17,26 +17,26 @@ const sampleProducts = [
     id: "2",
     title: "Retro Gaming Poster: Pixel Arcade",
     price: 19.99,
-    imageUrl: "https://placehold.co/600x800/d4bfae/2a2a2a/png?text=Pixel+Arcade",
+    imageUrl: "/categories/videogame.webp",
     category: "Gaming",
     href: "#",
     variant: "clay" as const,
   },
   {
     id: "3",
-    title: "Minimalist World Map - Earth Tones",
+    title: "Map + Navigation",
     price: 29.99,
-    imageUrl: "https://placehold.co/600x800/cbbfdd/2a2a2a/png?text=World+Map",
+    imageUrl: "/categories/maps.webp",
     category: "Maps",
     href: "#",
     variant: "lavender" as const,
   },
   {
     id: "4",
-    title: "Abstract Botanical Print",
+    title: "Funny + Meme",
     price: 22.99,
-    imageUrl: "https://placehold.co/600x800/b5c9a5/2a2a2a/png?text=Botanical",
-    category: "Abstract",
+    imageUrl: "/categories/meme.webp",
+    category: "Meme",
     href: "#",
     variant: "sage" as const,
   },
@@ -110,14 +110,14 @@ export default function Home() {
               href="#"
               className="inline-block rounded-2xl border-2 border-charcoal bg-transparent px-8 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream hover:shadow-lg"
             >
-              View All Products
+              View All Digital Downloads
             </a>
           </div>
         </div>
       </section>
 
       {/* Free Downloads Teaser */}
-      <section className=" from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
+      {/* <section className=" from-sage-100 via-lavender-50 to-clay-100 py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="mx-auto max-w-2xl space-y-6">
             <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
@@ -134,7 +134,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <Footer />

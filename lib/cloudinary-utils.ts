@@ -3,6 +3,8 @@
  * Helper functions for working with Cloudinary URLs and deletion
  */
 
+import crypto from 'crypto';
+
 /**
  * Extract the public_id from a Cloudinary URL
  * Example: https://res.cloudinary.com/demo/image/upload/v1234567890/high-res-assets/sample.jpg
@@ -47,4 +49,135 @@ export function isCloudinaryUrl(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Result of a Cloudinary deletion operation
+ */
+export interface CloudinaryDeleteResult {
+  success: boolean;
+  publicId: string;
+  result: 'ok' | 'not found' | 'error';
+  message: string;
+  error?: string;
+}
+
+/**
+ * Delete a single asset from Cloudinary by public_id
+ *
+ * @param publicId - The Cloudinary public_id to delete
+ * @returns Result object with success status and details
+ *
+ * @example
+ * const result = await deleteCloudinaryAsset('high-res-assets/moon-8x10');
+ * if (result.success) {
+ *   console.log('Asset deleted:', result.publicId);
+ * }
+ */
+export async function deleteCloudinaryAsset(
+  publicId: string
+): Promise<CloudinaryDeleteResult> {
+  try {
+    // Validate environment variables
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      return {
+        success: false,
+        publicId,
+        result: 'error',
+        message: 'Cloudinary credentials not configured',
+        error: 'Missing CLOUDINARY_API_KEY or CLOUDINARY_API_SECRET'
+      };
+    }
+
+    // Generate timestamp for signature
+    const timestamp = Math.floor(Date.now() / 1000);
+
+    // Create signature: SHA1(params + api_secret)
+    const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+    const signature = crypto
+      .createHash('sha1')
+      .update(paramsToSign)
+      .digest('hex');
+
+    // Prepare form data for Cloudinary API
+    const formData = new FormData();
+    formData.append('public_id', publicId);
+    formData.append('timestamp', timestamp.toString());
+    formData.append('api_key', apiKey);
+    formData.append('signature', signature);
+
+    // Call Cloudinary Admin API
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+    const response = await fetch(cloudinaryUrl, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    // Handle different response scenarios
+    if (result.result === 'ok') {
+      return {
+        success: true,
+        publicId,
+        result: 'ok',
+        message: 'Asset deleted successfully'
+      };
+    }
+
+    // Asset not found is still considered success (idempotent)
+    if (result.result === 'not found') {
+      return {
+        success: true,
+        publicId,
+        result: 'not found',
+        message: 'Asset already deleted or not found'
+      };
+    }
+
+    // Other errors
+    return {
+      success: false,
+      publicId,
+      result: 'error',
+      message: 'Failed to delete from Cloudinary',
+      error: JSON.stringify(result)
+    };
+  } catch (error) {
+    return {
+      success: false,
+      publicId,
+      result: 'error',
+      message: 'Cloudinary deletion failed',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+/**
+ * Delete multiple assets from Cloudinary (batch operation)
+ *
+ * @param publicIds - Array of Cloudinary public_ids to delete
+ * @returns Array of deletion results
+ *
+ * @example
+ * const results = await deleteMultipleCloudinaryAssets([
+ *   'high-res-assets/moon-8x10',
+ *   'high-res-assets/moon-16x20'
+ * ]);
+ * const successCount = results.filter(r => r.success).length;
+ */
+export async function deleteMultipleCloudinaryAssets(
+  publicIds: string[]
+): Promise<CloudinaryDeleteResult[]> {
+  // Execute deletions in parallel for efficiency
+  const results = await Promise.all(
+    publicIds.map(publicId => deleteCloudinaryAsset(publicId))
+  );
+
+  return results;
 }

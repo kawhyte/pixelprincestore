@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
+import { deleteCloudinaryAsset } from '@/lib/cloudinary-utils';
 
 /**
  * DELETE /api/cloudinary/delete
@@ -13,6 +13,9 @@ import crypto from 'crypto';
  * - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
  * - CLOUDINARY_API_KEY (server-side only)
  * - CLOUDINARY_API_SECRET (server-side only)
+ *
+ * Note: This endpoint is used by the UI for manual deletions.
+ * Automated garbage collection is handled by the Sanity webhook at /api/webhooks/sanity
  */
 export async function DELETE(request: NextRequest) {
   try {
@@ -26,74 +29,28 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get Cloudinary credentials from environment
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const apiKey = process.env.CLOUDINARY_API_KEY;
-    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+    console.log('[Cloudinary Delete] Deleting asset:', publicId);
 
-    if (!cloudName || !apiKey || !apiSecret) {
-      console.error('[Cloudinary Delete] Missing credentials');
+    // Use shared deletion utility
+    const result = await deleteCloudinaryAsset(publicId);
+
+    if (!result.success) {
+      console.error('[Cloudinary Delete] Deletion failed:', result.error);
       return NextResponse.json(
         {
-          error: 'Cloudinary credentials not configured',
-          details: 'Server is missing CLOUDINARY_API_KEY or CLOUDINARY_API_SECRET'
+          error: result.message,
+          details: result.error
         },
         { status: 500 }
       );
     }
 
-    // Generate timestamp for signature
-    const timestamp = Math.floor(Date.now() / 1000);
-
-    // Create signature for API request
-    // Cloudinary requires: SHA1(params + api_secret)
-    const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
-    const signature = crypto
-      .createHash('sha1')
-      .update(paramsToSign)
-      .digest('hex');
-
-    // Make DELETE request to Cloudinary API
-    const formData = new FormData();
-    formData.append('public_id', publicId);
-    formData.append('timestamp', timestamp.toString());
-    formData.append('api_key', apiKey);
-    formData.append('signature', signature);
-
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
-
-    const response = await fetch(cloudinaryUrl, {
-      method: 'POST',
-      body: formData,
-    });
-
-    const result = await response.json();
-
-    if (!response.ok || result.result !== 'ok') {
-      console.error('[Cloudinary Delete] Deletion failed:', result);
-
-      // Don't fail the request if asset not found (already deleted)
-      if (result.result === 'not found') {
-        return NextResponse.json({
-          success: true,
-          message: 'Asset already deleted or not found',
-          result: result.result
-        });
-      }
-
-      return NextResponse.json(
-        {
-          error: 'Failed to delete from Cloudinary',
-          details: result
-        },
-        { status: 500 }
-      );
-    }
+    console.log('[Cloudinary Delete] Success:', result.message);
 
     return NextResponse.json({
       success: true,
-      message: 'Asset deleted successfully',
-      publicId,
+      message: result.message,
+      publicId: result.publicId,
       result: result.result
     });
 

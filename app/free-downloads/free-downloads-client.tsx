@@ -67,6 +67,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
+        {/* https://thepixelprince.netlify.app/ */}
         {/* Info Banner */}
         {/* <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
           <div className="flex items-start gap-4">

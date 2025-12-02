@@ -70,7 +70,7 @@ export function verifyWebhookSignature(
   }
 
   try {
-    // Parse signature header format: "sha256={hash},t={timestamp}"
+    // Parse signature header format: "t={timestamp},v1={signature}"
     const parts = signature.split(',').reduce((acc, part) => {
       const [key, value] = part.split('=');
       if (key && value) {
@@ -79,25 +79,33 @@ export function verifyWebhookSignature(
       return acc;
     }, {} as Record<string, string>);
 
-    const receivedHash = parts.sha256;
+    const receivedSignature = parts.v1;
     const timestamp = parts.t;
 
-    if (!receivedHash || !timestamp) {
+    if (!receivedSignature || !timestamp) {
       console.error('[Sanity Webhook] Invalid signature format');
+      console.error('[Sanity Webhook] Parsed parts:', parts);
       return false;
     }
 
     // Compute expected signature: HMAC-SHA256(timestamp.body, secret)
     const payload = `${timestamp}.${typeof body === 'string' ? body : body.toString('utf8')}`;
-    const expectedHash = crypto
+    const expectedSignature = crypto
       .createHmac('sha256', secret)
       .update(payload)
-      .digest('hex');
+      .digest('base64')
+      // Convert to URL-safe base64 (base64url)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, ''); // Remove padding
+
+    console.log('[Sanity Webhook] Expected signature:', expectedSignature);
+    console.log('[Sanity Webhook] Received signature:', receivedSignature);
 
     // Constant-time comparison to prevent timing attacks
     return crypto.timingSafeEqual(
-      Buffer.from(receivedHash),
-      Buffer.from(expectedHash)
+      Buffer.from(receivedSignature),
+      Buffer.from(expectedSignature)
     );
   } catch (error) {
     console.error('[Sanity Webhook] Signature verification error:', error);

@@ -68,6 +68,9 @@ export async function POST(request: NextRequest) {
   console.log('[Sanity Webhook] ========================================');
   console.log('[Sanity Webhook] Received webhook request');
 
+  // Log all headers to find event type
+  console.log('[Sanity Webhook] Headers:', Object.fromEntries(request.headers.entries()));
+
   try {
     // 1. Validate webhook secret exists
     const webhookSecret = process.env.SANITY_WEBHOOK_SECRET;
@@ -84,6 +87,9 @@ export async function POST(request: NextRequest) {
     const signature = request.headers.get('sanity-webhook-signature');
 
     console.log('[Sanity Webhook] Verifying signature...');
+    console.log('[Sanity Webhook] Received signature:', signature);
+    console.log('[Sanity Webhook] Secret (first 10 chars):', webhookSecret?.substring(0, 10));
+    console.log('[Sanity Webhook] Body length:', rawBody.length);
 
     // 3. Verify webhook signature
     const isValid = verifyWebhookSignature(rawBody, signature, webhookSecret);
@@ -97,45 +103,48 @@ export async function POST(request: NextRequest) {
 
     console.log('[Sanity Webhook] Signature verified successfully');
 
-    // 4. Parse webhook body
-    const payload = parseWebhookBody<WebhookPayload>(rawBody);
-    console.log('[Sanity Webhook] Event type:', payload.transition);
+    // 4. Get operation type from header
+    const operation = request.headers.get('sanity-operation') as 'create' | 'update' | 'delete' | null;
+
+    // 5. Parse webhook body
+    const payload = parseWebhookBody<any>(rawBody);
+    console.log('[Sanity Webhook] Operation:', operation);
     console.log('[Sanity Webhook] Document ID:', payload._id);
     console.log('[Sanity Webhook] Document type:', payload._type);
+    console.log('[Sanity Webhook] Full payload:', JSON.stringify(payload, null, 2));
 
-    // 5. Handle different event types
+    // 6. Handle different event types
     let idsToDelete: string[] = [];
 
-    if (payload.transition === 'delete') {
+    if (operation === 'delete') {
       // Case A: Document was deleted - remove ALL Cloudinary assets
       console.log('[Sanity Webhook] Handling DELETE event');
 
-      if (payload.previous) {
-        idsToDelete = extractCloudinaryIds(payload.previous);
-        console.log('[Sanity Webhook] Found', idsToDelete.length, 'assets in deleted document');
-      } else {
-        console.log('[Sanity Webhook] No previous state available for deleted document');
+      // For delete, payload contains the deleted document
+      idsToDelete = extractCloudinaryIds(payload);
+      console.log('[Sanity Webhook] Found', idsToDelete.length, 'assets in deleted document');
+
+      if (idsToDelete.length > 0) {
+        console.log('[Sanity Webhook] Assets to delete:', idsToDelete);
       }
-    } else if (payload.transition === 'update') {
-      // Case B: Document was updated - compare before/after
+    } else if (operation === 'update') {
+      // Case B: Document was updated
       console.log('[Sanity Webhook] Handling UPDATE event');
 
-      if (payload.previous && payload.current) {
-        const previousIds = extractCloudinaryIds(payload.previous);
-        const currentIds = extractCloudinaryIds(payload.current);
+      // TODO: We need previous state to detect removed assets
+      // For now, we skip garbage collection on updates
+      // This requires updating the GROQ projection to include previous document state
 
-        console.log('[Sanity Webhook] Previous state had', previousIds.length, 'assets');
-        console.log('[Sanity Webhook] Current state has', currentIds.length, 'assets');
+      console.log('[Sanity Webhook] ⚠️  UPDATE event detected, but previous state not available');
+      console.log('[Sanity Webhook] Cannot detect removed assets without before/after comparison');
+      console.log('[Sanity Webhook] Skipping garbage collection for this update');
 
-        idsToDelete = calculateDeletedIds(previousIds, currentIds);
-        console.log('[Sanity Webhook] Detected', idsToDelete.length, 'removed assets');
-
-        if (idsToDelete.length > 0) {
-          console.log('[Sanity Webhook] Assets to delete:', idsToDelete);
-        }
-      } else {
-        console.log('[Sanity Webhook] Missing previous or current state - skipping comparison');
-      }
+      return NextResponse.json({
+        success: true,
+        message: 'Update event - garbage collection skipped (need previous state)',
+        processed: 0,
+        note: 'Only DELETE events are currently supported for garbage collection'
+      });
     } else {
       // Create events don't need garbage collection
       console.log('[Sanity Webhook] CREATE event - no garbage collection needed');

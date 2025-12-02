@@ -159,10 +159,10 @@ export const product = defineType({
       description: 'Primary category',
       options: {
         list: [
-          { title: 'Abstract', value: 'Abstract' },
-          { title: 'Nature', value: 'Nature' },
-          { title: 'Maps', value: 'Maps' },
-          { title: 'Vintage', value: 'Vintage' },
+          { title: 'Video Games + Man Cave ', value: 'Video Games' },
+          { title: 'Motivational + Quotes ', value: 'Quotes ' },
+          { title: 'Maps + Travel Poster', value: 'Maps' },
+          { title: 'Funny + Meme', value: 'Funny' },
           { title: 'Minimalist', value: 'Minimalist' },
           { title: 'Botanical', value: 'Botanical' },
         ],

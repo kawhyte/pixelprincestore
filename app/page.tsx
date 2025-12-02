@@ -93,7 +93,7 @@ export default function Home() {
               Featured Collection
             </h2>
             <p className="mt-4 text-base text-soft-charcoal sm:text-lg">
-              Handpicked Free digital art to elevate your space
+              Handpicked Printable digital art to elevate your space
             </p>
           </div>
 

@@ -40,7 +40,7 @@ export default function Hero() {
 
             {/* Headline - Massive Serif */}
             <h1 className="text-balance font-serif text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
-               Free Digital Download Wall Art
+             Printable High Resolution Wall Art for Homes | Offices
             </h1>
 
             {/* Subheadline */}

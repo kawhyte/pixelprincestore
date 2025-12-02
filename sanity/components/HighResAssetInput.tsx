@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { set, unset } from 'sanity';
+import { set, unset, KeyedSegment } from 'sanity';
 import { ObjectInputProps } from 'sanity';
 import { AdminHighResUpload } from '@/components/admin/HighResManager';
 import type { HighResAsset } from '@/lib/types/high-res-asset';
@@ -70,8 +70,8 @@ export function HighResAssetInput(props: ObjectInputProps) {
           patches.push(unset(['cloudinaryPublicId']));
         }
 
-        // AUTO-DETECTION: If metadata exists, also update parent fileSize and dimensions
-        // This only works if we're in a simple object structure (not nested arrays)
+        // AUTO-DETECTION: If metadata exists, also update sibling fileSize and dimensions
+        // This works with both simple paths and Sanity array structures
         if (newAsset.metadata && path.length > 0) {
           const fileSize = formatFileSize(newAsset.metadata.bytes);
           const dimensions = formatDimensions(newAsset.metadata.width, newAsset.metadata.height);
@@ -79,22 +79,55 @@ export function HighResAssetInput(props: ObjectInputProps) {
           // Get the parent path (remove 'highResAsset' from the end)
           const parentPath = path.slice(0, -1);
 
-          // Verify parent path doesn't contain complex structures
-          const isSimplePath = parentPath.every((segment: any) =>
-            typeof segment === 'string' || typeof segment === 'number'
-          );
+          /**
+           * Check if a path segment is a valid Sanity KeyedSegment
+           * KeyedSegment = {_key: string} - used for array item paths
+           */
+          const isKeyedSegment = (segment: any): segment is KeyedSegment => {
+            return (
+              typeof segment === 'object' &&
+              segment !== null &&
+              '_key' in segment &&
+              typeof segment._key === 'string'
+            );
+          };
 
-          if (isSimplePath) {
+          /**
+           * Validate that all segments are valid for Sanity patches
+           * Valid segments: string | number | {_key: string}
+           *
+           * Example valid paths:
+           * - ['sizes', {_key: 'abc123'}, 'highResAsset'] ✅ (array item)
+           * - ['config', 'asset'] ✅ (simple object)
+           * - ['items', 0, 'asset'] ✅ (array index)
+           */
+          const isValidSanityPath = (pathSegments: any[]): boolean => {
+            return pathSegments.every((segment: any) =>
+              typeof segment === 'string' ||
+              typeof segment === 'number' ||
+              isKeyedSegment(segment)
+            );
+          };
+
+          // Validate path structure
+          if (isValidSanityPath(parentPath)) {
+            // Auto-update sibling fields with metadata
             if (fileSize && fileSize !== '0 MB') {
-              // Patch sibling fileSize field
+              // Construct path for fileSize: ['sizes', {_key: 'abc123'}, 'fileSize']
               patches.push(set(fileSize, [...parentPath, 'fileSize']));
+              console.log('[HighResAssetInput] Auto-updated fileSize:', fileSize);
             }
             if (dimensions) {
-              // Patch sibling dimensions field
+              // Construct path for dimensions: ['sizes', {_key: 'abc123'}, 'dimensions']
               patches.push(set(dimensions, [...parentPath, 'dimensions']));
+              console.log('[HighResAssetInput] Auto-updated dimensions:', dimensions);
             }
           } else {
-            console.log('[HighResAssetInput] Skipping auto-update of parent fields (complex path structure)');
+            // This should rarely happen - only if path contains invalid segments
+            console.warn('[HighResAssetInput] Skipping auto-update: Invalid path structure', {
+              parentPath,
+              pathTypes: parentPath.map(s => typeof s),
+            });
           }
         }
 
@@ -111,7 +144,7 @@ export function HighResAssetInput(props: ObjectInputProps) {
         ]);
       }
     },
-    [onChange]
+    [onChange, path]
   );
 
   return (

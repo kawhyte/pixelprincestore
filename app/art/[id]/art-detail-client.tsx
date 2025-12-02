@@ -361,37 +361,42 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
                 )}
               </Button>
 
-              {tracking.hasDownloadedAllSizes(art.id) ? (
-                <div className="w-full rounded-2xl border-2 border-lavender-200 bg-lavender-50 py-6 text-center">
-                  <p className="text-lg font-semibold text-muted-foreground">
-                    ZIP Already Downloaded ✓
-                  </p>
-                </div>
-              ) : (
-                <Button
-                  onClick={handleDownloadAll}
-                  disabled={isDownloading || tracking.remaining === 0}
-                  variant="outline"
-                  className="w-full rounded-2xl border-2 border-charcoal py-6 text-lg font-semibold hover:bg-charcoal hover:text-cream disabled:opacity-50"
-                  size="lg"
-                >
-                  {isDownloading ? (
-                    <>
-                      <span className="animate-spin">⏳</span>
-                      <span className="ml-2">Preparing...</span>
-                    </>
-                  ) : tracking.remaining === 0 ? (
-                    <>
-                      <Package className="h-5 w-5" />
-                      <span className="ml-2">Weekly Limit Reached</span>
-                    </>
+              {/* Only show ZIP download button if zipUrl is available */}
+              {art.zipUrl && (
+                <>
+                  {tracking.hasDownloadedAllSizes(art.id) ? (
+                    <div className="w-full rounded-2xl border-2 border-lavender-200 bg-lavender-50 py-6 text-center">
+                      <p className="text-lg font-semibold text-muted-foreground">
+                        ZIP Already Downloaded ✓
+                      </p>
+                    </div>
                   ) : (
-                    <>
-                      <Package className="h-5 w-5" />
-                      <span className="ml-2">Download All Sizes (ZIP)</span>
-                    </>
+                    <Button
+                      onClick={handleDownloadAll}
+                      disabled={isDownloading || tracking.remaining === 0}
+                      variant="outline"
+                      className="w-full rounded-2xl border-2 border-charcoal py-6 text-lg font-semibold hover:bg-charcoal hover:text-cream disabled:opacity-50"
+                      size="lg"
+                    >
+                      {isDownloading ? (
+                        <>
+                          <span className="animate-spin">⏳</span>
+                          <span className="ml-2">Preparing...</span>
+                        </>
+                      ) : tracking.remaining === 0 ? (
+                        <>
+                          <Package className="h-5 w-5" />
+                          <span className="ml-2">Weekly Limit Reached</span>
+                        </>
+                      ) : (
+                        <>
+                          <Package className="h-5 w-5" />
+                          <span className="ml-2">Download All Sizes (ZIP)</span>
+                        </>
+                      )}
+                    </Button>
                   )}
-                </Button>
+                </>
               )}
             </div>
 
@@ -404,17 +409,21 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
               <p className="mb-3 text-sm text-soft-charcoal">
                 All downloads are professional quality PNG files, perfect for printing at home or at your local print shop.
               </p>
-              <p className="mb-3 text-sm font-semibold text-charcoal">
-                📦 ZIP includes all available sizes:
-              </p>
-              <ul className="space-y-1 text-sm text-soft-charcoal">
-                {art.sizes.filter(size => size.availability === 'available').map((size) => (
-                  <li key={size.id} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-sage-500" />
-                    {size.displayLabel || size.label} {size.alternateLabel && `(${size.alternateLabel})`} - {size.dimensions} ({size.fileSize})
-                  </li>
-                ))}
-              </ul>
+              {art.zipUrl && (
+                <>
+                  <p className="mb-3 text-sm font-semibold text-charcoal">
+                    📦 ZIP includes all available sizes:
+                  </p>
+                  <ul className="space-y-1 text-sm text-soft-charcoal">
+                    {art.sizes.filter(size => size.availability === 'available').map((size) => (
+                      <li key={size.id} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-sage-500" />
+                        {size.displayLabel || size.label} {size.alternateLabel && `(${size.alternateLabel})`} - {size.dimensions} ({size.fileSize})
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
 
             {/* Weekly Limit Info */}

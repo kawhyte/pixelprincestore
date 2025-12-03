@@ -12,12 +12,8 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 export default function Hero() {
   const [animationData, setAnimationData] = useState(null);
   const [isAnimationReady, setIsAnimationReady] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Mark component as mounted for hydration
-    setIsMounted(true);
-
     // Try to load the animation file when component mounts
     fetch("/animations/hero-art.json")
       .then((res) => {
@@ -112,7 +108,7 @@ export default function Hero() {
                       priority
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className={`object-contain transition-opacity duration-500 ${
-                        isMounted && isAnimationReady && animationData
+                        isAnimationReady && animationData
                           ? 'opacity-0'
                           : 'opacity-100'
                       }`}
@@ -120,7 +116,7 @@ export default function Hero() {
                     />
 
                     {/* Lottie Animation - Only shown after hydration and loading */}
-                    {isMounted && animationData && (
+                    {animationData && (
                       <div
                         className={`absolute inset-0 transition-opacity duration-500 ${
                           isAnimationReady ? 'opacity-100' : 'opacity-0'

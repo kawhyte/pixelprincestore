@@ -433,7 +433,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             </div>
 
             {/* Weekly Limit Info */}
-            <div className="rounded-2xl bg-lavender-50 p-6">
+            {/* <div className="rounded-2xl bg-lavender-50 p-6">
               {tracking.isLoading ? (
                 <p className="text-sm text-soft-charcoal">Loading download status...</p>
               ) : (
@@ -448,7 +448,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                   )}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
 

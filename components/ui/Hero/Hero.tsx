@@ -26,7 +26,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-cream py-20 lg:py-32">
+    <section className="relative overflow-hidden bg-cream py-20 lg:py-12">
       <div className="container mx-auto px-4">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Left: Text Content */}
@@ -56,7 +56,7 @@ export default function Hero() {
                 size="lg"
                 className="rounded-2xl bg-sage-500 px-8 py-6 text-lg font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
               >
-                <Link href="#collection">Start Downloading</Link>
+                <Link href="/free-downloads">Start Downloading</Link>
               </Button>
 
               <Button
@@ -65,7 +65,7 @@ export default function Hero() {
                 size="lg"
                 className="rounded-2xl border-2 border-charcoal bg-transparent px-8 py-6 text-lg font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
               >
-                <Link href="/free-downloads">View Collections</Link>
+                <Link href="#collection">View Collections</Link>
               </Button>
             </div>
 

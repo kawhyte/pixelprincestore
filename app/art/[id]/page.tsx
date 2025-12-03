@@ -27,5 +27,33 @@ export default async function ArtDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <ArtDetailClient art={art} />;
+  // Generate JSON-LD structured data for SEO (Product Schema)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: art.title,
+    description: art.description,
+    image: art.previewImage,
+    brand: {
+      "@type": "Brand",
+      name: "The Pixel Prince"
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0.00",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: `https://thepixelprince.com/art/${art.id}`
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ArtDetailClient art={art} />
+    </>
+  );
 }

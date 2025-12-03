@@ -32,21 +32,21 @@ export default function Hero() {
           {/* Left: Text Content */}
           <div className="space-y-8">
             {/* Eyebrow */}
-            {/* <div className="inline-block">
+            <div className="inline-block">
               <span className="rounded-full bg-sage-100 px-4 py-2 text-sm font-medium text-sage-500">
-                The Pixel Prince
+                Pixel Masterpieces. 100% Free.
               </span>
-            </div> */}
+            </div>
 
             {/* Headline - Massive Serif */}
             <h1 className="text-balance font-serif text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
-             Printable High Resolution Wall Art for Homes | Offices
+            Premium Digital Wall Art.
             </h1>
 
             {/* Subheadline */}
             <p className="text-balance text-lg leading-relaxed text-soft-charcoal sm:text-xl lg:text-2xl">
               Discover curated digital art for modern living. Premium posters,
-              video game decor, and world maps—ready for instant download.
+              video game decor, and world maps—ready for instant download. No account needed.
             </p>
 
             {/* CTA Buttons */}
@@ -56,7 +56,7 @@ export default function Hero() {
                 size="lg"
                 className="rounded-2xl bg-sage-500 px-8 py-6 text-lg font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
               >
-                <Link href="#collection">Explore Collection</Link>
+                <Link href="#collection">Start Downloading</Link>
               </Button>
 
               <Button
@@ -65,7 +65,7 @@ export default function Hero() {
                 size="lg"
                 className="rounded-2xl border-2 border-charcoal bg-transparent px-8 py-6 text-lg font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
               >
-                <Link href="/free-downloads">Free Downloads</Link>
+                <Link href="/free-downloads">View Collections</Link>
               </Button>
             </div>
 

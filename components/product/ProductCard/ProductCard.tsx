@@ -23,7 +23,7 @@ const variantStyles = {
 
 export default function ProductCard({
   title,
-  price,
+  // price,
   imageUrl,
   imageOrientation,
   category,
@@ -42,7 +42,7 @@ export default function ProductCard({
       <div className={`relative ${
         imageOrientation
           ? getCardAspectClass(imageOrientation.orientation)
-          : 'aspect-[3/4]'
+          : 'aspect-3/4'
       } overflow-hidden bg-muted`}>
         <Image
           src={imageUrl}
@@ -62,7 +62,7 @@ export default function ProductCard({
         )}
 
         {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
       {/* Content Area - Minimal & Clean */}

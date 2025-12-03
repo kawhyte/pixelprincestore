@@ -209,7 +209,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             <div className={`relative ${
               art.previewImageOrientation
                 ? getCardAspectClass(art.previewImageOrientation.orientation)
-                : 'aspect-[3/4]'
+                : 'aspect-3/4'
             } overflow-hidden rounded-2xl bg-muted shadow-xl`}>
               <Image
                 src={art.detailImage || art.previewImage}
@@ -468,7 +468,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                   <div className={`relative ${
                     relatedItem.previewImageOrientation
                       ? getCardAspectClass(relatedItem.previewImageOrientation.orientation)
-                      : 'aspect-[3/4]'
+                      : 'aspect-3/4'
                   } overflow-hidden bg-muted`}>
                     <Image
                       src={relatedItem.previewImage}

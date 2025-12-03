@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { useDownloadTracking } from "@/lib/use-download-tracking";
+import { getCardAspectClass } from "@/lib/image-utils";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -204,7 +205,11 @@ export default function ArtDetailClient({ art }: ArtDetailClientProps) {
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Left Column - Image */}
           <div className="space-y-6">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-muted shadow-xl">
+            <div className={`relative ${
+              art.previewImageOrientation
+                ? getCardAspectClass(art.previewImageOrientation.orientation)
+                : 'aspect-[3/4]'
+            } overflow-hidden rounded-2xl bg-muted shadow-xl`}>
               <Image
                 src={art.detailImage || art.previewImage}
                 alt={art.title}

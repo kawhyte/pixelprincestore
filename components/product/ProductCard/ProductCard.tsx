@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { getCardAspectClass, type ImageOrientation } from "@/lib/image-utils";
 
 interface ProductCardProps {
   id: string;
   title: string;
   price: number;
   imageUrl: string;
+  imageOrientation?: ImageOrientation;
   category?: string;
   href: string;
   variant?: "sage" | "clay" | "lavender" | "cream";
@@ -23,6 +25,7 @@ export default function ProductCard({
   title,
   price,
   imageUrl,
+  imageOrientation,
   category,
   href,
   variant = "cream",
@@ -35,13 +38,17 @@ export default function ProductCard({
         variantStyles[variant]
       )}
     >
-      {/* Image Container - Vertical Aspect Ratio (Portrait) */}
-      <div className="relative aspect-3/4 overflow-hidden bg-muted">
+      {/* Image Container - Dynamic Aspect Ratio Based on Orientation */}
+      <div className={`relative ${
+        imageOrientation
+          ? getCardAspectClass(imageOrientation.orientation)
+          : 'aspect-[3/4]'
+      } overflow-hidden bg-muted`}>
         <Image
           src={imageUrl}
           alt={title}
           fill
-          className="object-contain transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
         />
 

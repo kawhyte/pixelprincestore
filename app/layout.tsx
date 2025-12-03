@@ -55,6 +55,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${merriweather.variable}`}>
       <head>
+        {/* Preconnect to Sanity CDN for faster image loading */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

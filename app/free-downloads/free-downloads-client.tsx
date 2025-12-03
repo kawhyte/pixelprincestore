@@ -6,6 +6,7 @@ import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
 
 import { useDownloadTracking } from "@/lib/use-download-tracking";
 import { FreeArt } from "@/sanity/lib/client";
+import { getCardAspectClass } from "@/lib/image-utils";
 
 // Earth-tone variant assignment
 const variants = ["sage", "clay", "lavender", "sage"] as const;
@@ -101,8 +102,12 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
                   variantStyles[art.variant]
                 }`}
               >
-                {/* Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                {/* Image - Dynamic aspect ratio based on orientation */}
+                <div className={`relative ${
+                  art.previewImageOrientation
+                    ? getCardAspectClass(art.previewImageOrientation.orientation)
+                    : 'aspect-[3/4]'
+                } overflow-hidden bg-muted`}>
                   <Image
                     src={art.previewImage}
                     alt={art.title}

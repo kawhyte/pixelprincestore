@@ -1,5 +1,6 @@
 import { createClient } from 'next-sanity'
 import { urlFor } from './image'
+import { getImageOrientation, getOptimalImageDimensions, type ImageOrientation } from '@/lib/image-utils'
 
 import { apiVersion, dataset, projectId } from '../env'
 
@@ -13,6 +14,9 @@ export const client = createClient({
 /**
  * TypeScript interfaces matching the Sanity schema
  */
+// Re-export ImageOrientation from lib/image-utils for convenience
+export type { ImageOrientation } from '@/lib/image-utils';
+
 export interface HighResAsset {
   assetType: 'cloudinary' | 'external'
   cloudinaryUrl?: string
@@ -62,6 +66,7 @@ export interface FreeArt {
   description: string
   longDescription?: string
   previewImage: string
+  previewImageOrientation?: ImageOrientation
   detailImage?: string
   sizes: ArtSize[]
   allSizesZip: string // Deprecated: use zipUrl
@@ -83,7 +88,19 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     artist,
     description,
     longDescription,
-    previewImage,
+    previewImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          }
+        }
+      }
+    },
     detailImage,
     sizes[]{
       id,
@@ -107,24 +124,48 @@ export async function getAllProducts(): Promise<FreeArt[]> {
   const products = await client.fetch<SanityProduct[]>(query)
 
   // Transform Sanity products to match the FreeArt interface
-  return products.map((product) => ({
-    id: product.slug.current,
-    title: product.title,
-    artist: product.artist,
-    description: product.description,
-    longDescription: product.longDescription,
-    previewImage: product.previewImage
-      ? urlFor(product.previewImage).width(600).height(800).url()
-      : '',
-    detailImage: product.detailImage
-      ? urlFor(product.detailImage).width(1200).height(1600).url()
-      : undefined,
-    sizes: product.sizes || [],
-    allSizesZip: product.allSizesZip,
-    zipUrl: product.zipUrl,
-    tags: product.tags || [],
-    category: product.category,
-  }))
+  return products.map((product) => {
+    let previewImageOrientation: ImageOrientation | undefined;
+    let previewImageUrl = '';
+
+    // Extract orientation from image metadata if available
+    if (product.previewImage?.asset?.metadata?.dimensions) {
+      const { width, height } = product.previewImage.asset.metadata.dimensions;
+      previewImageOrientation = getImageOrientation(width, height);
+
+      // Apply optimal image transform based on detected orientation
+      const { width: transformWidth, height: transformHeight } =
+        getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
+
+      previewImageUrl = urlFor(product.previewImage)
+        .width(transformWidth)
+        .height(transformHeight)
+        .url();
+    } else {
+      // Fallback for images without metadata (default to portrait 3:4)
+      previewImageUrl = product.previewImage
+        ? urlFor(product.previewImage).width(600).height(800).url()
+        : '';
+    }
+
+    return {
+      id: product.slug.current,
+      title: product.title,
+      artist: product.artist,
+      description: product.description,
+      longDescription: product.longDescription,
+      previewImage: previewImageUrl,
+      previewImageOrientation,
+      detailImage: product.detailImage
+        ? urlFor(product.detailImage).width(1200).height(1600).url()
+        : undefined,
+      sizes: product.sizes || [],
+      allSizesZip: product.allSizesZip,
+      zipUrl: product.zipUrl,
+      tags: product.tags || [],
+      category: product.category,
+    };
+  })
 }
 
 /**
@@ -139,7 +180,19 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     artist,
     description,
     longDescription,
-    previewImage,
+    previewImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          }
+        }
+      }
+    },
     detailImage,
     sizes[]{
       id,
@@ -164,15 +217,37 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
 
   if (!product) return null
 
+  let previewImageOrientation: ImageOrientation | undefined;
+  let previewImageUrl = '';
+
+  // Extract orientation from image metadata if available
+  if (product.previewImage?.asset?.metadata?.dimensions) {
+    const { width, height } = product.previewImage.asset.metadata.dimensions;
+    previewImageOrientation = getImageOrientation(width, height);
+
+    // Apply optimal image transform based on detected orientation
+    const { width: transformWidth, height: transformHeight } =
+      getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
+
+    previewImageUrl = urlFor(product.previewImage)
+      .width(transformWidth)
+      .height(transformHeight)
+      .url();
+  } else {
+    // Fallback for images without metadata (default to portrait 3:4)
+    previewImageUrl = product.previewImage
+      ? urlFor(product.previewImage).width(600).height(800).url()
+      : '';
+  }
+
   return {
     id: product.slug.current,
     title: product.title,
     artist: product.artist,
     description: product.description,
     longDescription: product.longDescription,
-    previewImage: product.previewImage
-      ? urlFor(product.previewImage).width(600).height(800).url()
-      : '',
+    previewImage: previewImageUrl,
+    previewImageOrientation,
     detailImage: product.detailImage
       ? urlFor(product.detailImage).width(1200).height(1600).url()
       : undefined,

@@ -38,11 +38,32 @@ export const product = defineType({
       name: 'previewImage',
       title: 'Preview Image',
       type: 'image',
-      description: 'Card preview image (600x800 recommended)',
+      description: 'Card preview image (600x800 recommended for portrait, 800x600 for landscape)',
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) =>
+        Rule.required()
+          .custom((image: any) => {
+            // Validate aspect ratio - warn if unusual
+            if (image?.asset?.metadata?.dimensions) {
+              const { width, height } = image.asset.metadata.dimensions;
+              const aspectRatio = width / height;
+
+              // Check for standard aspect ratios (with tolerance)
+              const isPortrait = aspectRatio >= 0.70 && aspectRatio <= 0.85; // ~3:4
+              const isLandscape = aspectRatio >= 1.25 && aspectRatio <= 1.40; // ~4:3
+              const isSquare = aspectRatio >= 0.95 && aspectRatio <= 1.05; // ~1:1
+
+              if (!isPortrait && !isLandscape && !isSquare) {
+                return {
+                  message: `⚠️ Unusual aspect ratio detected (${aspectRatio.toFixed(2)}). Consider using portrait (3:4), landscape (4:3), or square (1:1) for best card display.`,
+                  level: 'warning',
+                };
+              }
+            }
+            return true;
+          }),
     }),
     defineField({
       name: 'aiHelper',

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 
@@ -10,17 +11,26 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function Hero() {
   const [animationData, setAnimationData] = useState(null);
+  const [isAnimationReady, setIsAnimationReady] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Mark component as mounted for hydration
+    setIsMounted(true);
+
     // Try to load the animation file when component mounts
     fetch("/animations/hero-art.json")
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Animation not found");
       })
-      .then((data) => setAnimationData(data))
+      .then((data) => {
+        setAnimationData(data);
+        // Delay showing animation slightly to ensure smooth transition
+        setTimeout(() => setIsAnimationReady(true), 100);
+      })
       .catch(() => {
-        // Animation file not uploaded yet - fallback will be shown
+        // Animation file not uploaded yet - keep fallback image shown
         setAnimationData(null);
       });
   }, []);
@@ -90,47 +100,50 @@ export default function Hero() {
           <div className="relative">
             {/* Floating Card Animation */}
             <div className="relative">
-             
-
-              {/* Main Lottie Animation */}
+              {/* Main Visual Container - Fixed aspect ratio to prevent layout shift */}
               <div className="relative z-10 transform transition-transform duration-700 hover:scale-105">
-                <div className="overflow-hidden ">
-                  <div className="relative" style={{ background: 'transparent' }}>
-                    {animationData ? (
-                      <Lottie
-                        animationData={animationData}
-                        loop={true}
-                        autoplay={true}
-                        className="h-full w-full"
-                        style={{
-                          background: 'transparent',
-                          mixBlendMode: 'multiply'
-                        }}
-                        rendererSettings={{
-                          preserveAspectRatio: 'xMidYMid meet'
-                        }}
-                      />
-                    ) : (
-                      // Fallback while animation is being uploaded
-                      <div className="flex h-full w-full items-center justify-center">
-                        <div className="text-center">
-                          <p className="font-serif text-2xl text-charcoal/50">
-                            Upload Animation
-                          </p>
-                          <p className="mt-2 text-sm text-charcoal/30">
-                            /public/animations/hero-art.json
-                          </p>
-                        </div>
+                <div className="overflow-hidden">
+                  <div className="relative aspect-square w-full" style={{ background: 'transparent' }}>
+                    {/* Priority-loaded fallback image for optimal LCP */}
+                    <Image
+                      src="/animations/hero-fallback.webp"
+                      alt="The Pixel Prince Store - Premium Digital Art"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className={`object-contain transition-opacity duration-500 ${
+                        isMounted && isAnimationReady && animationData
+                          ? 'opacity-0'
+                          : 'opacity-100'
+                      }`}
+                      style={{ mixBlendMode: 'multiply' }}
+                    />
+
+                    {/* Lottie Animation - Only shown after hydration and loading */}
+                    {isMounted && animationData && (
+                      <div
+                        className={`absolute inset-0 transition-opacity duration-500 ${
+                          isAnimationReady ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <Lottie
+                          animationData={animationData}
+                          loop={true}
+                          autoplay={true}
+                          className="h-full w-full"
+                          style={{
+                            background: 'transparent',
+                            mixBlendMode: 'multiply'
+                          }}
+                          rendererSettings={{
+                            preserveAspectRatio: 'xMidYMid meet'
+                          }}
+                        />
                       </div>
                     )}
                   </div>
-               
                 </div>
               </div>
-
-         
-
-              
             </div>
           </div>
         </div>

@@ -27,7 +27,17 @@
 - Only displays section when related products exist (conditional rendering)
 - Uses same image orientation detection as gallery cards for consistent UI
 
-## Phase 3: Hero Performance (LCP)
-- [ ] Create/Identify a fallback static image for the Hero.
-- [ ] Update `components/ui/Hero/Hero.tsx`: Implement `next/image` as a priority loaded fallback that swaps to Lottie only after hydration/loading.
-- [ ] **Success Criteria:** LCP score improves; no layout shift when animation loads.
+## Phase 3: Hero Performance (LCP) ✅
+- [x] Create/Identify a fallback static image for the Hero.
+- [x] Update `components/ui/Hero/Hero.tsx`: Implement `next/image` as a priority loaded fallback that swaps to Lottie only after hydration/loading.
+- [x] **Success Criteria:** LCP score improves; no layout shift when animation loads.
+
+**Implementation Notes:**
+- Utilized existing fallback image at `/public/animations/hero-fallback.webp`
+- Implemented `next/image` with `priority` prop for optimal LCP
+- Added dual-layer rendering: static image (SSR) → Lottie animation (CSR)
+- Fixed aspect ratio (`aspect-square`) prevents layout shift during load
+- Smooth 500ms cross-fade transition between static and animated states
+- Animation only loads/displays after client-side hydration
+- Responsive sizing with `sizes="(max-width: 768px) 100vw, 50vw"` for optimal performance
+- Both layers use `mixBlendMode: 'multiply'` for visual consistency

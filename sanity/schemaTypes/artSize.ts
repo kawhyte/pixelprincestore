@@ -91,6 +91,15 @@ export const artSize = defineType({
       components: {
         input: HighResAssetInput,
       },
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { availability?: string };
+          // Only require highResAsset if availability is "available"
+          if (parent?.availability === 'available' && !value) {
+            return 'High-resolution asset is required for available sizes. Upload a file or set status to "Coming Soon".';
+          }
+          return true;
+        }),
       fields: [
         defineField({
           name: 'assetType',

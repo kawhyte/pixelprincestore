@@ -53,7 +53,9 @@ export function AdminHighResUpload({
    * If replacing an existing Cloudinary asset, delete the old one first
    */
   const openCloudinaryWidget = async () => {
-    console.log('[HighResManager] Opening Cloudinary widget. Current asset:', asset);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[HighResManager] Opening Cloudinary widget. Current asset:', asset);
+    }
 
     // If replacing an existing Cloudinary asset, delete it first
     if (asset?.assetType === 'cloudinary') {
@@ -61,12 +63,16 @@ export function AdminHighResUpload({
       let publicId = asset.cloudinaryPublicId;
 
       if (!publicId && asset.cloudinaryUrl) {
-        console.log('[HighResManager] No public_id stored, extracting from URL...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[HighResManager] No public_id stored, extracting from URL...');
+        }
         publicId = extractCloudinaryPublicId(asset.cloudinaryUrl) || undefined;
       }
 
       if (publicId) {
-        console.log('[HighResManager] Deleting old Cloudinary asset before uploading new one');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[HighResManager] Deleting old Cloudinary asset before uploading new one');
+        }
         await deleteFromCloudinary(publicId);
       }
     }
@@ -177,7 +183,9 @@ export function AdminHighResUpload({
    * Delete asset from Cloudinary
    */
   const deleteFromCloudinary = async (publicId: string) => {
-    console.log('[HighResManager] Attempting to delete asset with public_id:', publicId);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[HighResManager] Attempting to delete asset with public_id:', publicId);
+    }
 
     try {
       const response = await fetch('/api/cloudinary/delete', {
@@ -189,7 +197,9 @@ export function AdminHighResUpload({
       });
 
       const result = await response.json();
-      console.log('[HighResManager] Deletion API response:', { status: response.status, result });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[HighResManager] Deletion API response:', { status: response.status, result });
+      }
 
       if (!response.ok) {
         console.error('[HighResManager] Failed to delete from Cloudinary:', result);
@@ -198,7 +208,9 @@ export function AdminHighResUpload({
         return false;
       }
 
-      console.log('[HighResManager] ✅ Successfully deleted from Cloudinary:', publicId);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[HighResManager] ✅ Successfully deleted from Cloudinary:', publicId);
+      }
       return true;
     } catch (error) {
       console.error('[HighResManager] Error deleting from Cloudinary:', error);
@@ -212,7 +224,9 @@ export function AdminHighResUpload({
    * If the current asset is from Cloudinary, delete it first
    */
   const handleReset = async () => {
-    console.log('[HighResManager] Reset called. Current asset:', asset);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[HighResManager] Reset called. Current asset:', asset);
+    }
 
     // If current asset is from Cloudinary, delete it
     if (asset?.assetType === 'cloudinary') {
@@ -220,19 +234,29 @@ export function AdminHighResUpload({
       let publicId = asset.cloudinaryPublicId;
 
       if (!publicId && asset.cloudinaryUrl) {
-        console.log('[HighResManager] No public_id stored, extracting from URL...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[HighResManager] No public_id stored, extracting from URL...');
+        }
         publicId = extractCloudinaryPublicId(asset.cloudinaryUrl) || undefined;
-        console.log('[HighResManager] Extracted public_id:', publicId);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[HighResManager] Extracted public_id:', publicId);
+        }
       }
 
       if (publicId) {
-        console.log('[HighResManager] Deleting Cloudinary asset before reset');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[HighResManager] Deleting Cloudinary asset before reset');
+        }
         await deleteFromCloudinary(publicId);
       } else {
-        console.warn('[HighResManager] Could not determine public_id for deletion');
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[HighResManager] Could not determine public_id for deletion');
+        }
       }
     } else {
-      console.log('[HighResManager] No Cloudinary asset to delete. Asset type:', asset?.assetType);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[HighResManager] No Cloudinary asset to delete. Asset type:', asset?.assetType);
+      }
     }
 
     setAsset(null);

@@ -36,7 +36,7 @@ export default function ProductCard({
       )}
     >
       {/* Image Container - Vertical Aspect Ratio (Portrait) */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+      <div className="relative aspect-3/4 overflow-hidden bg-muted">
         <Image
           src={imageUrl}
           alt={title}

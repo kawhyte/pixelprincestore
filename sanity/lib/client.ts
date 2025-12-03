@@ -169,6 +169,82 @@ export async function getAllProducts(): Promise<FreeArt[]> {
 }
 
 /**
+ * Fetch related products by category (excluding current product)
+ * Returns up to 3 related products from the same category
+ */
+export async function getRelatedProducts(category: string, currentSlug: string): Promise<FreeArt[]> {
+  // If no category provided, return empty array
+  if (!category) return [];
+
+  const query = `*[_type == "product" && category == $category && slug.current != $currentSlug] | order(_createdAt desc) [0...3] {
+    _id,
+    _createdAt,
+    title,
+    slug,
+    artist,
+    description,
+    previewImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          }
+        }
+      }
+    },
+    category
+  }`
+
+  const products = await client.fetch<SanityProduct[]>(query, { category, currentSlug })
+
+  // Transform to FreeArt interface (simplified for related products)
+  return products.map((product) => {
+    let previewImageOrientation: ImageOrientation | undefined;
+    let previewImageUrl = '';
+
+    // Extract orientation from image metadata if available
+    if (product.previewImage?.asset?.metadata?.dimensions) {
+      const { width, height } = product.previewImage.asset.metadata.dimensions;
+      previewImageOrientation = getImageOrientation(width, height);
+
+      // Apply optimal image transform based on detected orientation
+      const { width: transformWidth, height: transformHeight } =
+        getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
+
+      previewImageUrl = urlFor(product.previewImage)
+        .width(transformWidth)
+        .height(transformHeight)
+        .url();
+    } else {
+      // Fallback for images without metadata (default to portrait 3:4)
+      previewImageUrl = product.previewImage
+        ? urlFor(product.previewImage).width(600).height(800).url()
+        : '';
+    }
+
+    return {
+      id: product.slug.current,
+      title: product.title,
+      artist: product.artist,
+      description: product.description,
+      longDescription: product.longDescription,
+      previewImage: previewImageUrl,
+      previewImageOrientation,
+      detailImage: undefined,
+      sizes: [],
+      allSizesZip: '',
+      zipUrl: undefined,
+      tags: [],
+      category: product.category,
+    };
+  })
+}
+
+/**
  * Fetch a single product by slug
  */
 export async function getProductBySlug(slug: string): Promise<FreeArt | null> {

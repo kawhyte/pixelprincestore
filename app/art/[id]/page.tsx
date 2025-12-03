@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAllProducts, getProductBySlug } from "@/sanity/lib/client";
+import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/sanity/lib/client";
 import ArtDetailClient from "./art-detail-client";
 
 interface PageProps {
@@ -27,6 +27,9 @@ export default async function ArtDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch related products (same category, excluding current)
+  const relatedArt = await getRelatedProducts(art.category || '', id);
+
   // Generate JSON-LD structured data for SEO (Product Schema)
   const jsonLd = {
     "@context": "https://schema.org",
@@ -53,7 +56,7 @@ export default async function ArtDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ArtDetailClient art={art} />
+      <ArtDetailClient art={art} relatedArt={relatedArt} />
     </>
   );
 }

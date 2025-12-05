@@ -8,6 +8,7 @@ import {
   serializeDownloadCookie,
   getStatusMessage,
 } from "@/lib/download-tracking";
+import { writeClient } from "@/sanity/lib/write-client";
 
 /**
  * Secure API Route for Downloading Free Digital Art
@@ -106,6 +107,24 @@ export async function GET(request: NextRequest) {
           { status: 403 }
         );
       }
+    }
+
+    // Increment download count in Sanity (fire-and-forget)
+    // CRITICAL: This runs in the background and does NOT block the file download
+    if (writeClient) {
+      try {
+        writeClient
+          .patch(artPiece._id)
+          .inc({ downloads: 1 })
+          .commit()
+          .catch((error) => {
+            console.error('[CLAIM-ART] Failed to increment download count in Sanity:', error);
+          });
+      } catch (error) {
+        console.error('[CLAIM-ART] Error setting up Sanity download increment:', error);
+      }
+    } else {
+      console.warn('[CLAIM-ART] Write client not available - download count will not be incremented');
     }
 
     // Determine download URL and file details

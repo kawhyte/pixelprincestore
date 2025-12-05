@@ -189,6 +189,15 @@ export const product = defineType({
         ],
       },
     }),
+    defineField({
+      name: 'downloads',
+      title: 'Total Downloads',
+      type: 'number',
+      description: 'Total number of times this art piece has been downloaded (automatically tracked)',
+      initialValue: 0,
+      readOnly: true,
+      validation: (Rule) => Rule.min(0).integer(),
+    }),
   ],
   preview: {
     select: {

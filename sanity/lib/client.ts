@@ -57,9 +57,11 @@ export interface SanityProduct {
   zipUrl?: string // Cloudinary or Google Drive URL for ZIP
   tags?: string[]
   category?: string
+  downloads?: number
 }
 
 export interface FreeArt {
+  _id: string
   id: string
   title: string
   artist: string
@@ -73,6 +75,7 @@ export interface FreeArt {
   zipUrl?: string // Cloudinary or Google Drive URL for ZIP
   tags: string[]
   category?: string
+  downloads?: number
 }
 
 /**
@@ -118,7 +121,8 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     allSizesZip,
     zipUrl,
     tags,
-    category
+    category,
+    downloads
   }`
 
   const products = await client.fetch<SanityProduct[]>(query)
@@ -149,6 +153,7 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     }
 
     return {
+      _id: product._id,
       id: product.slug.current,
       title: product.title,
       artist: product.artist,
@@ -164,6 +169,7 @@ export async function getAllProducts(): Promise<FreeArt[]> {
       zipUrl: product.zipUrl,
       tags: product.tags || [],
       category: product.category,
+      downloads: product.downloads || 0,
     };
   })
 }
@@ -227,6 +233,7 @@ export async function getRelatedProducts(category: string, currentSlug: string):
     }
 
     return {
+      _id: product._id,
       id: product.slug.current,
       title: product.title,
       artist: product.artist,
@@ -240,6 +247,7 @@ export async function getRelatedProducts(category: string, currentSlug: string):
       zipUrl: undefined,
       tags: [],
       category: product.category,
+      downloads: 0,
     };
   })
 }
@@ -286,7 +294,8 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     allSizesZip,
     zipUrl,
     tags,
-    category
+    category,
+    downloads
   }`
 
   const product = await client.fetch<SanityProduct | null>(query, { slug })
@@ -317,6 +326,7 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
   }
 
   return {
+    _id: product._id,
     id: product.slug.current,
     title: product.title,
     artist: product.artist,
@@ -332,5 +342,6 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     zipUrl: product.zipUrl,
     tags: product.tags || [],
     category: product.category,
+    downloads: product.downloads || 0,
   }
 }

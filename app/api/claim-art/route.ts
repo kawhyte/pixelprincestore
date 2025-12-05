@@ -115,6 +115,7 @@ export async function GET(request: NextRequest) {
       try {
         writeClient
           .patch(artPiece._id)
+          .setIfMissing({ downloads: 0 }) // Initialize field if it doesn't exist
           .inc({ downloads: 1 })
           .commit()
           .catch((error) => {

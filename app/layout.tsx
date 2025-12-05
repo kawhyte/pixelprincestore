@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ConditionalNavigation from "@/components/common/Navigation/ConditionalNavigation";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-sans",

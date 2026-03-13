@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
+import CartDrawer from "@/components/common/CartDrawer/CartDrawer";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <>
@@ -39,20 +41,36 @@ export default function Navigation() {
               >
                 Free Downloads
               </Link>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
+                aria-label="Open cart"
+              >
+                <ShoppingBag className="h-5 w-5" />
+              </button>
             </div>
 
-            {/* Mobile Menu Button - Visible on mobile only */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100 md:hidden"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
+            {/* Mobile right-side controls */}
+            <div className="flex items-center gap-2 md:hidden">
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100"
+                aria-label="Open cart"
+              >
+                <ShoppingBag className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -95,6 +113,9 @@ export default function Navigation() {
           className="fixed inset-0 top-16 z-30 bg-black/20 backdrop-blur-sm md:hidden"
         />
       )}
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }

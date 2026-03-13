@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Response Style
+- Be strictly token-efficient: no filler, no preamble, no summaries.
+- Output only necessary code changes — no surrounding context unless critical.
+- Skip explanations unless the logic is non-obvious.
+
 ## Project Overview
 
 The Pixel Prince Store is a Next.js 16 (App Router) digital art store powered by Sanity CMS. The core feature is a free art download system with a rolling 7-day download limit (3 downloads per week) enforced via cookie-based tracking. Content is managed through Sanity CMS, with high-resolution assets hosted on Cloudinary or external URLs (Google Drive/Dropbox).

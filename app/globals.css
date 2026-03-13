@@ -135,12 +135,17 @@
 }
 
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
 
   body {
     @apply bg-cream text-charcoal font-sans;
+    overflow-x: hidden;
   }
 
   /* Typography defaults */

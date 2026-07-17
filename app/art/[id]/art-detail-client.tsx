@@ -4,13 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Download, Package, Sparkles } from "lucide-react";
-import confetti from "canvas-confetti";
-import { toast } from "sonner";
 
 import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
-import { useDownloadTracking } from "@/lib/use-download-tracking";
 import { getCardAspectClass } from "@/lib/image-utils";
+import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -18,173 +16,10 @@ interface ArtDetailClientProps {
 }
 
 export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProps) {
-  const [selectedSize, setSelectedSize] = useState<ArtSize | null>(null);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const tracking = useDownloadTracking();
-
-  // Select first available size by default
-  if (!selectedSize && art.sizes.length > 0) {
-    const firstAvailable = art.sizes.find(size => size.availability === 'available');
-    if (firstAvailable) {
-      setSelectedSize(firstAvailable);
-    }
-  }
-
-  const triggerConfetti = () => {
-    const duration = 3000;
-    const animationEnd = Date.now() + duration;
-    const defaults = {
-      startVelocity: 30,
-      spread: 360,
-      ticks: 60,
-      zIndex: 0,
-      colors: ["#7a9d66", "#d4bfae", "#cbbfdd", "#f3f1e8"],
-    };
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min;
-    }
-
-    const interval: NodeJS.Timeout = setInterval(function () {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
-
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      });
-    }, 250);
-  };
-
-  const handleDownloadSize = async () => {
-    if (!selectedSize) return;
-    setIsDownloading(true);
-
-    try {
-      const response = await fetch(
-        `/api/claim-art?artId=${art.id}&sizeId=${selectedSize.id}`
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        if (response.status === 403) {
-          toast.error("Download limit reached", {
-            description: error.error || "You've reached your download limit.",
-            duration: 5000,
-          });
-        } else {
-          toast.error("Download failed", {
-            description: error.error || "Please try again later.",
-          });
-        }
-
-        setIsDownloading(false);
-        tracking.refresh();
-        return;
-      }
-
-      // Convert response to blob
-      const blob = await response.blob();
-
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${art.title.replace(/\s+/g, "-")}-${selectedSize.id}.png`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      // Success! Trigger confetti and toast
-      triggerConfetti();
-      toast.success("🎉 Download successful!", {
-        description: `${art.title} (${selectedSize.displayLabel || selectedSize.label}) is now in your downloads folder.`,
-        duration: 6000,
-      });
-
-      // Refresh tracking
-      tracking.refresh();
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Download failed", {
-        description: "Please check your connection and try again.",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-  const handleDownloadAll = async () => {
-    setIsDownloading(true);
-
-    try {
-      const response = await fetch(
-        `/api/claim-art?artId=${art.id}&type=all`
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        if (response.status === 403) {
-          toast.error("Download limit reached", {
-            description: error.error || "You've reached your download limit.",
-            duration: 5000,
-          });
-        } else {
-          toast.error("Download failed", {
-            description: error.error || "Please try again later.",
-          });
-        }
-
-        setIsDownloading(false);
-        tracking.refresh();
-        return;
-      }
-
-      // Convert response to blob
-      const blob = await response.blob();
-
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${art.title.replace(/\s+/g, "-")}-all-sizes.zip`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      // Success! Trigger confetti and toast
-      triggerConfetti();
-      toast.success("🎉 Download successful!", {
-        description: `${art.title} (All Sizes) is now in your downloads folder.`,
-        duration: 6000,
-      });
-
-      // Refresh tracking
-      tracking.refresh();
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Download failed", {
-        description: "Please check your connection and try again.",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  const [selectedSize, setSelectedSize] = useState<ArtSize | null>(
+    () => art.sizes.find((s) => s.availability === "available") ?? null
+  );
+  const [gateSize, setGateSize] = useState<{ sizeId: string; sizeLabel: string } | null>(null);
 
   return (
     <div className="min-h-screen bg-cream">
@@ -259,7 +94,6 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {art.sizes.map((size) => {
-                  const isDownloaded = tracking.hasDownloadedSize(art.id, size.id);
                   const isComingSoon = size.availability === 'coming-soon';
                   const isAvailable = size.availability === 'available';
 
@@ -273,15 +107,13 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                           ? "cursor-not-allowed border-border bg-muted/30 opacity-60"
                           : selectedSize?.id === size.id
                           ? "border-sage-500 bg-sage-50 shadow-md"
-                          : isDownloaded
-                          ? "border-lavender-200 bg-lavender-50/50 opacity-75"
                           : "border-border bg-card hover:border-sage-200 hover:bg-sage-50/50"
                       }`}
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
                           <div className="flex flex-col">
-                            <span className={`font-semibold ${isDownloaded || isComingSoon ? "text-muted-foreground" : "text-charcoal"}`}>
+                            <span className={`font-semibold ${isComingSoon ? "text-muted-foreground" : "text-charcoal"}`}>
                               {size.displayLabel || size.label}
                             </span>
                             {size.alternateLabel && (
@@ -295,17 +127,12 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                               Coming Soon
                             </span>
                           )}
-                          {!isComingSoon && selectedSize?.id === size.id && !isDownloaded && (
+                          {!isComingSoon && selectedSize?.id === size.id && (
                             <div className="h-5 w-5 rounded-full bg-sage-500 flex items-center justify-center">
                               <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
-                          )}
-                          {!isComingSoon && isDownloaded && (
-                            <span className="text-xs font-medium text-sage-600">
-                              Downloaded ✓
-                            </span>
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -342,67 +169,32 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             {/* Download Buttons */}
             <div className="space-y-3">
               <Button
-                onClick={handleDownloadSize}
-                disabled={!selectedSize || selectedSize.availability !== 'available' || isDownloading || tracking.remaining === 0}
+                onClick={() =>
+                  selectedSize &&
+                  setGateSize({
+                    sizeId: selectedSize.id,
+                    sizeLabel: selectedSize.displayLabel || selectedSize.id,
+                  })
+                }
+                disabled={!selectedSize || selectedSize.availability !== 'available'}
                 className="w-full rounded-2xl bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
-                {isDownloading ? (
-                  <>
-                    <span className="animate-spin">⏳</span>
-                    <span className="ml-2">Downloading...</span>
-                  </>
-                ) : tracking.remaining === 0 ? (
-                  <>
-                    <Download className="h-5 w-5" />
-                    <span className="ml-2">Weekly Limit Reached</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="h-5 w-5" />
-                    <span className="ml-2">
-                      Download {selectedSize?.displayLabel || selectedSize?.label || "Selected Size"}
-                    </span>
-                  </>
-                )}
+                <Download className="h-5 w-5" />
+                <span className="ml-2">Email me this size — free</span>
               </Button>
 
               {/* Only show ZIP download button if zipUrl is available */}
               {art.zipUrl && (
-                <>
-                  {tracking.hasDownloadedAllSizes(art.id) ? (
-                    <div className="w-full rounded-2xl border-2 border-lavender-200 bg-lavender-50 py-6 text-center">
-                      <p className="text-lg font-semibold text-muted-foreground">
-                        ZIP Already Downloaded ✓
-                      </p>
-                    </div>
-                  ) : (
-                    <Button
-                      onClick={handleDownloadAll}
-                      disabled={isDownloading || tracking.remaining === 0}
-                      variant="outline"
-                      className="w-full rounded-2xl border-2 border-charcoal py-6 text-lg font-semibold hover:bg-charcoal hover:text-cream disabled:opacity-50"
-                      size="lg"
-                    >
-                      {isDownloading ? (
-                        <>
-                          <span className="animate-spin">⏳</span>
-                          <span className="ml-2">Preparing...</span>
-                        </>
-                      ) : tracking.remaining === 0 ? (
-                        <>
-                          <Package className="h-5 w-5" />
-                          <span className="ml-2">Weekly Limit Reached</span>
-                        </>
-                      ) : (
-                        <>
-                          <Package className="h-5 w-5" />
-                          <span className="ml-2">Download All Sizes (ZIP)</span>
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </>
+                <Button
+                  onClick={() => setGateSize({ sizeId: "all", sizeLabel: "All sizes (ZIP)" })}
+                  variant="outline"
+                  className="w-full rounded-2xl border-2 border-charcoal py-6 text-lg font-semibold hover:bg-charcoal hover:text-cream disabled:opacity-50"
+                  size="lg"
+                >
+                  <Package className="h-5 w-5" />
+                  <span className="ml-2">Email me all sizes (ZIP) — free</span>
+                </Button>
               )}
             </div>
 
@@ -432,23 +224,6 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               )}
             </div>
 
-            {/* Weekly Limit Info */}
-            {/* <div className="rounded-2xl bg-lavender-50 p-6">
-              {tracking.isLoading ? (
-                <p className="text-sm text-soft-charcoal">Loading download status...</p>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-sm text-soft-charcoal">
-                    <strong className="text-charcoal">Free downloads:</strong> {tracking.message}
-                  </p>
-                  {tracking.remaining > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Choose wisely or grab the ZIP to get all sizes at once!
-                    </p>
-                  )}
-                </div>
-              )}
-            </div> */}
           </div>
         </div>
 
@@ -492,6 +267,15 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
           </section>
         )}
       </main>
+
+      <EmailGateDialog
+        open={!!gateSize}
+        onOpenChange={(o) => !o && setGateSize(null)}
+        artId={art.id}
+        artTitle={art.title}
+        sizeId={gateSize?.sizeId ?? ""}
+        sizeLabel={gateSize?.sizeLabel ?? ""}
+      />
     </div>
   );
 }

@@ -1,42 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductBySlug } from "@/sanity/lib/client";
-import { DOWNLOAD_COOKIE_NAME, COOKIE_MAX_AGE } from "@/config/free-art";
-import {
-  parseDownloadCookie,
-  canDownload,
-  addDownload,
-  serializeDownloadCookie,
-  getStatusMessage,
-} from "@/lib/download-tracking";
+import { verifyDownloadToken } from "@/lib/download-token";
 import { writeClient } from "@/sanity/lib/write-client";
 
 /**
  * Secure API Route for Downloading Free Digital Art
  *
  * This route:
- * 1. Validates artId and sizeId (or type=all for ZIP)
- * 2. Checks weekly download limit (3 per week)
- * 3. Streams the file from Cloudinary or external URL (Google Drive/Dropbox)
- * 4. Updates cookie with download record
+ * 1. Verifies the signed download token (issued via /api/request-download)
+ * 2. Streams the file from Cloudinary or external URL (Google Drive/Dropbox)
  *
  * Query Parameters:
- * - artId: ID of the art piece (required)
- * - sizeId: ID of the size (required for single downloads)
- * - type: "single" or "all" (default: "single")
+ * - token: signed download token (required in production)
  *
- * Examples:
- * - /api/claim-art?artId=art_1&sizeId=8x10
- * - /api/claim-art?artId=art_1&type=all
- *
- * DEV MODE: Set DISABLE_DOWNLOAD_LIMIT=true in .env.local to bypass limits
+ * DEV MODE: Set DISABLE_DOWNLOAD_LIMIT=true in .env.local to bypass the token
+ * requirement and use the old artId/sizeId/type query params directly.
  */
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const artId = searchParams.get("artId");
-    const sizeId = searchParams.get("sizeId");
-    const type = searchParams.get("type") || "single";
+    const token = searchParams.get("token");
+
+    // Dev bypass keeps the old query-param form working locally
+    const downloadLimitDisabled = process.env.DISABLE_DOWNLOAD_LIMIT === "true";
+
+    let artId: string | null;
+    let sizeId: string | null;
+    let isZip: boolean;
+
+    if (token) {
+      const claim = await verifyDownloadToken(token);
+      if (!claim) {
+        return NextResponse.json(
+          { error: "This download link is invalid or has expired (links last 72 hours). Request the art again to get a fresh link." },
+          { status: 403 }
+        );
+      }
+      artId = claim.artId;
+      isZip = claim.sizeId === "all";
+      sizeId = isZip ? null : claim.sizeId;
+    } else if (downloadLimitDisabled) {
+      artId = searchParams.get("artId");
+      sizeId = searchParams.get("sizeId");
+      isZip = (searchParams.get("type") || "single") === "all";
+    } else {
+      return NextResponse.json(
+        { error: "A download token is required. Enter your email on the artwork page to receive a download link." },
+        { status: 401 }
+      );
+    }
 
     // Validate artId
     if (!artId) {
@@ -56,9 +69,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Determine if this is a ZIP download
-    const isZip = type === "all";
-
     // For single downloads, validate sizeId
     if (!isZip && !sizeId) {
       return NextResponse.json(
@@ -75,36 +85,6 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           { error: "Invalid sizeId - size not found" },
           { status: 404 }
-        );
-      }
-    }
-
-    // Check download limit (unless disabled for development)
-    const downloadLimitDisabled = process.env.DISABLE_DOWNLOAD_LIMIT === "true";
-
-    if (!downloadLimitDisabled) {
-      // Parse existing cookie
-      const cookieValue = request.cookies.get(DOWNLOAD_COOKIE_NAME)?.value;
-      const cookie = parseDownloadCookie(cookieValue);
-
-      // Validate download
-      const validation = canDownload(
-        cookie,
-        artId,
-        isZip ? "all" : sizeId!,
-        isZip
-      );
-
-      if (!validation.allowed) {
-        const status = getStatusMessage(cookie);
-        return NextResponse.json(
-          {
-            error: validation.reason,
-            remaining: status.remaining,
-            limit: status.limit,
-            resetDate: status.resetDate,
-          },
-          { status: 403 }
         );
       }
     }
@@ -228,29 +208,6 @@ export async function GET(request: NextRequest) {
         { error: "Unable to download file. Please check your connection and try again." },
         { status: 500 }
       );
-    }
-
-    // Update cookie with download record (unless disabled)
-    if (!downloadLimitDisabled) {
-      const cookieValue = request.cookies.get(DOWNLOAD_COOKIE_NAME)?.value;
-      const cookie = parseDownloadCookie(cookieValue);
-      const updatedCookie = addDownload(
-        cookie,
-        artId,
-        isZip ? "all" : sizeId!,
-        isZip
-      );
-      const serialized = serializeDownloadCookie(updatedCookie);
-
-      response.cookies.set({
-        name: DOWNLOAD_COOKIE_NAME,
-        value: serialized,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: COOKIE_MAX_AGE,
-        path: "/",
-      });
     }
 
     return response;

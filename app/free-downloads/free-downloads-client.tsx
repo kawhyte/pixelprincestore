@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
 
-import { useDownloadTracking } from "@/lib/use-download-tracking";
 import { FreeArt } from "@/sanity/lib/client";
 import { getCardAspectClass } from "@/lib/image-utils";
 
@@ -23,8 +22,6 @@ interface FreeDownloadsClientProps {
 }
 
 export default function FreeDownloadsClient({ products }: FreeDownloadsClientProps) {
-  const tracking = useDownloadTracking();
-
   // Assign earth-tone variants to each art piece
   const artWithVariants = products.map((art, index) => ({
     ...art,
@@ -54,13 +51,8 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
                 Free Wall Art Downloads
               </h1>
               <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
-                Download <span className="font-semibold text-sage-500">3 sizes per week</span> — completely free!
+                Free print-ready wall art, delivered to your inbox. 3 downloads a week.
               </p>
-              {!tracking.isLoading && (
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {tracking.message}
-                </p>
-              )}
             </div>
           </div>
         </div>

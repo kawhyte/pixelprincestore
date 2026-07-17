@@ -72,7 +72,7 @@ export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
                   />
                 </div>
                 <span className="absolute left-4 top-4 rounded-full bg-lavender-100 px-4 py-2 text-sm font-medium text-lavender-500 shadow-sm">
-                  Free this month
+                  Featured this month
                 </span>
               </Link>
             </div>

@@ -189,6 +189,9 @@ CLOUDINARY_API_SECRET=<api-secret>
 
 # Google Gemini (for AI description generator)
 GOOGLE_API_KEY=<api-key>
+
+# Admin secret gating studio-only routes (/api/cloudinary/delete, /api/gemini/generate)
+ADMIN_API_SECRET=<long-random-string>
 ```
 
 **Development Only:**
@@ -306,9 +309,8 @@ This provides:
 
 ### API Routes
 - `/api/claim-art` → Download handler (GET with query params)
-- `/api/gemini/generate` → AI description generator (POST)
-- `/api/cloudinary/delete` → Delete Cloudinary assets (DELETE)
-- `/api/debug-sanity` → Debug Sanity data (GET)
+- `/api/gemini/generate` → AI description generator (POST, requires `x-admin-secret` header)
+- `/api/cloudinary/delete` → Delete Cloudinary assets (DELETE, requires `x-admin-secret` header)
 
 ### File Streaming
 The download API uses Node.js streams for efficient large file transfer:

@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdminSecret } from '@/lib/admin-auth'
 
 interface GenerateRequest {
   title: string
@@ -13,6 +14,9 @@ interface GenerateResponse {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    const authError = requireAdminSecret(request)
+    if (authError) return authError
+
     const body: GenerateRequest = await request.json()
     const { title, imageUrl } = body
 
@@ -22,6 +26,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!title || !imageUrl) {
       return NextResponse.json(
         { error: 'Title and image URL are required' },
+        { status: 400 }
+      )
+    }
+
+    let imageHost: string
+    try {
+      imageHost = new URL(imageUrl).hostname
+    } catch {
+      return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 })
+    }
+    const allowedHosts = ['cdn.sanity.io', 'res.cloudinary.com']
+    if (!allowedHosts.includes(imageHost)) {
+      return NextResponse.json(
+        { error: 'Image URL host not allowed' },
         { status: 400 }
       )
     }

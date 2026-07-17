@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteCloudinaryAsset } from '@/lib/cloudinary-utils';
+import { requireAdminSecret } from '@/lib/admin-auth';
 
 /**
  * DELETE /api/cloudinary/delete
@@ -19,6 +20,9 @@ import { deleteCloudinaryAsset } from '@/lib/cloudinary-utils';
  */
 export async function DELETE(request: NextRequest) {
   try {
+    const authError = requireAdminSecret(request);
+    if (authError) return authError;
+
     const body = await request.json();
     const { publicId } = body;
 

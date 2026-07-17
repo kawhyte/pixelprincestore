@@ -195,6 +195,20 @@ export const product = defineType({
       type: 'boolean',
       initialValue: false,
       description: 'Show this piece in the homepage hero. Only one product should be featured at a time.',
+      validation: (Rule) =>
+        Rule.custom(async (featured, context) => {
+          if (!featured) return true
+          const id = context.document?._id?.replace(/^drafts\./, '')
+          const client = context.getClient({ apiVersion: '2025-11-27' })
+          const otherFeaturedCount = await client.fetch(
+            `count(*[_type == "product" && featured == true && !(_id in [$id, $draftId])])`,
+            { id, draftId: `drafts.${id}` }
+          )
+          if (otherFeaturedCount > 0) {
+            return 'Another product is already featured. Untick it first — only one can be featured at a time.'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'downloads',
@@ -211,10 +225,11 @@ export const product = defineType({
       title: 'title',
       artist: 'artist',
       media: 'previewImage',
+      featured: 'featured',
     },
-    prepare({ title, artist, media }) {
+    prepare({ title, artist, media, featured }) {
       return {
-        title: title,
+        title: featured ? `⭐ ${title}` : title,
         subtitle: `by ${artist}`,
         media: media,
       }

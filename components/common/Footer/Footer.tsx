@@ -127,6 +127,37 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* Column 4: Legal */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-lg font-semibold">Legal</h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Terms &amp; License
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  About
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom Bar */}

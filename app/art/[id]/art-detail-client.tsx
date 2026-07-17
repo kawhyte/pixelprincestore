@@ -9,6 +9,7 @@ import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
+import { LICENSE_SUMMARY } from "@/config/license";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -222,6 +223,12 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                   </ul>
                 </>
               )}
+              <p className="mt-4 border-t border-sage-200 pt-3 text-xs text-muted-foreground">
+                {LICENSE_SUMMARY}{" "}
+                <Link href="/terms" className="underline hover:text-sage-500">
+                  Full license
+                </Link>
+              </p>
             </div>
 
           </div>

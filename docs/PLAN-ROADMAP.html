@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Prince — Rebuild Roadmap</title>
+<style>
+  :root{
+    --cream:#f3f1e8; --card:#fdfcfa; --charcoal:#2a2a2a; --soft:#4a4a4a; --muted:#8a887f;
+    --blue:#4a7bc7; --blue-light:#e1eafa; --blue-lighter:#f0f4fb;
+    --clay:#d4bfae; --clay-light:#f2ebe6;
+    --lavender:#cbbfdd; --lavender-light:#eeebf5;
+    --green:#5f8f5a; --green-light:#e7efe4;
+    --amber:#b07d3f; --amber-light:#f5ead9;
+    --red:#c05555; --red-light:#f6e3e3;
+    --border:#e4e0d2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--charcoal);font-family:Georgia,'Times New Roman',serif;line-height:1.55;padding:0 16px 80px}
+  .sans{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+  .wrap{max-width:880px;margin:0 auto}
+
+  header{padding:56px 0 28px;text-align:center}
+  header h1{font-size:clamp(28px,5vw,44px);font-weight:900;letter-spacing:-0.5px}
+  header p.sub{font-family:Helvetica,Arial,sans-serif;color:var(--soft);margin-top:10px;font-size:16px;max-width:560px;margin-left:auto;margin-right:auto}
+  .crown{font-size:34px;display:block;margin-bottom:6px}
+
+  /* progress */
+  .progress-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px 26px;margin:18px 0 40px;box-shadow:0 2px 10px rgba(42,42,42,.05)}
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;font-family:Helvetica,Arial,sans-serif}
+  .progress-top b{font-size:15px}
+  .progress-top span{color:var(--muted);font-size:13px}
+  .bar{height:12px;background:var(--blue-lighter);border-radius:999px;margin-top:12px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--blue),#7aa3e0);border-radius:999px;transition:width .4s ease}
+
+  /* legend */
+  .legend{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:36px;font-family:Helvetica,Arial,sans-serif;font-size:12px}
+  .pill{padding:4px 12px;border-radius:999px;font-weight:600}
+  .sev-critical{background:var(--red-light);color:var(--red)}
+  .sev-high{background:var(--amber-light);color:var(--amber)}
+  .sev-medium{background:var(--blue-light);color:var(--blue)}
+  .sev-simple{background:var(--green-light);color:var(--green)}
+
+  /* phases */
+  .phase-label{font-family:Helvetica,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 6px;display:flex;align-items:center;gap:10px}
+  .phase-label::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  /* timeline */
+  .step{display:flex;gap:18px;position:relative}
+  .rail{display:flex;flex-direction:column;align-items:center;width:44px;flex-shrink:0}
+  .dot{width:44px;height:44px;border-radius:50%;background:var(--card);border:2px solid var(--blue);color:var(--blue);display:flex;align-items:center;justify-content:center;font-family:Helvetica,Arial,sans-serif;font-weight:800;font-size:15px;flex-shrink:0;transition:all .3s}
+  .line{width:2px;flex:1;background:var(--border);min-height:24px}
+  .step:last-of-type .line{background:transparent}
+  .step.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px 24px;margin-bottom:26px;flex:1;box-shadow:0 2px 10px rgba(42,42,42,.04);transition:opacity .3s}
+  .step.done .card{opacity:.72}
+  .card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .card h2{font-size:20px;font-weight:800}
+  .card .file{font-family:Menlo,Consolas,monospace;font-size:11px;color:var(--muted);margin-top:3px;word-break:break-all}
+  .card p.why{font-family:Helvetica,Arial,sans-serif;color:var(--soft);font-size:14px;margin:12px 0 4px}
+
+  .tasks{list-style:none;margin-top:12px}
+  .tasks li{margin:0}
+  .tasks label{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:var(--charcoal)}
+  .tasks label:hover{background:var(--blue-lighter)}
+  .tasks input{appearance:none;width:20px;height:20px;border:2px solid var(--blue);border-radius:7px;flex-shrink:0;cursor:pointer;position:relative;margin-top:1px;background:#fff;transition:all .15s}
+  .tasks input:checked{background:var(--green);border-color:var(--green)}
+  .tasks input:checked::after{content:"✓";color:#fff;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
+  .tasks input:checked + span{color:var(--muted);text-decoration:line-through}
+  .tasks input:disabled{cursor:default;opacity:.9}
+  .verified-badge{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;font-weight:700;color:var(--green);background:var(--green-light);border-radius:999px;padding:2px 8px;margin-left:8px;flex-shrink:0;white-space:nowrap}
+
+  .note{border-radius:14px;padding:12px 14px;margin-top:14px;font-family:Helvetica,Arial,sans-serif;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+  .note b{font-weight:700}
+  .note.tip{background:var(--lavender-light);color:#5c4d78}
+  .note.warn{background:var(--amber-light);color:#7d5626}
+  .note.win{background:var(--green-light);color:#3f6b3a}
+  .note .ico{font-size:15px;line-height:1.3}
+
+  .kenny{background:var(--clay-light);border:1px dashed var(--clay);border-radius:14px;padding:12px 14px;margin-top:12px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#6d5a48}
+  .kenny b{color:#5a4936}
+
+  footer{text-align:center;margin-top:48px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:var(--muted)}
+  .reset{background:none;border:1px solid var(--border);border-radius:999px;padding:6px 16px;font-size:12px;color:var(--muted);cursor:pointer;margin-top:10px;font-family:inherit}
+  .reset:hover{color:var(--red);border-color:var(--red)}
+
+  @media (max-width:560px){
+    .rail{width:34px}
+    .dot{width:34px;height:34px;font-size:13px}
+    .card{padding:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="crown">👑</span>
+  <h1>The Pixel Prince — Rebuild Roadmap</h1>
+  <p class="sub sans">12 plans, in order. Each card is one plan file in <b>docs/</b>. Check things off as they're finished — this page remembers your progress.</p>
+</header>
+
+<div class="progress-card">
+  <div class="progress-top"><b id="pct">0% complete</b><span id="count">0 of 0 tasks done</span></div>
+  <div class="bar"><i id="fill"></i></div>
+</div>
+
+<div class="legend">
+  <span class="pill sev-critical">CRITICAL — do not skip</span>
+  <span class="pill sev-high">HIGH — big impact</span>
+  <span class="pill sev-medium">MEDIUM — growth engine</span>
+  <span class="pill sev-simple">SIMPLE — quick win</span>
+</div>
+
+<!-- ============ PHASE A ============ -->
+<div class="phase-label">Phase A · Lock the doors &amp; lay the foundation</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">1</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Security Lockdown</h2><div class="file">PLAN-01-critical-api-security-lockdown.md</div></div>
+      <span class="pill sans sev-critical">CRITICAL</span>
+    </div>
+    <p class="why">Right now, anyone on the internet can delete your Cloudinary art files and burn your Google AI credits. This closes those doors. Visitors notice nothing.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="1a"><span>Delete public debug pages &amp; endpoints</span></label></li>
+      <li><label><input type="checkbox" data-t="1b"><span>Add admin secret to the delete + AI endpoints</span></label></li>
+      <li><label><input type="checkbox" data-t="1c"><span>Add ADMIN_API_SECRET to .env.local and Vercel</span></label></li>
+      <li><label><input type="checkbox" data-t="1d"><span>Verify: Studio AI generator still works after entering secret</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">⚠️</span><span><b>Why first:</b> everything else is pointless if someone can wipe your art library while you build.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">2</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Testing Foundation</h2><div class="file">PLAN-02-simple-testing-foundation.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">A safety net so every later change can prove it didn't break the site. About half a day of setup.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="2a"><span>Install Vitest (unit tests) + Playwright (browser tests)</span></label></li>
+      <li><label><input type="checkbox" data-t="2b"><span>Unit tests for download-limit logic</span></label></li>
+      <li><label><input type="checkbox" data-t="2c"><span>Browser smoke test: home → gallery → art page</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">💡</span><span><b>Note:</b> from here on, every plan ends with "all tests green" — that's your no-broken-site guarantee.</span></div>
+  </div>
+</div>
+
+<!-- ============ PHASE B ============ -->
+<div class="phase-label">Phase B · The email engine (the whole point)</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">12</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>One-File Art Pipeline</h2><div class="file">PLAN-12-high-single-file-pipeline.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">The tedium killer: ONE master PNG per artwork (4:5 ratio) instead of 3–4 per-size uploads. Visitors get one auto-built ZIP — your file + a printing guide + the license — assembled by the server. You never type dimensions, never build a ZIP, never touch the public folder again.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="12a"><span>Schema switched to one master file (ratio &amp; resolution auto-detected)</span></label></li>
+      <li><label><input type="checkbox" data-t="12b"><span>Auto-ZIP download (PNG + print guide + license)</span></label></li>
+      <li><label><input type="checkbox" data-t="12c"><span>Art page: one download button + "prints at 3 sizes" chips</span></label></li>
+      <li><label><input type="checkbox" data-t="12d"><span>Existing artworks migrated to the one-file model</span></label></li>
+      <li><label><input type="checkbox" data-t="12e"><span>How-to-print PDF created (Kenny, once — ships in every ZIP forever)</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">🔢</span><span><b>Numbering note:</b> this card says 12 (it was added later) but it runs <b>third</b> — right here, before the email gate, which is built on top of it.</span></div>
+    <div class="kenny"><b>✍️ Kenny homework:</b> export masters at 4:5, 4800×6000 px, under 10MB (re-export at 3600×4500 if too big) — and make the one-time printing-guide PDF.</div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">3</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Email-Gated Downloads</h2><div class="file">PLAN-03-critical-email-capture-engine.md</div></div>
+      <span class="pill sans sev-critical">CRITICAL</span>
+    </div>
+    <p class="why">The heart of the strategy: free art in exchange for an email. Visitor picks art → enters email → gets a 72-hour download link by email → lands on your list. Welcome email included.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="3a"><span>Create Resend account + Audience, verify domain (SPF/DKIM)</span></label></li>
+      <li><label><input type="checkbox" data-t="3b"><span>Email dialog on art pages (email + consent + honeypot — no size picking, one file per artwork)</span></label></li>
+      <li><label><input type="checkbox" data-t="3c"><span>Signed 72-hour download links (no more shareable URLs)</span></label></li>
+      <li><label><input type="checkbox" data-t="3d"><span>3-per-week limit now tracked per email (not by cookie)</span></label></li>
+      <li><label><input type="checkbox" data-t="3e"><span>Welcome email for first-time subscribers</span></label></li>
+      <li><label><input type="checkbox" data-t="3f"><span>Full test: stranger's email → link arrives → file downloads</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">📬</span><span><b>Do domain verification (SPF/DKIM) the same day</b> — without it your emails land in spam and the whole engine looks broken.</span></div>
+    <div class="note win"><span class="ico">🏆</span><span><b>Milestone:</b> after this plan, every download grows your list — the #1 job of the site.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">4</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Homepage Rebuild</h2><div class="file">PLAN-04-high-homepage-rebuild.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">Out: fake products, fake prices, dead links, the cart icon. In: "Free print of the month" hero + email signup, your real art, and clear paths to both Etsy shops.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="4a"><span>Hero: featured freebie + email form above the fold</span></label></li>
+      <li><label><input type="checkbox" data-t="4b"><span>Real free-art grid from Sanity (no fake products)</span></label></li>
+      <li><label><input type="checkbox" data-t="4c"><span>Etsy band: printed shop + printables shop (with tracking tags)</span></label></li>
+      <li><label><input type="checkbox" data-t="4d"><span>Remove cart icon + drawer, delete mock product pages</span></label></li>
+      <li><label><input type="checkbox" data-t="4e"><span>Tick "Featured" on one artwork in Studio</span></label></li>
+      <li><label><input type="checkbox" data-t="4f"><span>Lottie animation + fake "2,500 customers" claim removed (real art + real download count instead)</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">💡</span><span><b>Design choice:</b> browsing stays 100% open — the email ask only appears at the moment someone downloads. No walls, no bounce.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">5</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Legal Pages + About</h2><div class="file">PLAN-05-high-legal-and-compliance.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">Privacy + Terms are required by Resend, Pinterest business accounts, and US email law. The About page puts your face on the brand — humans buy from humans.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="5a"><span>/privacy and /terms pages live</span></label></li>
+      <li><label><input type="checkbox" data-t="5b"><span>License blurb on every art page (LICENSE.txt is manual per-ZIP until PLAN-12's auto-builder ships)</span></label></li>
+      <li><label><input type="checkbox" data-t="5c"><span>/about page built (with placeholders for your story)</span></label></li>
+    </ul>
+    <div class="kenny"><b>✍️ Kenny homework:</b> write your About story + add your photo, add your mailing address to the privacy page, and drop LICENSE.txt into every ZIP you upload from now on.</div>
+  </div>
+</div>
+
+<!-- ============ PHASE C ============ -->
+<div class="phase-label">Phase C · Pinterest &amp; SEO growth engine</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">6</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Art Pages → Pin Landing Pages</h2><div class="file">PLAN-06-medium-art-detail-pin-landing.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Every artwork page becomes a proper landing page for Pinterest traffic: "Get the printed version" / "Get the printable" buttons, its own social preview image, and correct page titles (currently all art pages share one generic title — a real SEO bug).</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="6a"><span>Etsy CTA buttons on every art page (with tracking tags)</span></label></li>
+      <li><label><input type="checkbox" data-t="6b"><span>Per-page titles, descriptions + auto-generated share images</span></label></li>
+      <li><label><input type="checkbox" data-t="6c"><span>Pinterest domain-claim tag added</span></label></li>
+      <li><label><input type="checkbox" data-t="6d"><span>Paste each artwork's Etsy listing URL into Studio</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">7</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Collection Landing Pages</h2><div class="file">PLAN-07-medium-collection-pages.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Four keyword pages (game room wall art, retro gaming prints, map prints, printable wall art) — the destinations ~40% of your pins will point at, and Google's front door to the site.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="7a"><span>Four /collections/ pages with real intro copy</span></label></li>
+      <li><label><input type="checkbox" data-t="7b"><span>FAQ accordions with Google rich-result markup</span></label></li>
+      <li><label><input type="checkbox" data-t="7c"><span>Email block on every collection page</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">📌</span><span><b>Once live:</b> point new pins at these four pages, not just the homepage.</span></div>
+  </div>
+</div>
+
+<!-- ============ PHASE D ============ -->
+<div class="phase-label">Phase D · Blog &amp; measurement</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">8</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Blog Engine</h2><div class="file">PLAN-08-medium-blog-engine.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Write posts entirely in Sanity Studio — with product cards and email blocks you can drop anywhere in the text. No code needed per post, ever.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="8a"><span>Blog post type in Studio (with product-embed + email blocks)</span></label></li>
+      <li><label><input type="checkbox" data-t="8b"><span>/blog index + post pages with SEO markup</span></label></li>
+      <li><label><input type="checkbox" data-t="8c"><span>Test post published end-to-end from Studio</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">9</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>"Kenny Voice" Writing Skill</h2><div class="file">PLAN-09-simple-blog-voice-skill.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">A custom Claude skill that drafts blog posts in your voice with SEO structure built in — turning each post into a 30-minute edit instead of a 3-hour write.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="9a"><span>Voice interview + samples from Meet The Whytes</span></label></li>
+      <li><label><input type="checkbox" data-t="9b"><span>Skill built with guardrails (no trademarks, no fake stories)</span></label></li>
+      <li><label><input type="checkbox" data-t="9c"><span>First post drafted: "game room wall art ideas"</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">🗓️</span><span><b>Deadline from your spec:</b> "gamer gift ideas under $50" must be live by mid-September for holiday traffic.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">10</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Analytics + Backups + Launch Plumbing</h2><div class="file">PLAN-10-simple-analytics-and-plumbing.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">Umami analytics (free, cookieless — no cookie banner) measures only what you'll actually check monthly: signups, downloads, Etsy click-outs. Your own visits are excluded so the numbers are never just you. Plus automatic monthly content backups and search-engine registration.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="10d"><span>Umami Cloud account created + website ID configured</span></label></li>
+      <li><label><input type="checkbox" data-t="10a"><span>Signup / download / Etsy-click events wired (Umami)</span></label></li>
+      <li><label><input type="checkbox" data-t="10e"><span>Self-exclusion flag set in every browser you use</span></label></li>
+      <li><label><input type="checkbox" data-t="10b"><span>Monthly automatic Sanity backup (GitHub Action)</span></label></li>
+      <li><label><input type="checkbox" data-t="10c"><span>Google Search Console + Bing set up, sitemap submitted</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">🙈</span><span><b>Not counting yourself:</b> run <code>localStorage.setItem("umami.disabled","1")</code> once in the browser console on the live site — per browser (desktop + phone). Dev/localhost never reports at all.</span></div>
+    <div class="note win"><span class="ico">🎉</span><span><b>Done = launched.</b> Monthly routine from here: 1 broadcast email, 1–2 blog posts, rotate the featured freebie, pin consistently. ~5 hrs/month.</span></div>
+  </div>
+</div>
+
+<!-- ============ PHASE E ============ -->
+<div class="phase-label">Phase E · Polish for the long haul</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">11</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Sanity Studio Makeover</h2><div class="file">PLAN-11-medium-sanity-studio-ux.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Your content editor becomes as nice as the site: adding an artwork means following five numbered tabs, every uploaded file shows a thumbnail, and the sidebar shows only Artworks / Posts / Subscribers. Fixes two hidden data bugs along the way.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="11a"><span>Artwork editor split into 5 numbered tabs with plain-English help text</span></label></li>
+      <li><label><input type="checkbox" data-t="11b"><span>Upload preview: thumbnail + auto-detected ratio &amp; resolution for the print file</span></label></li>
+      <li><label><input type="checkbox" data-t="11c"><span>Clean sidebar (Artworks / Posts / Subscribers / Media browser) + brand colors</span></label></li>
+      <li><label><input type="checkbox" data-t="11d"><span>Data fix: trailing-space category values patched</span></label></li>
+      <li><label><input type="checkbox" data-t="11e"><span>ADDING-NEW-ART guide rewritten to match the new tabs</span></label></li>
+    </ul>
+    <div class="note tip"><span class="ico">🧭</span><span><b>Flexible timing:</b> run this any time after Plan 4 — it makes your weekly routine faster but nothing else depends on it.</span></div>
+  </div>
+</div>
+
+<footer>
+  <div>Commerce stays <b>frozen</b> until Etsy hits $2K/mo × 3 months — no carts, no checkout, no prices on the site.</div>
+  <button class="reset" id="reset">Reset all checkmarks</button>
+</footer>
+
+</div>
+
+<script>
+/*
+  AGENT_VERIFIED: filled in by Claude directly in this file, not by clicking in
+  the browser. A task id goes in here only after its plan step is implemented
+  AND verified (tests/build green, feature checked working). This is the
+  file's own persistence layer, so it survives closing/reopening the doc in
+  any browser — unlike localStorage below, which only remembers Kenny's own
+  manual clicks in one browser profile.
+  Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
+*/
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true};
+</script>
+<script>
+(function(){
+  const KEY="pp-roadmap-v1";
+  const boxes=[...document.querySelectorAll('.tasks input')];
+  const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
+  boxes.forEach(b=>{
+    const verified=!!AGENT_VERIFIED[b.dataset.t];
+    b.checked = verified || !!saved[b.dataset.t];
+    if(verified){
+      b.disabled=true;
+      const badge=document.createElement('span');
+      badge.className='verified-badge';
+      badge.textContent='✓ verified';
+      b.closest('label').appendChild(badge);
+    }
+    b.addEventListener('change',update);
+  });
+  function update(){
+    const state={};
+    boxes.forEach(b=>{ if(!AGENT_VERIFIED[b.dataset.t]) state[b.dataset.t]=b.checked; });
+    localStorage.setItem(KEY,JSON.stringify(state));
+    const done=boxes.filter(b=>b.checked).length;
+    const pct=Math.round(done/boxes.length*100);
+    document.getElementById('fill').style.width=pct+"%";
+    document.getElementById('pct').textContent=pct+"% complete";
+    document.getElementById('count').textContent=done+" of "+boxes.length+" tasks done";
+    document.querySelectorAll('[data-step]').forEach(step=>{
+      const bs=[...step.querySelectorAll('input')];
+      step.classList.toggle('done',bs.length>0&&bs.every(b=>b.checked));
+    });
+  }
+  document.getElementById('reset').addEventListener('click',()=>{
+    if(confirm("Clear all checkmarks? (Claude-verified items stay checked)")){
+      boxes.forEach(b=>{ if(!AGENT_VERIFIED[b.dataset.t]) b.checked=false; });
+      update();
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>

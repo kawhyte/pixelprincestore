@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# markdown docs — only CLAUDE.md, README.md, and nested READMEs are tracked
+*.md
+!CLAUDE.md
+!README.md
+!**/README.md

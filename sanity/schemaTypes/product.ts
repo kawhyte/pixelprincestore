@@ -190,6 +190,13 @@ export const product = defineType({
       },
     }),
     defineField({
+      name: 'featured',
+      title: 'Featured Free Print of the Month',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this piece in the homepage hero. Only one product should be featured at a time.',
+    }),
+    defineField({
       name: 'downloads',
       title: 'Total Downloads',
       type: 'number',

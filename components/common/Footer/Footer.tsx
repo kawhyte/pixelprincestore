@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
 
 export default function Footer() {
   return (
@@ -83,30 +84,6 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  All Prints
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Video Game Art
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  World Maps
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/free-downloads"
                   className="text-cream/70 transition-colors hover:text-sage-300"
                 >
@@ -114,12 +91,24 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="#"
+                <a
+                  href={etsyUrl(ETSY_MAIN_SHOP, "footer")}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-cream/70 transition-colors hover:text-sage-300"
                 >
-                  New Arrivals
-                </Link>
+                  Print Shop
+                </a>
+              </li>
+              <li>
+                <a
+                  href={etsyUrl(ETSY_PRINTABLES_SHOP, "footer")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Printables
+                </a>
               </li>
             </ul>
           </div>
@@ -129,91 +118,12 @@ export default function Footer() {
             <h3 className="font-serif text-lg font-semibold">Support</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Printing Guide
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Licensing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Returns
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
+                <a
+                  href="mailto:hello@thepixelprince.com"
                   className="text-cream/70 transition-colors hover:text-sage-300"
                 >
                   Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Company */}
-          <div className="space-y-4">
-            <h3 className="font-serif text-lg font-semibold">Company</h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Our Story
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-cream/70 transition-colors hover:text-sage-300"
-                >
-                  Terms of Service
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

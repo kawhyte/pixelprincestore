@@ -71,3 +71,23 @@ export async function recordDownloadRequest(
     .commit();
   return { isNewSubscriber };
 }
+
+/** Creates the subscriber if new (no download record). Returns true if the subscriber is brand new. */
+export async function recordSubscription(
+  email: string,
+  source: string
+): Promise<{ isNewSubscriber: boolean }> {
+  if (!writeClient) throw new Error("Sanity write client not configured");
+  const id = docIdForEmail(email);
+  const existing = await writeClient.getDocument(id);
+  const isNewSubscriber = !existing;
+  await writeClient.createIfNotExists({
+    _id: id,
+    _type: "subscriber",
+    email: normalizeEmail(email),
+    consentAt: new Date().toISOString(),
+    source,
+    downloads: [],
+  });
+  return { isNewSubscriber };
+}

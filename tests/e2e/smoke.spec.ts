@@ -2,10 +2,17 @@ import { test, expect } from "@playwright/test";
 
 test("home page renders nav and free-downloads link", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("link", { name: "The Pixel Prince" })).toBeVisible();
+  await expect(
+    page.getByRole("navigation").getByRole("link", { name: "The Pixel Prince", exact: true })
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Free Downloads" }).first()
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Free retro gaming & map wall art/i })
+  ).toBeVisible();
+  await expect(page.locator('input[type="email"]').first()).toBeVisible();
+  await expect(page.locator("text=/\\$\\d+\\.\\d{2}/")).toHaveCount(0);
 });
 
 test("free downloads gallery renders and navigates to art detail", async ({ page }) => {

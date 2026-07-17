@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ShoppingBag } from "lucide-react";
-import CartDrawer from "@/components/common/CartDrawer/CartDrawer";
+import { Menu, X } from "lucide-react";
+import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <>
@@ -30,35 +29,31 @@ export default function Navigation() {
                 Home
               </Link>
               <Link
-                href="https://www.etsy.com/shop/thepixelprince"
-                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
-              >
-                Etsy Shop
-              </Link>
-              <Link
                 href="/free-downloads"
                 className="rounded-2xl bg-sage-500 px-6 py-2.5 font-sans text-sm font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-md"
               >
                 Free Downloads
               </Link>
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
-                aria-label="Open cart"
+              <a
+                href={etsyUrl(ETSY_MAIN_SHOP, "nav")}
+                target="_blank"
+                rel="noopener"
+                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
               >
-                <ShoppingBag className="h-5 w-5" />
-              </button>
+                Print Shop
+              </a>
+              <a
+                href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav")}
+                target="_blank"
+                rel="noopener"
+                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
+              >
+                Printables
+              </a>
             </div>
 
             {/* Mobile right-side controls */}
             <div className="flex items-center gap-2 md:hidden">
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100"
-                aria-label="Open cart"
-              >
-                <ShoppingBag className="h-5 w-5" />
-              </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100"
@@ -89,13 +84,24 @@ export default function Navigation() {
           >
             Home
           </Link>
-          <Link
-            href="#collection"
+          <a
+            href={etsyUrl(ETSY_MAIN_SHOP, "nav-mobile")}
+            target="_blank"
+            rel="noopener"
             onClick={() => setIsMobileMenuOpen(false)}
             className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
           >
-            Shop
-          </Link>
+            Print Shop
+          </a>
+          <a
+            href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav-mobile")}
+            target="_blank"
+            rel="noopener"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
+          >
+            Printables
+          </a>
           <Link
             href="/free-downloads"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -113,9 +119,6 @@ export default function Navigation() {
           className="fixed inset-0 top-16 z-30 bg-black/20 backdrop-blur-sm md:hidden"
         />
       )}
-
-      {/* Cart Drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }

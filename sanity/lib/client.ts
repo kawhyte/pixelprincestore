@@ -58,6 +58,7 @@ export interface SanityProduct {
   tags?: string[]
   category?: string
   downloads?: number
+  featured?: boolean
 }
 
 export interface FreeArt {
@@ -76,6 +77,7 @@ export interface FreeArt {
   tags: string[]
   category?: string
   downloads?: number
+  featured?: boolean
 }
 
 /**
@@ -122,7 +124,8 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     zipUrl,
     tags,
     category,
-    downloads
+    downloads,
+    featured
   }`
 
   const products = await client.fetch<SanityProduct[]>(query)
@@ -170,6 +173,7 @@ export async function getAllProducts(): Promise<FreeArt[]> {
       tags: product.tags || [],
       category: product.category,
       downloads: product.downloads || 0,
+      featured: product.featured,
     };
   })
 }
@@ -202,7 +206,8 @@ export async function getRelatedProducts(category: string, currentSlug: string):
         }
       }
     },
-    category
+    category,
+    featured
   }`
 
   const products = await client.fetch<SanityProduct[]>(query, { category, currentSlug })
@@ -295,7 +300,8 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     zipUrl,
     tags,
     category,
-    downloads
+    downloads,
+    featured
   }`
 
   const product = await client.fetch<SanityProduct | null>(query, { slug })
@@ -343,5 +349,99 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     tags: product.tags || [],
     category: product.category,
     downloads: product.downloads || 0,
+    featured: product.featured,
+  }
+}
+
+/**
+ * Fetch the featured "print of the month" product
+ */
+export async function getFeaturedProduct(): Promise<FreeArt | null> {
+  const query = `*[_type == "product" && featured == true] | order(_updatedAt desc) [0] {
+    _id,
+    _createdAt,
+    title,
+    slug,
+    artist,
+    description,
+    longDescription,
+    previewImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height,
+            aspectRatio
+          }
+        }
+      }
+    },
+    detailImage,
+    sizes[]{
+      id,
+      label,
+      displayLabel,
+      alternateLabel,
+      dimensions,
+      fileName,
+      fileSize,
+      recommendedFor,
+      availability,
+      comingSoonMessage,
+      highResAsset
+    },
+    allSizesZip,
+    zipUrl,
+    tags,
+    category,
+    downloads,
+    featured
+  }`
+
+  const product = await client.fetch<SanityProduct | null>(query)
+
+  if (!product) return null
+
+  let previewImageOrientation: ImageOrientation | undefined;
+  let previewImageUrl = '';
+
+  if (product.previewImage?.asset?.metadata?.dimensions) {
+    const { width, height } = product.previewImage.asset.metadata.dimensions;
+    previewImageOrientation = getImageOrientation(width, height);
+
+    const { width: transformWidth, height: transformHeight } =
+      getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
+
+    previewImageUrl = urlFor(product.previewImage)
+      .width(transformWidth)
+      .height(transformHeight)
+      .url();
+  } else {
+    previewImageUrl = product.previewImage
+      ? urlFor(product.previewImage).width(600).height(800).url()
+      : '';
+  }
+
+  return {
+    _id: product._id,
+    id: product.slug.current,
+    title: product.title,
+    artist: product.artist,
+    description: product.description,
+    longDescription: product.longDescription,
+    previewImage: previewImageUrl,
+    previewImageOrientation,
+    detailImage: product.detailImage
+      ? urlFor(product.detailImage).width(1200).height(1600).url()
+      : undefined,
+    sizes: product.sizes || [],
+    allSizesZip: product.allSizesZip,
+    zipUrl: product.zipUrl,
+    tags: product.tags || [],
+    category: product.category,
+    downloads: product.downloads || 0,
+    featured: product.featured,
   }
 }

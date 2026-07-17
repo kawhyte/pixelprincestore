@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
         destination: "/free-downloads",
         permanent: true, // 308 redirect for SEO preservation
       },
+      {
+        source: "/product/:slug",
+        destination: "/free-downloads",
+        permanent: true,
+      },
     ];
   },
 };

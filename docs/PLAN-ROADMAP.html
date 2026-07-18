@@ -242,13 +242,15 @@
       <div><h2>Art Pages → Pin Landing Pages</h2><div class="file">PLAN-06-medium-art-detail-pin-landing.md</div></div>
       <span class="pill sans sev-medium">MEDIUM</span>
     </div>
-    <p class="why">Every artwork page becomes a proper landing page for Pinterest traffic: "Get the printed version" / "Get the printable" buttons, its own social preview image, and correct page titles (currently all art pages share one generic title — a real SEO bug).</p>
+    <p class="why">Every artwork page becomes a proper landing page for Pinterest traffic: category-matched "Shop {style} prints" / printable-bundle buttons that cross-sell the Etsy shops honestly (the free print itself has no paid twin — see below), its own social preview image, and correct page titles (previously all art pages shared one generic title — a real SEO bug).</p>
     <ul class="tasks">
       <li><label><input type="checkbox" data-t="6a"><span>Etsy CTA buttons on every art page (with tracking tags)</span></label></li>
       <li><label><input type="checkbox" data-t="6b"><span>Per-page titles, descriptions + auto-generated share images</span></label></li>
-      <li><label><input type="checkbox" data-t="6c"><span>Pinterest domain-claim tag added</span></label></li>
-      <li><label><input type="checkbox" data-t="6d"><span>Paste each artwork's Etsy listing URL into Studio</span></label></li>
+      <li><label><input type="checkbox" data-t="6c"><span>Pinterest domain-claim tag added (code side — real verification code still needed, see homework)</span></label></li>
+      <li><label><input type="checkbox" data-t="6d"><span>Category → Etsy shop links configured (config/etsy-categories.ts) — no per-artwork data entry required</span></label></li>
     </ul>
+    <div class="note tip"><span class="ico">💡</span><span><b>Strategy correction (2026-07-17):</b> the free prints don't have a matching paid Etsy listing, so the CTAs cross-sell by <b>category</b> (e.g. a map print → "Shop map prints" on Etsy) instead of promising this exact piece is for sale. The rare `etsyListingUrl`/`etsyPrintableUrl` Studio fields still work as an override if a specific piece ever does get listed.</span></div>
+    <div class="kenny"><b>✍️ Kenny homework:</b> get your real Pinterest domain-verify code (Pinterest → Settings → Claimed accounts, see <code>docs/future-work/pinterest-domain-verify.md</code>) and set <code>NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY</code> in Vercel. Optionally swap the default Etsy search-URL per category in <code>config/etsy-categories.ts</code> for a curated section URL.</div>
   </div>
 </div>
 
@@ -364,7 +366,7 @@
   manual clicks in one browser profile.
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"6a":true,"6b":true,"6d":true};
 </script>
 <script>
 (function(){

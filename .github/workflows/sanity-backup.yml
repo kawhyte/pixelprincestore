@@ -10,10 +10,10 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - name: Export dataset
-        run: npx -y sanity@latest dataset export production backup.tar.gz --project "$SANITY_PROJECT_ID" --token "$SANITY_TOKEN"
+        run: npx -y sanity@latest dataset export production backup.tar.gz -p "$SANITY_PROJECT_ID"
         env:
           SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-          SANITY_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
           name: sanity-backup-${{ github.run_id }}

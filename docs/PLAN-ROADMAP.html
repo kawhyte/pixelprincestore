@@ -170,7 +170,8 @@
       <li><label><input type="checkbox" data-t="12e"><span>How-to-print PDF created (Kenny, once — ships in every ZIP forever)</span></label></li>
     </ul>
     <div class="note tip"><span class="ico">🔢</span><span><b>Numbering note:</b> this card says 12 (it was added later) but it runs <b>third</b> — right here, before the email gate, which is built on top of it.</span></div>
-    <div class="kenny"><b>✍️ Kenny homework:</b> export masters at 4:5, 4800×6000 px, under 10MB (re-export at 3600×4500 if too big) — and make the one-time printing-guide PDF.</div>
+    <div class="note win"><span class="ico">✅</span><span><b>Shipped (2026-07-18):</b> product.ts now has a single artFile field with ratio/resolution auto-detected from the upload; lib/build-download-zip.ts streams the ZIP (PNG + how-to-print.pdf + LICENSE.txt) on demand; all 6 live artworks migrated (largest available Cloudinary asset per piece, fetched via the Admin API). Verified against the real dev server: a live /api/claim-art request produced a correct ZIP whose PNG SHA-256-matched the Cloudinary master, and the Sanity downloads counter incremented correctly.</span></div>
+    <div class="kenny"><b>✍️ Kenny homework — done:</b> the printing-guide PDF (6 pages) and LICENSE.txt already exist in assets/download-extras/ and ship in every ZIP. Still worth re-checking that each artwork's master export meets the 4:5/5:4, 2400×3000+ guidance going forward.</div>
   </div>
 </div>
 
@@ -347,6 +348,8 @@
       <li><label><input type="checkbox" data-t="11e"><span>ADDING-NEW-ART guide rewritten to match the new tabs</span></label></li>
     </ul>
     <div class="note tip"><span class="ico">🧭</span><span><b>Flexible timing:</b> run this any time after Plan 4 — it makes your weekly routine faster but nothing else depends on it.</span></div>
+    <div class="note win"><span class="ico">✅</span><span><b>Shipped (2026-07-18):</b> 5-tab editor, plain-English copy, artFile-aware list preview (ratio/resolution/downloads), curated sidebar, brand theme, category trailing-space bug fixed (live data patched + schema options corrected), docs/ADDING-NEW-ART.md rewritten. Verified via tsc/lint/test/build/e2e, all green.</span></div>
+    <div class="note warn"><span class="ico">🖼️</span><span><b>Media browser tool skipped:</b> sanity-plugin-media requires Sanity v5/v6; this project is pinned to v4.19.0, so it's incompatible and was left out (11c only partially done — sidebar + brand colors shipped). Use the Studio's built-in asset picker (click "Select" on any image field) to browse all uploads in the meantime — installing the plugin would require a separate Sanity major-version upgrade first.</span></div>
   </div>
 </div>
 
@@ -386,7 +389,7 @@
   manual clicks in one browser profile.
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11d":true,"11e":true};
 </script>
 <script>
 (function(){

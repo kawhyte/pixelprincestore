@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Merriweather } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ConditionalNavigation from "@/components/common/Navigation/ConditionalNavigation";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
-import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -87,7 +87,14 @@ export default function RootLayout({
         <ConditionalNavigation />
         {children}
         <Toaster />
-        <Analytics />
+        {process.env.NODE_ENV === "production" &&
+          process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+            <Script
+              src="https://cloud.umami.is/script.js"
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+              strategy="afterInteractive"
+            />
+          )}
       </body>
     </html>
   );

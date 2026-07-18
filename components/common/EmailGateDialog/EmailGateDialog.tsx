@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { triggerConfetti } from "@/lib/confetti";
+import { trackEmailSignup, trackDownloadClaimed } from "@/lib/analytics";
 
 interface EmailGateDialogProps {
   open: boolean;
@@ -74,6 +75,8 @@ export default function EmailGateDialog({
       localStorage.setItem(EMAIL_STORAGE_KEY, email);
       setSuccess(true);
       triggerConfetti();
+      trackEmailSignup(`art/${artId}`);
+      trackDownloadClaimed(artId, sizeId);
     } catch {
       toast.error("Network error", {
         description: "Please check your connection and try again.",

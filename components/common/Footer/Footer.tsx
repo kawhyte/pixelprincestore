@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 
 export default function Footer() {
   return (
@@ -60,10 +61,8 @@ export default function Footer() {
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               </Link>
-              <Link
+              <EtsyLink
                 href="https://www.etsy.com/shop/thepixelprince"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-cream/70 transition-colors hover:text-sage-300"
                 aria-label="Etsy"
               >
@@ -74,7 +73,7 @@ export default function Footer() {
                 >
                   <path d="M16.875 5.5h3.563l.313 4.313h-.625c-.438-1.626-1.25-2.938-2.438-2.938h-1.563v8.75c0 1.063.5 1.375 1.563 1.375h.313v.625h-5.313V17h.313c1.063 0 1.563-.313 1.563-1.375v-8.75h-1.563c-1.188 0-2 1.313-2.438 2.938h-.625l.313-4.313h6.624zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" />
                 </svg>
-              </Link>
+              </EtsyLink>
             </div>
           </div>
 
@@ -99,24 +98,20 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a
+                <EtsyLink
                   href={etsyUrl(ETSY_MAIN_SHOP, "footer")}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-cream/70 transition-colors hover:text-sage-300"
                 >
                   Print Shop
-                </a>
+                </EtsyLink>
               </li>
               <li>
-                <a
+                <EtsyLink
                   href={etsyUrl(ETSY_PRINTABLES_SHOP, "footer")}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-cream/70 transition-colors hover:text-sage-300"
                 >
                   Printables
-                </a>
+                </EtsyLink>
               </li>
             </ul>
           </div>

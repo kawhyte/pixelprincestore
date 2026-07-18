@@ -9,6 +9,7 @@ import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import { LICENSE_SUMMARY } from "@/config/license";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
@@ -96,22 +97,20 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                 Love this style?
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
-                <a
+                <EtsyLink
                   href={etsyUrl(etsyLinks.printed, `art-${art.id}`)}
-                  target="_blank" rel="noopener"
                   className="flex items-center justify-center gap-2 rounded-2xl bg-charcoal px-6 py-4 font-semibold text-cream transition-all hover:shadow-lg"
                 >
                   <Frame className="h-5 w-5" />
                   {etsyLinks.styleLabel ? `Shop ${etsyLinks.styleLabel} prints` : "Shop the print shop"}
-                </a>
-                <a
+                </EtsyLink>
+                <EtsyLink
                   href={etsyUrl(etsyLinks.printable, `art-${art.id}`)}
-                  target="_blank" rel="noopener"
                   className="flex items-center justify-center gap-2 rounded-2xl border-2 border-charcoal px-6 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
                 >
                   <FileDown className="h-5 w-5" />
                   {etsyLinks.styleLabel ? `Printable ${etsyLinks.styleLabel} bundles` : "Shop printable bundles"}
-                </a>
+                </EtsyLink>
               </div>
               <p className="text-center text-xs text-muted-foreground">
                 Prints & bundles on Etsy — this exact piece stays free below.

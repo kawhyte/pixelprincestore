@@ -12,6 +12,7 @@ import { resolveEtsyLinks } from "@/config/etsy-categories";
 import { COLLECTIONS, getCollection } from "@/config/collections";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import FaqAccordion from "@/components/common/FaqAccordion/FaqAccordion";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -123,17 +124,15 @@ export default async function CollectionPage({ params }: PageProps) {
                       </div>
                     </Link>
                     <div className="px-4 pb-4 sm:px-5 sm:pb-5">
-                      <a
+                      <EtsyLink
                         href={etsyUrl(etsyLinks.printed, collection.etsyCampaign)}
-                        target="_blank"
-                        rel="noopener"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-sage-600 hover:text-sage-700"
                       >
                         <Frame className="h-4 w-4" />
                         {etsyLinks.styleLabel
                           ? `Shop ${etsyLinks.styleLabel} prints →`
                           : "Shop prints →"}
-                      </a>
+                      </EtsyLink>
                     </div>
                   </div>
                 );

@@ -1,0 +1,21 @@
+name: Monthly Sanity backup
+on:
+  schedule:
+    - cron: "0 6 1 * *"   # 06:00 UTC on the 1st of each month
+  workflow_dispatch: {}
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Export dataset
+        run: npx -y sanity@latest dataset export production backup.tar.gz --project "$SANITY_PROJECT_ID" --token "$SANITY_TOKEN"
+        env:
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sanity-backup-${{ github.run_id }}
+          path: backup.tar.gz
+          retention-days: 90

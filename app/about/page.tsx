@@ -3,6 +3,7 @@ import Image from "next/image";
 import { generateMetadata as buildMetadata } from "@/lib/seo";
 import { ETSY_MAIN_SHOP, etsyUrl } from "@/config/links";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 
 export const metadata = buildMetadata({
   title: "About Kenny & Rene — The Pixel Prince",
@@ -84,14 +85,12 @@ export default function AboutPage() {
             <p className="mt-2 text-sm text-soft-charcoal">
               Printed prints, maps &amp; personalized pieces
             </p>
-            <a
+            <EtsyLink
               href={etsyUrl(ETSY_MAIN_SHOP, "about")}
-              target="_blank"
-              rel="noopener"
               className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
             >
               Visit the print shop
-            </a>
+            </EtsyLink>
 
             <div className="mt-8 border-t border-border pt-8">
               <p className="mb-4 text-sm text-soft-charcoal">

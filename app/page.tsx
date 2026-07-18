@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Hero from "@/components/ui/Hero/Hero";
 import Footer from "@/components/common/Footer/Footer";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import { getAllProducts, getFeaturedProduct } from "@/sanity/lib/client";
 import { getCardAspectClass } from "@/lib/image-utils";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
@@ -109,14 +110,12 @@ export default async function Home() {
               <p className="mt-2 text-sm text-soft-charcoal">
                 Printed prints, maps &amp; personalized pieces
               </p>
-              <a
+              <EtsyLink
                 href={etsyUrl(ETSY_MAIN_SHOP, "home")}
-                target="_blank"
-                rel="noopener"
                 className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
               >
                 Visit the print shop
-              </a>
+              </EtsyLink>
             </div>
 
             <div className="rounded-2xl bg-cream p-8 text-center shadow-sm">
@@ -126,14 +125,12 @@ export default async function Home() {
               <p className="mt-2 text-sm text-soft-charcoal">
                 Instant-download bundles
               </p>
-              <a
+              <EtsyLink
                 href={etsyUrl(ETSY_PRINTABLES_SHOP, "home")}
-                target="_blank"
-                rel="noopener"
                 className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
               >
                 Browse printables
-              </a>
+              </EtsyLink>
             </div>
           </div>
         </div>

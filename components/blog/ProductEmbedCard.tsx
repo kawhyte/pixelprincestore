@@ -3,6 +3,7 @@ import Link from "next/link";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
 import type { EmbeddedProduct } from "@/sanity/lib/blog";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 
 interface ProductEmbedCardProps {
   product: EmbeddedProduct | null;
@@ -38,14 +39,12 @@ export default function ProductEmbedCard({ product, note }: ProductEmbedCardProp
           >
             Free download
           </Link>
-          <a
+          <EtsyLink
             href={etsyUrl(etsyLinks.printed, "blog-embed")}
-            target="_blank"
-            rel="noopener"
             className="text-sm font-medium text-sage-600 hover:text-sage-700"
           >
             {etsyLinks.styleLabel ? `Shop ${etsyLinks.styleLabel} prints →` : "Shop prints →"}
-          </a>
+          </EtsyLink>
         </div>
       </div>
     </div>

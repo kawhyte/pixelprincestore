@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackEmailSignup } from "@/lib/analytics";
 
 interface EmailSignupFormProps {
   source: string;
@@ -38,6 +39,7 @@ export default function EmailSignupForm({ source, className }: EmailSignupFormPr
       }
 
       setSuccess(true);
+      trackEmailSignup(source);
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {

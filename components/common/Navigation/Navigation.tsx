@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
+import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,22 +47,18 @@ export default function Navigation() {
               >
                 Free Downloads
               </Link>
-              <a
+              <EtsyLink
                 href={etsyUrl(ETSY_MAIN_SHOP, "nav")}
-                target="_blank"
-                rel="noopener"
                 className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
               >
                 Print Shop
-              </a>
-              <a
+              </EtsyLink>
+              <EtsyLink
                 href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav")}
-                target="_blank"
-                rel="noopener"
                 className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
               >
                 Printables
-              </a>
+              </EtsyLink>
             </div>
 
             {/* Mobile right-side controls */}
@@ -110,24 +107,20 @@ export default function Navigation() {
           >
             Blog
           </Link>
-          <a
+          <EtsyLink
             href={etsyUrl(ETSY_MAIN_SHOP, "nav-mobile")}
-            target="_blank"
-            rel="noopener"
             onClick={() => setIsMobileMenuOpen(false)}
             className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
           >
             Print Shop
-          </a>
-          <a
+          </EtsyLink>
+          <EtsyLink
             href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav-mobile")}
-            target="_blank"
-            rel="noopener"
             onClick={() => setIsMobileMenuOpen(false)}
             className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
           >
             Printables
-          </a>
+          </EtsyLink>
           <Link
             href="/free-downloads"
             onClick={() => setIsMobileMenuOpen(false)}

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with: { node-version: 22 }
       - name: Export dataset
         run: npx -y sanity@latest dataset export production backup.tar.gz --project "$SANITY_PROJECT_ID" --token "$SANITY_TOKEN"
         env:

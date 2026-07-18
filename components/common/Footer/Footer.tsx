@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="border-t border-border/50 bg-charcoal text-cream">
       <div className="container mx-auto px-4 py-12 sm:py-16">
         {/* Main Footer Grid */}
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           {/* Column 1: Brand */}
           <div className="space-y-4">
             <h2 className="font-serif text-xl font-bold sm:text-2xl">The Pixel Prince</h2>
@@ -113,7 +113,46 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Support */}
+          {/* Column 3: Collections */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-lg font-semibold">Collections</h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link
+                  href="/collections/game-room-wall-art"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Game Room Wall Art
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/collections/retro-gaming-prints"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Retro Gaming Prints
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/collections/map-prints"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Map Prints
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/collections/printable-wall-art"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Printable Wall Art
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Support */}
           <div className="space-y-4">
             <h3 className="font-serif text-lg font-semibold">Support</h3>
             <ul className="space-y-3 text-sm">
@@ -128,7 +167,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Legal */}
+          {/* Column 5: Legal */}
           <div className="space-y-4">
             <h3 className="font-serif text-lg font-semibold">Legal</h3>
             <ul className="space-y-3 text-sm">

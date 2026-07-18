@@ -147,15 +147,14 @@ export default async function Home() {
               {/* TODO(KENNY): replace with real photo */}
               <Image
                 src="/categories/quotes.webp"
-                alt="Kenny, The Pixel Prince"
+                alt="Kenny and Rene, The Pixel Prince"
                 fill
                 className="object-cover"
               />
             </div>
             <p className="text-base leading-relaxed text-soft-charcoal sm:text-lg">
-              I&apos;m Kenny — I design every piece myself, no AI art, no
-              stock. If you hang one of my prints, I&apos;d genuinely love to
-              see it.
+              We&apos;re Kenny and Rene — we design every piece ourselves,
+              inspired by the places we&apos;ve traveled and things we&apos;ve experienced.
             </p>
           </div>
         </div>

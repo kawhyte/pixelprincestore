@@ -25,3 +25,10 @@ test("free downloads gallery renders and navigates to art detail", async ({ page
   await expect(page).toHaveURL(/\/art\//);
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toBeVisible();
 });
+
+test("collection page renders grid, faq and email form", async ({ page }) => {
+  await page.goto("/collections/game-room-wall-art");
+  await expect(page.locator("main").getByRole("heading", { level: 1 })).toContainText(/game room/i);
+  await expect(page.locator("details").first()).toBeVisible();
+  await expect(page.locator('input[type="email"]')).toBeVisible();
+});

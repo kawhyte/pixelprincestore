@@ -349,6 +349,25 @@
   </div>
 </div>
 
+<div class="step" data-step>
+  <div class="rail"><div class="dot">13</div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Mobile-First UX Audit</h2><div class="file">PLAN-13-medium-mobile-first-ux.md (not yet written)</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Most visitors will land here on a phone, not a laptop — every page needs to be audited and tuned mobile-first, not just "responsive enough." Cover every route added so far (home, free-downloads, art detail, collections, about, blog index + post, studio-adjacent public pages) plus anything shipped after this is written.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="13a"><span>Full-site pass on real phone viewports (not just DevTools) — tap targets, font sizes, spacing, sticky nav behavior</span></label></li>
+      <li><label><input type="checkbox" data-t="13b"><span>Forms (email signup, size selection, download flow) verified thumb-friendly with no zoom-on-focus issues</span></label></li>
+      <li><label><input type="checkbox" data-t="13c"><span>Images/hero sections checked for layout shift and load speed on throttled mobile connections</span></label></li>
+      <li><label><input type="checkbox" data-t="13d"><span>Blog post pages (long-form text + embeds) checked for readability and scroll comfort on small screens</span></label></li>
+      <li><label><input type="checkbox" data-t="13e"><span>Lighthouse mobile scores captured as a baseline + regression check added to the workflow</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">📱</span><span><b>Why this matters:</b> ~60% of expected traffic is mobile — a broken or clunky mobile experience is a bigger risk to conversions than any single feature gap.</span></div>
+  </div>
+</div>
+
 <footer>
   <div>Commerce stays <b>frozen</b> until Etsy hits $2K/mo × 3 months — no carts, no checkout, no prices on the site.</div>
   <button class="reset" id="reset">Reset all checkmarks</button>
@@ -366,7 +385,7 @@
   manual clicks in one browser profile.
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true};
 </script>
 <script>
 (function(){

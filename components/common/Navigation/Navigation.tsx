@@ -35,6 +35,12 @@ export default function Navigation() {
                 About
               </Link>
               <Link
+                href="/blog"
+                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
+              >
+                Blog
+              </Link>
+              <Link
                 href="/free-downloads"
                 className="rounded-2xl bg-sage-500 px-6 py-2.5 font-sans text-sm font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-md"
               >
@@ -96,6 +102,13 @@ export default function Navigation() {
             className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
           >
             About
+          </Link>
+          <Link
+            href="/blog"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
+          >
+            Blog
           </Link>
           <a
             href={etsyUrl(ETSY_MAIN_SHOP, "nav-mobile")}

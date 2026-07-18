@@ -91,6 +91,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/blog"
+                  className="text-cream/70 transition-colors hover:text-sage-300"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
                 <a
                   href={etsyUrl(ETSY_MAIN_SHOP, "footer")}
                   target="_blank"

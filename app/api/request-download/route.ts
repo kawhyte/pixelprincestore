@@ -22,7 +22,7 @@ function ipThrottled(ip: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email: rawEmail, artId, sizeId, consent, website } = body as Record<string, unknown>;
+    const { email: rawEmail, artId, consent, website } = body as Record<string, unknown>;
 
     // Honeypot: real users never fill "website". Pretend success.
     if (typeof website === "string" && website.length > 0) {
@@ -40,18 +40,16 @@ export async function POST(request: NextRequest) {
     if (consent !== true) {
       return NextResponse.json({ error: "Please confirm the consent checkbox." }, { status: 400 });
     }
-    if (typeof artId !== "string" || typeof sizeId !== "string") {
-      return NextResponse.json({ error: "Missing artwork or size." }, { status: 400 });
+    if (typeof artId !== "string") {
+      return NextResponse.json({ error: "Missing artwork." }, { status: 400 });
     }
 
     const email = normalizeEmail(rawEmail);
     const art = await getProductBySlug(artId);
     if (!art) return NextResponse.json({ error: "Artwork not found." }, { status: 404 });
-
-    const isZip = sizeId === "all";
-    const size = isZip ? null : art.sizes.find((s) => s.id === sizeId);
-    if (!isZip && !size) return NextResponse.json({ error: "Size not found." }, { status: 404 });
-    if (isZip && !art.zipUrl) return NextResponse.json({ error: "ZIP not available." }, { status: 404 });
+    if (!art.artFile?.cloudinaryUrl && !art.artFile?.externalUrl) {
+      return NextResponse.json({ error: "This artwork's file isn't available yet." }, { status: 404 });
+    }
 
     const existing = await getSubscriber(email);
     if (isOverWeeklyLimit(existing)) {
@@ -61,16 +59,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { isNewSubscriber } = await recordDownloadRequest(email, artId, sizeId, `art/${artId}`);
+    const { isNewSubscriber } = await recordDownloadRequest(email, artId, `art/${artId}`);
 
-    const token = await signDownloadToken({ email, artId, sizeId });
+    const token = await signDownloadToken({ email, artId });
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.thepixelprince.com";
     const downloadUrl = `${siteUrl}/api/claim-art?token=${encodeURIComponent(token)}`;
 
     await emailProvider.sendDownloadEmail({
       to: email,
       artTitle: art.title,
-      sizeLabel: isZip ? "All sizes (ZIP)" : (size!.displayLabel || size!.id),
       downloadUrl,
     });
 

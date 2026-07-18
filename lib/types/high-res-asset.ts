@@ -2,21 +2,15 @@
  * Type definitions for High-Resolution Asset Manager
  */
 
-export type AssetType = 'cloudinary' | 'external';
-
 export interface HighResAsset {
-  assetType: AssetType;
   cloudinaryUrl?: string;
   cloudinaryPublicId?: string; // For deletion purposes
-  externalUrl?: string;
+  externalUrl?: string; // Legacy only — no new external uploads
   filename: string;
+  width?: number;
+  height?: number;
+  bytes?: number;
   uploadedAt?: string;
-  // Auto-detected metadata from Cloudinary
-  metadata?: {
-    bytes?: number;
-    width?: number;
-    height?: number;
-  };
 }
 
 export interface AdminHighResUploadProps {

@@ -1,4 +1,5 @@
 import { createClient } from 'next-sanity'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { urlFor } from './image'
 import { getImageOrientation, getOptimalImageDimensions, type ImageOrientation } from '@/lib/image-utils'
 
@@ -17,27 +18,28 @@ export const client = createClient({
 // Re-export ImageOrientation from lib/image-utils for convenience
 export type { ImageOrientation } from '@/lib/image-utils';
 
-export interface HighResAsset {
-  assetType: 'cloudinary' | 'external'
+export interface ArtFile {
   cloudinaryUrl?: string
   cloudinaryPublicId?: string
-  externalUrl?: string
-  filename: string
-  uploadedAt?: string
+  externalUrl?: string // legacy only
+  filename?: string
+  width?: number
+  height?: number
+  bytes?: number
 }
 
-export interface ArtSize {
-  id: string
-  label?: string // Legacy field, use displayLabel instead
-  displayLabel: string // Primary label in cm
-  alternateLabel?: string // Secondary label in inches
-  dimensions: string
-  fileName: string
-  fileSize: string
-  recommendedFor?: string
-  availability: 'available' | 'coming-soon'
-  comingSoonMessage?: string
-  highResAsset?: HighResAsset
+export type SanityImageWithDimensions = SanityImageSource & {
+  asset?: {
+    _id: string
+    url: string
+    metadata?: {
+      dimensions?: {
+        width: number
+        height: number
+        aspectRatio: number
+      }
+    }
+  }
 }
 
 export interface SanityProduct {
@@ -50,11 +52,9 @@ export interface SanityProduct {
   artist: string
   description: string
   longDescription?: string
-  previewImage: any
-  detailImage?: any
-  sizes: ArtSize[]
-  allSizesZip: string // Deprecated: use zipUrl
-  zipUrl?: string // Cloudinary or Google Drive URL for ZIP
+  previewImage: SanityImageWithDimensions
+  detailImage?: SanityImageWithDimensions
+  artFile?: ArtFile
   etsyListingUrl?: string
   etsyPrintableUrl?: string
   tags?: string[]
@@ -73,9 +73,7 @@ export interface FreeArt {
   previewImage: string
   previewImageOrientation?: ImageOrientation
   detailImage?: string
-  sizes: ArtSize[]
-  allSizesZip: string // Deprecated: use zipUrl
-  zipUrl?: string // Cloudinary or Google Drive URL for ZIP
+  artFile?: ArtFile
   etsyListingUrl?: string
   etsyPrintableUrl?: string
   tags: string[]
@@ -84,104 +82,90 @@ export interface FreeArt {
   featured?: boolean
 }
 
+const PRODUCT_PROJECTION = `
+  _id,
+  _createdAt,
+  title,
+  slug,
+  artist,
+  description,
+  longDescription,
+  previewImage {
+    asset->{
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height,
+          aspectRatio
+        }
+      }
+    }
+  },
+  detailImage,
+  artFile,
+  etsyListingUrl,
+  etsyPrintableUrl,
+  tags,
+  category,
+  downloads,
+  featured
+`
+
+function toFreeArt(product: SanityProduct): FreeArt {
+  let previewImageOrientation: ImageOrientation | undefined;
+  let previewImageUrl = '';
+
+  if (product.previewImage?.asset?.metadata?.dimensions) {
+    const { width, height } = product.previewImage.asset.metadata.dimensions;
+    previewImageOrientation = getImageOrientation(width, height);
+
+    const { width: transformWidth, height: transformHeight } =
+      getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
+
+    previewImageUrl = urlFor(product.previewImage)
+      .width(transformWidth)
+      .height(transformHeight)
+      .url();
+  } else {
+    previewImageUrl = product.previewImage
+      ? urlFor(product.previewImage).width(600).height(800).url()
+      : '';
+  }
+
+  return {
+    _id: product._id,
+    id: product.slug.current,
+    title: product.title,
+    artist: product.artist,
+    description: product.description,
+    longDescription: product.longDescription,
+    previewImage: previewImageUrl,
+    previewImageOrientation,
+    detailImage: product.detailImage
+      ? urlFor(product.detailImage).width(1200).height(1600).url()
+      : undefined,
+    artFile: product.artFile,
+    etsyListingUrl: product.etsyListingUrl,
+    etsyPrintableUrl: product.etsyPrintableUrl,
+    tags: product.tags || [],
+    category: product.category,
+    downloads: product.downloads || 0,
+    featured: product.featured,
+  };
+}
+
 /**
  * Fetch all free art products from Sanity
  * Returns data in the format expected by the frontend
  */
 export async function getAllProducts(): Promise<FreeArt[]> {
-  const query = `*[_type == "product"] | order(_createdAt desc) {
-    _id,
-    _createdAt,
-    title,
-    slug,
-    artist,
-    description,
-    longDescription,
-    previewImage {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height,
-            aspectRatio
-          }
-        }
-      }
-    },
-    detailImage,
-    sizes[]{
-      id,
-      label,
-      displayLabel,
-      alternateLabel,
-      dimensions,
-      fileName,
-      fileSize,
-      recommendedFor,
-      availability,
-      comingSoonMessage,
-      highResAsset
-    },
-    allSizesZip,
-    zipUrl,
-    etsyListingUrl,
-    etsyPrintableUrl,
-    tags,
-    category,
-    downloads,
-    featured
-  }`
+  const query = `*[_type == "product"] | order(_createdAt desc) { ${PRODUCT_PROJECTION} }`
 
   const products = await client.fetch<SanityProduct[]>(query)
 
-  // Transform Sanity products to match the FreeArt interface
-  return products.map((product) => {
-    let previewImageOrientation: ImageOrientation | undefined;
-    let previewImageUrl = '';
-
-    // Extract orientation from image metadata if available
-    if (product.previewImage?.asset?.metadata?.dimensions) {
-      const { width, height } = product.previewImage.asset.metadata.dimensions;
-      previewImageOrientation = getImageOrientation(width, height);
-
-      // Apply optimal image transform based on detected orientation
-      const { width: transformWidth, height: transformHeight } =
-        getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
-
-      previewImageUrl = urlFor(product.previewImage)
-        .width(transformWidth)
-        .height(transformHeight)
-        .url();
-    } else {
-      // Fallback for images without metadata (default to portrait 3:4)
-      previewImageUrl = product.previewImage
-        ? urlFor(product.previewImage).width(600).height(800).url()
-        : '';
-    }
-
-    return {
-      _id: product._id,
-      id: product.slug.current,
-      title: product.title,
-      artist: product.artist,
-      description: product.description,
-      longDescription: product.longDescription,
-      previewImage: previewImageUrl,
-      previewImageOrientation,
-      detailImage: product.detailImage
-        ? urlFor(product.detailImage).width(1200).height(1600).url()
-        : undefined,
-      sizes: product.sizes || [],
-      allSizesZip: product.allSizesZip,
-      zipUrl: product.zipUrl,
-      tags: product.tags || [],
-      category: product.category,
-      downloads: product.downloads || 0,
-      featured: product.featured,
-    };
-  })
+  return products.map(toFreeArt)
 }
 
 /**
@@ -253,9 +237,7 @@ export async function getRelatedProducts(category: string, currentSlug: string):
       previewImage: previewImageUrl,
       previewImageOrientation,
       detailImage: undefined,
-      sizes: [],
-      allSizesZip: '',
-      zipUrl: undefined,
+      artFile: undefined,
       tags: [],
       category: product.category,
       downloads: 0,
@@ -267,195 +249,24 @@ export async function getRelatedProducts(category: string, currentSlug: string):
  * Fetch a single product by slug
  */
 export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
-  const query = `*[_type == "product" && slug.current == $slug][0] {
-    _id,
-    _createdAt,
-    title,
-    slug,
-    artist,
-    description,
-    longDescription,
-    previewImage {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height,
-            aspectRatio
-          }
-        }
-      }
-    },
-    detailImage,
-    sizes[]{
-      id,
-      label,
-      displayLabel,
-      alternateLabel,
-      dimensions,
-      fileName,
-      fileSize,
-      recommendedFor,
-      availability,
-      comingSoonMessage,
-      highResAsset
-    },
-    allSizesZip,
-    zipUrl,
-    etsyListingUrl,
-    etsyPrintableUrl,
-    tags,
-    category,
-    downloads,
-    featured
-  }`
+  const query = `*[_type == "product" && slug.current == $slug][0] { ${PRODUCT_PROJECTION} }`
 
   const product = await client.fetch<SanityProduct | null>(query, { slug })
 
   if (!product) return null
 
-  let previewImageOrientation: ImageOrientation | undefined;
-  let previewImageUrl = '';
-
-  // Extract orientation from image metadata if available
-  if (product.previewImage?.asset?.metadata?.dimensions) {
-    const { width, height } = product.previewImage.asset.metadata.dimensions;
-    previewImageOrientation = getImageOrientation(width, height);
-
-    // Apply optimal image transform based on detected orientation
-    const { width: transformWidth, height: transformHeight } =
-      getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
-
-    previewImageUrl = urlFor(product.previewImage)
-      .width(transformWidth)
-      .height(transformHeight)
-      .url();
-  } else {
-    // Fallback for images without metadata (default to portrait 3:4)
-    previewImageUrl = product.previewImage
-      ? urlFor(product.previewImage).width(600).height(800).url()
-      : '';
-  }
-
-  return {
-    _id: product._id,
-    id: product.slug.current,
-    title: product.title,
-    artist: product.artist,
-    description: product.description,
-    longDescription: product.longDescription,
-    previewImage: previewImageUrl,
-    previewImageOrientation,
-    detailImage: product.detailImage
-      ? urlFor(product.detailImage).width(1200).height(1600).url()
-      : undefined,
-    sizes: product.sizes || [],
-    allSizesZip: product.allSizesZip,
-    zipUrl: product.zipUrl,
-    etsyListingUrl: product.etsyListingUrl,
-    etsyPrintableUrl: product.etsyPrintableUrl,
-    tags: product.tags || [],
-    category: product.category,
-    downloads: product.downloads || 0,
-    featured: product.featured,
-  }
+  return toFreeArt(product)
 }
 
 /**
  * Fetch the featured "print of the month" product
  */
 export async function getFeaturedProduct(): Promise<FreeArt | null> {
-  const query = `*[_type == "product" && featured == true] | order(_updatedAt desc) [0] {
-    _id,
-    _createdAt,
-    title,
-    slug,
-    artist,
-    description,
-    longDescription,
-    previewImage {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height,
-            aspectRatio
-          }
-        }
-      }
-    },
-    detailImage,
-    sizes[]{
-      id,
-      label,
-      displayLabel,
-      alternateLabel,
-      dimensions,
-      fileName,
-      fileSize,
-      recommendedFor,
-      availability,
-      comingSoonMessage,
-      highResAsset
-    },
-    allSizesZip,
-    zipUrl,
-    etsyListingUrl,
-    etsyPrintableUrl,
-    tags,
-    category,
-    downloads,
-    featured
-  }`
+  const query = `*[_type == "product" && featured == true] | order(_updatedAt desc) [0] { ${PRODUCT_PROJECTION} }`
 
   const product = await client.fetch<SanityProduct | null>(query)
 
   if (!product) return null
 
-  let previewImageOrientation: ImageOrientation | undefined;
-  let previewImageUrl = '';
-
-  if (product.previewImage?.asset?.metadata?.dimensions) {
-    const { width, height } = product.previewImage.asset.metadata.dimensions;
-    previewImageOrientation = getImageOrientation(width, height);
-
-    const { width: transformWidth, height: transformHeight } =
-      getOptimalImageDimensions(width, height, previewImageOrientation.orientation);
-
-    previewImageUrl = urlFor(product.previewImage)
-      .width(transformWidth)
-      .height(transformHeight)
-      .url();
-  } else {
-    previewImageUrl = product.previewImage
-      ? urlFor(product.previewImage).width(600).height(800).url()
-      : '';
-  }
-
-  return {
-    _id: product._id,
-    id: product.slug.current,
-    title: product.title,
-    artist: product.artist,
-    description: product.description,
-    longDescription: product.longDescription,
-    previewImage: previewImageUrl,
-    previewImageOrientation,
-    detailImage: product.detailImage
-      ? urlFor(product.detailImage).width(1200).height(1600).url()
-      : undefined,
-    sizes: product.sizes || [],
-    allSizesZip: product.allSizesZip,
-    zipUrl: product.zipUrl,
-    etsyListingUrl: product.etsyListingUrl,
-    etsyPrintableUrl: product.etsyPrintableUrl,
-    tags: product.tags || [],
-    category: product.category,
-    downloads: product.downloads || 0,
-    featured: product.featured,
-  }
+  return toFreeArt(product)
 }

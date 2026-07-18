@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Download, Package, Sparkles, Frame, FileDown } from "lucide-react";
+import { ArrowLeft, Download, Sparkles, Frame, FileDown, CheckCircle2 } from "lucide-react";
 
-import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
+import { type FreeArt } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
@@ -13,6 +13,7 @@ import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import { LICENSE_SUMMARY } from "@/config/license";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
+import { PRINT_SIZES, deriveRatio } from "@/config/print-sizes";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -20,11 +21,14 @@ interface ArtDetailClientProps {
 }
 
 export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProps) {
-  const [selectedSize, setSelectedSize] = useState<ArtSize | null>(
-    () => art.sizes.find((s) => s.availability === "available") ?? null
-  );
-  const [gateSize, setGateSize] = useState<{ sizeId: string; sizeLabel: string } | null>(null);
+  const [gateOpen, setGateOpen] = useState(false);
   const etsyLinks = resolveEtsyLinks(art);
+
+  const ratio = art.artFile?.width && art.artFile?.height
+    ? deriveRatio(art.artFile.width, art.artFile.height)
+    : null;
+  const printSizes = PRINT_SIZES[ratio ?? "4:5"];
+  const hasFile = !!(art.artFile?.cloudinaryUrl || art.artFile?.externalUrl);
 
   return (
     <div className="min-h-screen bg-cream">
@@ -117,142 +121,54 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               </p>
             </div>
 
-            {/* Size Selector */}
+            {/* Print Sizes */}
             <div className="space-y-4">
               <h2 className="font-serif text-2xl font-semibold text-charcoal">
-                Choose Your Size
+                Prints At 3 Sizes
               </h2>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {art.sizes.map((size) => {
-                  const isComingSoon = size.availability === 'coming-soon';
-                  const isAvailable = size.availability === 'available';
-
-                  return (
-                    <button
-                      key={size.id}
-                      onClick={() => isAvailable ? setSelectedSize(size) : null}
-                      disabled={isComingSoon}
-                      className={`rounded-xl border-2 p-4 text-left transition-all ${
-                        isComingSoon
-                          ? "cursor-not-allowed border-border bg-muted/30 opacity-60"
-                          : selectedSize?.id === size.id
-                          ? "border-sage-500 bg-sage-50 shadow-md"
-                          : "border-border bg-card hover:border-sage-200 hover:bg-sage-50/50"
-                      }`}
-                    >
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className={`font-semibold ${isComingSoon ? "text-muted-foreground" : "text-charcoal"}`}>
-                              {size.displayLabel || size.label}
-                            </span>
-                            {size.alternateLabel && (
-                              <span className="text-xs text-muted-foreground">
-                                {size.alternateLabel}
-                              </span>
-                            )}
-                          </div>
-                          {isComingSoon && (
-                            <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
-                              Coming Soon
-                            </span>
-                          )}
-                          {!isComingSoon && selectedSize?.id === size.id && (
-                            <div className="h-5 w-5 rounded-full bg-sage-500 flex items-center justify-center">
-                              <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {size.dimensions}
-                        </p>
-                        {isComingSoon && size.comingSoonMessage && (
-                          <p className="text-xs font-medium text-amber-600">
-                            {size.comingSoonMessage}
-                          </p>
-                        )}
-                        {!isComingSoon && size.recommendedFor && (
-                          <p className="text-xs text-sage-600">
-                            {size.recommendedFor}
-                          </p>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs font-medium text-charcoal">
-                            {size.fileSize}
-                          </p>
-                          {!isComingSoon && (
-                            <div className="flex items-center gap-1 text-xs font-medium text-lavender-600">
-                              <Sparkles className="h-3 w-3" />
-                              <span>High-Res PNG</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
+              <div className="grid gap-3 sm:grid-cols-3">
+                {printSizes.map((size) => (
+                  <div
+                    key={size.label}
+                    className="rounded-xl border-2 border-border bg-card p-4"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-sage-500" />
+                      <span className="font-semibold text-charcoal">{size.label}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{size.cm}</p>
+                    <p className="mt-2 text-xs text-sage-600">{size.fits}</p>
+                  </div>
+                ))}
               </div>
+              <p className="text-sm text-soft-charcoal">
+                One high-res file covers all three sizes — a step-by-step printing guide is included in your download.
+              </p>
             </div>
 
-            {/* Download Buttons */}
+            {/* Download Button */}
             <div className="space-y-3">
               <Button
-                onClick={() =>
-                  selectedSize &&
-                  setGateSize({
-                    sizeId: selectedSize.id,
-                    sizeLabel: selectedSize.displayLabel || selectedSize.id,
-                  })
-                }
-                disabled={!selectedSize || selectedSize.availability !== 'available'}
+                onClick={() => setGateOpen(true)}
+                disabled={!hasFile}
                 className="w-full rounded-2xl bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
                 <Download className="h-5 w-5" />
-                <span className="ml-2">Email me this size — free</span>
+                <span className="ml-2">Email me this print — free</span>
               </Button>
-
-              {/* Only show ZIP download button if zipUrl is available */}
-              {art.zipUrl && (
-                <Button
-                  onClick={() => setGateSize({ sizeId: "all", sizeLabel: "All sizes (ZIP)" })}
-                  variant="outline"
-                  className="w-full rounded-2xl border-2 border-charcoal py-6 text-lg font-semibold hover:bg-charcoal hover:text-cream disabled:opacity-50"
-                  size="lg"
-                >
-                  <Package className="h-5 w-5" />
-                  <span className="ml-2">Email me all sizes (ZIP) — free</span>
-                </Button>
-              )}
             </div>
 
             {/* Info Banner */}
             <div className="rounded-2xl border border-sage-200 bg-sage-50 p-6">
               <h3 className="mb-2 flex items-center gap-2 font-semibold text-charcoal">
                 <Sparkles className="h-5 w-5 text-sage-600" />
-                High-Resolution Printable Files
+                High-Resolution Printable File
               </h3>
               <p className="mb-3 text-sm text-soft-charcoal">
-                All downloads are professional quality PNG files, perfect for printing at home or at your local print shop.
+                Your download includes: the high-res PNG, a printing guide (PDF), and the personal-use license.
               </p>
-              {art.zipUrl && (
-                <>
-                  <p className="mb-3 text-sm font-semibold text-charcoal">
-                    📦 ZIP includes all available sizes:
-                  </p>
-                  <ul className="space-y-1 text-sm text-soft-charcoal">
-                    {art.sizes.filter(size => size.availability === 'available').map((size) => (
-                      <li key={size.id} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-sage-500" />
-                        {size.displayLabel || size.label} {size.alternateLabel && `(${size.alternateLabel})`} - {size.dimensions} ({size.fileSize})
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
               <p className="mt-4 border-t border-sage-200 pt-3 text-xs text-muted-foreground">
                 {LICENSE_SUMMARY}{" "}
                 <Link href="/terms" className="underline hover:text-sage-500">
@@ -306,12 +222,10 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
       </main>
 
       <EmailGateDialog
-        open={!!gateSize}
-        onOpenChange={(o) => !o && setGateSize(null)}
+        open={gateOpen}
+        onOpenChange={setGateOpen}
         artId={art.id}
         artTitle={art.title}
-        sizeId={gateSize?.sizeId ?? ""}
-        sizeLabel={gateSize?.sizeLabel ?? ""}
       />
     </div>
   );

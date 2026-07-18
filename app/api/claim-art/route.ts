@@ -2,20 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { getProductBySlug } from "@/sanity/lib/client";
 import { verifyDownloadToken } from "@/lib/download-token";
 import { writeClient } from "@/sanity/lib/write-client";
+import { buildDownloadZip } from "@/lib/build-download-zip";
 
 /**
  * Secure API Route for Downloading Free Digital Art
  *
  * This route:
  * 1. Verifies the signed download token (issued via /api/request-download)
- * 2. Streams the file from Cloudinary or external URL (Google Drive/Dropbox)
+ * 2. Streams a server-built ZIP (master PNG + printing guide + license)
  *
  * Query Parameters:
  * - token: signed download token (required in production)
  *
  * DEV MODE: Set DISABLE_DOWNLOAD_LIMIT=true in .env.local to bypass the token
- * requirement and use the old artId/sizeId/type query params directly.
+ * requirement and use the old artId query param directly.
  */
+
+export const maxDuration = 60;
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,8 +29,6 @@ export async function GET(request: NextRequest) {
     const downloadLimitDisabled = process.env.DISABLE_DOWNLOAD_LIMIT === "true";
 
     let artId: string | null;
-    let sizeId: string | null;
-    let isZip: boolean;
 
     if (token) {
       const claim = await verifyDownloadToken(token);
@@ -38,12 +39,8 @@ export async function GET(request: NextRequest) {
         );
       }
       artId = claim.artId;
-      isZip = claim.sizeId === "all";
-      sizeId = isZip ? null : claim.sizeId;
     } else if (downloadLimitDisabled) {
       artId = searchParams.get("artId");
-      sizeId = searchParams.get("sizeId");
-      isZip = (searchParams.get("type") || "single") === "all";
     } else {
       return NextResponse.json(
         { error: "A download token is required. Enter your email on the artwork page to receive a download link." },
@@ -51,7 +48,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Validate artId
     if (!artId) {
       return NextResponse.json(
         { error: "Missing artId parameter" },
@@ -59,7 +55,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Find the art piece from Sanity
     const artPiece = await getProductBySlug(artId);
 
     if (!artPiece) {
@@ -67,26 +62,6 @@ export async function GET(request: NextRequest) {
         { error: "Invalid artId - art piece not found" },
         { status: 404 }
       );
-    }
-
-    // For single downloads, validate sizeId
-    if (!isZip && !sizeId) {
-      return NextResponse.json(
-        { error: "Missing sizeId parameter for single download" },
-        { status: 400 }
-      );
-    }
-
-    // For single downloads, find the size
-    let size = null;
-    if (!isZip) {
-      size = artPiece.sizes.find((s) => s.id === sizeId);
-      if (!size) {
-        return NextResponse.json(
-          { error: "Invalid sizeId - size not found" },
-          { status: 404 }
-        );
-      }
     }
 
     // Increment download count in Sanity (fire-and-forget)
@@ -108,109 +83,33 @@ export async function GET(request: NextRequest) {
       console.warn('[CLAIM-ART] Write client not available - download count will not be incremented');
     }
 
-    // Determine download URL and file details
-    let downloadUrl: string | null = null;
-    let contentType: string;
-    let downloadName: string;
-
-    if (isZip) {
-      // Handle ZIP download from Cloudinary or external URL
-      downloadUrl = artPiece.zipUrl || null;
-      contentType = "application/zip";
-      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-all-sizes.zip`;
-
-      if (!downloadUrl) {
-        return NextResponse.json(
-          {
-            error: "ZIP file not available. Please contact support.",
-            details: downloadLimitDisabled ? "Missing zipUrl in artwork data" : undefined
-          },
-          { status: 404 }
-        );
-      }
-    } else {
-      // Handle individual size download from Cloudinary or external URL
-      if (!size) {
-        return NextResponse.json(
-          { error: "Size not found" },
-          { status: 404 }
-        );
-      }
-
-      const highResAsset = size.highResAsset;
-
-      if (!highResAsset) {
-        return NextResponse.json(
-          {
-            error: "This size is not available for download. Please contact support.",
-            details: downloadLimitDisabled ? "Missing highResAsset in size data" : undefined
-          },
-          { status: 404 }
-        );
-      }
-
-      downloadUrl = highResAsset.assetType === 'cloudinary'
-        ? (highResAsset.cloudinaryUrl ?? null)
-        : (highResAsset.externalUrl ?? null);
-
-      contentType = "image/png";
-      downloadName = `${artPiece.title.replace(/\s+/g, "-")}-${size.displayLabel.replace(/[^a-zA-Z0-9]/g, "")}.png`;
-
-      if (!downloadUrl) {
-        return NextResponse.json(
-          {
-            error: "File URL not configured. Please contact support.",
-            details: downloadLimitDisabled ? "Missing URL in highResAsset" : undefined
-          },
-          { status: 404 }
-        );
-      }
+    const fileUrl = artPiece.artFile?.cloudinaryUrl || artPiece.artFile?.externalUrl;
+    if (!fileUrl) {
+      return NextResponse.json(
+        { error: "This artwork's file isn't available yet. Please contact support." },
+        { status: 404 }
+      );
     }
 
-    // Fetch the file from the external URL
-    let response: NextResponse;
+    const safeTitle = artPiece.title.replace(/[^a-zA-Z0-9-_ ]/g, "").replace(/\s+/g, "-");
+
     try {
-      const fileResponse = await fetch(downloadUrl);
-
-      if (!fileResponse.ok) {
-        console.error(`[CLAIM-ART] Failed to fetch from URL: ${downloadUrl}`);
-        return NextResponse.json(
-          {
-            error: "Unable to access file. Please try again later or contact support.",
-            details: downloadLimitDisabled ? `URL returned status: ${fileResponse.status}` : undefined
-          },
-          { status: 500 }
-        );
-      }
-
-      // Get the content as a stream
-      const fileStream = fileResponse.body;
-
-      if (!fileStream) {
-        return NextResponse.json(
-          { error: "Unable to stream file. Please try again." },
-          { status: 500 }
-        );
-      }
-
-      // Create response with the stream
-      response = new NextResponse(fileStream, {
+      const zipStream = await buildDownloadZip({ fileUrl, pngName: `${safeTitle}.png` });
+      return new NextResponse(zipStream, {
         status: 200,
         headers: {
-          "Content-Type": contentType,
-          "Content-Disposition": `attachment; filename="${downloadName}"`,
+          "Content-Type": "application/zip",
+          "Content-Disposition": `attachment; filename="${safeTitle}-print.zip"`,
           "Cache-Control": "no-cache",
         },
       });
     } catch (error) {
-      console.error(`[CLAIM-ART] Error fetching from URL:`, error);
+      console.error(`[CLAIM-ART] Error building ZIP:`, error);
       return NextResponse.json(
-        { error: "Unable to download file. Please check your connection and try again." },
+        { error: "Unable to build the download. Please try again later or contact support." },
         { status: 500 }
       );
     }
-
-    return response;
   } catch (error) {
     console.error("[CLAIM-ART] Error:", error);
     return NextResponse.json(

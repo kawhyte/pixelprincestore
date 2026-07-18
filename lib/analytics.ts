@@ -17,8 +17,8 @@ function track(name: string, data?: Record<string, string>) {
 export function trackEmailSignup(source: string) {
   track("email_signup", { source });
 }
-export function trackDownloadClaimed(artId: string, sizeId: string) {
-  track("download_claimed", { artId, sizeId });
+export function trackDownloadClaimed(artId: string) {
+  track("download_claimed", { artId });
 }
 export function trackEtsyClickOut(shop: "main" | "printables", page: string) {
   track("etsy_click_out", { shop, page });

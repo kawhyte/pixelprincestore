@@ -5,7 +5,6 @@ export interface EmailProvider {
   sendDownloadEmail(opts: {
     to: string;
     artTitle: string;
-    sizeLabel: string;
     downloadUrl: string;
   }): Promise<void>;
   sendWelcomeEmail(to: string): Promise<void>;
@@ -26,7 +25,7 @@ export const emailProvider: EmailProvider = {
     await resendClient().contacts.create({ email, audienceId, unsubscribed: false });
   },
 
-  async sendDownloadEmail({ to, artTitle, sizeLabel, downloadUrl }) {
+  async sendDownloadEmail({ to, artTitle, downloadUrl }) {
     await resendClient().emails.send({
       from: FROM,
       to,
@@ -34,7 +33,7 @@ export const emailProvider: EmailProvider = {
       html: `
         <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #2a2a2a;">
           <h1 style="font-size: 24px;">Your download is ready</h1>
-          <p><strong>${artTitle}</strong> (${sizeLabel}) is waiting for you.</p>
+          <p><strong>${artTitle}</strong> is waiting for you.</p>
           <p style="margin: 28px 0;">
             <a href="${downloadUrl}"
                style="background:#4a7bc7;color:#fff;padding:14px 28px;border-radius:16px;text-decoration:none;font-family:Helvetica,Arial,sans-serif;font-weight:bold;">

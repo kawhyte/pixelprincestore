@@ -3,7 +3,7 @@ import { WEEKLY_DOWNLOAD_LIMIT } from "@/config/free-art";
 
 export interface SubscriberDownload {
   artId: string;
-  sizeId: string;
+  sizeId?: string; // legacy only — pre single-file-pipeline records
   requestedAt: string;
 }
 
@@ -41,7 +41,6 @@ export function isOverWeeklyLimit(sub: SubscriberDoc | null): boolean {
 export async function recordDownloadRequest(
   email: string,
   artId: string,
-  sizeId: string,
   source: string
 ): Promise<{ isNewSubscriber: boolean }> {
   if (!writeClient) throw new Error("Sanity write client not configured");
@@ -63,7 +62,6 @@ export async function recordDownloadRequest(
         {
           _key: `${Date.now()}`,
           artId,
-          sizeId,
           requestedAt: new Date().toISOString(),
         },
       ])

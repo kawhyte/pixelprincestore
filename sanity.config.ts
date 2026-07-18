@@ -12,13 +12,18 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
+import {pixelPrinceTheme} from './sanity/theme'
 
+// NOTE: sanity-plugin-media requires sanity ^5 || ^6.0.0-0; this project is
+// pinned to sanity ^4.19.0, so it can't be installed. Use the built-in asset
+// picker (click "Select" on any image field) to browse all uploaded media.
 export default defineConfig({
   name: 'default',
-  title: 'The Pixel Prince Store',
+  title: 'The Pixel Prince — Studio',
   basePath: '/studio',
   projectId,
   dataset,
+  theme: pixelPrinceTheme,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
   plugins: [

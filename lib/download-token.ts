@@ -3,8 +3,6 @@ import { SignJWT, jwtVerify } from "jose";
 export interface DownloadClaim {
   email: string;
   artId: string;
-  /** size id, or "all" for the ZIP */
-  sizeId: string;
 }
 
 const TOKEN_TTL_HOURS = 72;
@@ -28,10 +26,9 @@ export async function verifyDownloadToken(token: string): Promise<DownloadClaim 
     const { payload } = await jwtVerify(token, secretKey());
     if (
       typeof payload.email !== "string" ||
-      typeof payload.artId !== "string" ||
-      typeof payload.sizeId !== "string"
+      typeof payload.artId !== "string"
     ) return null;
-    return { email: payload.email, artId: payload.artId, sizeId: payload.sizeId };
+    return { email: payload.email, artId: payload.artId };
   } catch {
     return null;
   }

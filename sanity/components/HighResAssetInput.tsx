@@ -18,11 +18,13 @@ export function HighResAssetInput(props: ObjectInputProps) {
   // Convert Sanity value to our HighResAsset type
   const currentAsset: HighResAsset | null = value
     ? {
-        assetType: value.assetType as 'cloudinary' | 'external',
         cloudinaryUrl: value.cloudinaryUrl,
         cloudinaryPublicId: value.cloudinaryPublicId,
         externalUrl: value.externalUrl,
         filename: value.filename,
+        width: value.width,
+        height: value.height,
+        bytes: value.bytes,
         uploadedAt: value.uploadedAt,
       }
     : null;
@@ -33,42 +35,37 @@ export function HighResAssetInput(props: ObjectInputProps) {
   const handleAssetChange = useCallback(
     (newAsset: HighResAsset | null) => {
       if (newAsset) {
-        // Build patches array for highResAsset fields
-        // Patches for fields WITHIN highResAsset are relative to the object itself
         const patches: Array<ReturnType<typeof set> | ReturnType<typeof unset>> = [
-          set(newAsset.assetType, ['assetType']),
           set(newAsset.filename, ['filename']),
           set(newAsset.uploadedAt || new Date().toISOString(), ['uploadedAt']),
+          set(newAsset.cloudinaryUrl, ['cloudinaryUrl']),
+          unset(['externalUrl']),
         ];
 
-        // Conditionally add URL patches based on type
-        if (newAsset.assetType === 'cloudinary' && newAsset.cloudinaryUrl) {
-          patches.push(set(newAsset.cloudinaryUrl, ['cloudinaryUrl']));
-          if (newAsset.cloudinaryPublicId) {
-            patches.push(set(newAsset.cloudinaryPublicId, ['cloudinaryPublicId']));
-          }
-          patches.push(unset(['externalUrl']));
-        } else if (newAsset.assetType === 'external' && newAsset.externalUrl) {
-          patches.push(set(newAsset.externalUrl, ['externalUrl']));
-          patches.push(unset(['cloudinaryUrl']));
-          patches.push(unset(['cloudinaryPublicId']));
+        if (newAsset.cloudinaryPublicId) {
+          patches.push(set(newAsset.cloudinaryPublicId, ['cloudinaryPublicId']));
+        }
+        if (typeof newAsset.width === 'number') {
+          patches.push(set(newAsset.width, ['width']));
+        }
+        if (typeof newAsset.height === 'number') {
+          patches.push(set(newAsset.height, ['height']));
+        }
+        if (typeof newAsset.bytes === 'number') {
+          patches.push(set(newAsset.bytes, ['bytes']));
         }
 
-        // Note: Auto-updating sibling fields (fileSize, dimensions) from metadata
-        // is not supported due to Sanity's patching architecture limitations.
-        // These fields should be updated manually in the Sanity Studio.
-
-        // Apply all patches
         onChange(patches);
       } else {
-        // Clear all values if asset is removed
         onChange([
-          unset(['assetType']),
           unset(['cloudinaryUrl']),
+          unset(['cloudinaryPublicId']),
           unset(['externalUrl']),
           unset(['filename']),
+          unset(['width']),
+          unset(['height']),
+          unset(['bytes']),
           unset(['uploadedAt']),
-          unset(['cloudinaryPublicId']),
         ]);
       }
     },

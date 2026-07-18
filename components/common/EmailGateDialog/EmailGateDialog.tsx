@@ -20,9 +20,6 @@ interface EmailGateDialogProps {
   onOpenChange: (open: boolean) => void;
   artId: string;
   artTitle: string;
-  /** size id or "all" */
-  sizeId: string;
-  sizeLabel: string;
 }
 
 const EMAIL_STORAGE_KEY = "pp_email";
@@ -32,8 +29,6 @@ export default function EmailGateDialog({
   onOpenChange,
   artId,
   artTitle,
-  sizeId,
-  sizeLabel,
 }: EmailGateDialogProps) {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
@@ -61,7 +56,7 @@ export default function EmailGateDialog({
       const response = await fetch("/api/request-download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, artId, sizeId, consent: true, website }),
+        body: JSON.stringify({ email, artId, consent: true, website }),
       });
 
       const data = await response.json();
@@ -76,7 +71,7 @@ export default function EmailGateDialog({
       setSuccess(true);
       triggerConfetti();
       trackEmailSignup(`art/${artId}`);
-      trackDownloadClaimed(artId, sizeId);
+      trackDownloadClaimed(artId);
     } catch {
       toast.error("Network error", {
         description: "Please check your connection and try again.",
@@ -101,7 +96,7 @@ export default function EmailGateDialog({
               Check your inbox!
             </h2>
             <p className="text-sm text-soft-charcoal">
-              We sent &quot;{artTitle}&quot; ({sizeLabel}) to {email}. The link works
+              We sent &quot;{artTitle}&quot; to {email}. The link works
               for 72 hours. (Check spam the first time.)
             </p>
             <Button
@@ -118,7 +113,7 @@ export default function EmailGateDialog({
                 Get your free print
               </DialogTitle>
               <DialogDescription>
-                {artTitle} ({sizeLabel})
+                {artTitle}
               </DialogDescription>
             </DialogHeader>
 

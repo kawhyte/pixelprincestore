@@ -9,14 +9,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-The Pixel Prince Store is a Next.js 16 (App Router) digital art store powered by Sanity CMS. The core feature is a free art download system with a rolling 7-day download limit (3 downloads per week) enforced via cookie-based tracking. Content is managed through Sanity CMS, with high-resolution assets hosted on Cloudinary or external URLs (Google Drive/Dropbox).
+The Pixel Prince Store is a Next.js 16 (App Router) digital art store powered by Sanity CMS. The core feature is a free art download system: each artwork has ONE master print file, gated behind an email capture with a signed 72-hour download link and a rolling 7-day limit (3 downloads/week) tracked per email in Sanity. Content is managed through Sanity CMS, with the print file hosted on Cloudinary.
 
 **Tech Stack:**
 - Next.js 16 (App Router, React 19, TypeScript)
 - Sanity CMS (content management, v4)
 - Cloudinary (asset hosting)
 - Tailwind CSS v4 (styling)
-- Cookie-based state management (download tracking)
+- Resend (email delivery) + signed JWT download links (`lib/download-token.ts`)
 - Google Gemini AI (description generation in Sanity Studio)
 
 ## Key Commands
@@ -54,84 +54,32 @@ npm run generate-zips    # [DEPRECATED] Generate ZIP bundles (not used with Clou
 ### Content Flow
 
 1. **Sanity CMS** (`/studio` route at `/app/studio/[[...tool]]/page.tsx`)
-   - Content editors create/edit art products
+   - Content editors create/edit art products via five numbered tabs (see `docs/ADDING-NEW-ART.md`)
    - Upload preview images (600×800) and detail images (1200×1600) to Sanity
-   - Upload high-res download files to Cloudinary via custom input component
+   - Upload the ONE print file to Cloudinary via custom input component (`sanity/components/HighResAssetInput.tsx`)
    - Use AI generator to create descriptions (Gemini API)
+   - Curated sidebar (`sanity/structure.ts`): Artworks, Blog Posts, Subscribers. Studio forced into dark mode (`scheme="dark"` on `NextStudio`).
 
 2. **Data Layer** (`sanity/lib/client.ts`)
    - `getAllProducts()`: Fetch all products for gallery
    - `getProductBySlug(slug)`: Fetch single product for detail page
+   - `getFeaturedProduct()`: Fetch the homepage hero print
    - Transforms Sanity data to `FreeArt` interface
    - Uses `urlFor()` helper for image URLs
 
 3. **Frontend Pages**
    - `/free-downloads` → Gallery of all free art (`app/free-downloads/page.tsx`)
-   - `/art/[id]` → Art detail page with size selection (`app/art/[id]/page.tsx`)
+   - `/art/[id]` → Art detail page with print-size info chips + one download button (`app/art/[id]/page.tsx`)
    - Static generation at build time via `generateStaticParams()`
 
-4. **Download API** (`app/api/claim-art/route.ts`)
-   - Validates download limits (server-side)
-   - Fetches files from Cloudinary/external URLs
-   - Streams file to user
-   - Updates cookie with download record
-
-### Download Tracking System
-
-**Server-Side:** `lib/download-tracking.ts`
-- `parseDownloadCookie()`: Parse cookie JSON
-- `canDownload()`: Validate if download allowed (weekly limit, duplicate check)
-- `addDownload()`: Add download record to cookie
-- `cleanupOldDownloads()`: Remove records older than 7 days
-- `getStatusMessage()`: Generate user-facing status message
-
-**Client-Side:** `lib/use-download-tracking.ts`
-- `useDownloadTracking()` hook for React components
-- Polls cookie every 1 second for real-time updates
-- Provides: `remaining`, `limit`, `resetDate`, `message`
-- Helper methods: `hasDownloadedSize()`, `hasDownloadedAllSizes()`
-
-**Cookie Structure:**
-```json
-{
-  "downloads": [
-    {
-      "artId": "ethereal-dreams",
-      "sizeId": "8x10",
-      "timestamp": 1732406400000,
-      "isZip": false
-    }
-  ]
-}
-```
-
-**Cookie Settings:**
-- Name: `pp_downloads`
-- httpOnly: `true` (server-only modification)
-- secure: `true` in production
-- sameSite: `lax`
-- maxAge: 7 days
-
-### High-Resolution Asset Management
-
-**Asset Types:**
-1. **Cloudinary** (`assetType: 'cloudinary'`)
-   - Uploaded via custom Sanity input component (`sanity/components/HighResAssetInput.tsx`)
-   - Stored fields: `cloudinaryUrl`, `cloudinaryPublicId`, `filename`, `uploadedAt`
-   - Can be deleted from Cloudinary via `/test-cloudinary-delete` page
-
-2. **External URL** (`assetType: 'external'`)
-   - Google Drive or Dropbox direct download links
-   - Stored fields: `externalUrl`, `filename`, `uploadedAt`
-
-**Download Flow:**
-- API route fetches file from URL (Cloudinary or external)
-- Streams response to user via `Response(webStream)`
-- Efficient for large files (10+ MB ZIPs)
+4. **Download flow** (email-gated, signed links — no cookies)
+   - `EmailGateDialog` posts `{ email, artId, consent }` to `/api/request-download`
+   - `/api/request-download` (`app/api/request-download/route.ts`): validates email + weekly limit (per-email, via `lib/subscriber-store.ts`), signs a 72-hour JWT (`lib/download-token.ts`), emails the link (Resend, `lib/email.ts`)
+   - `/api/claim-art` (`app/api/claim-art/route.ts`): verifies the token, builds the ZIP on the fly (`lib/build-download-zip.ts`: master PNG + `assets/download-extras/*`), streams it, increments `downloads` in Sanity
 
 ### Sanity Schema
 
-**Product Schema** (`sanity/schemaTypes/product.ts`)
+**Product Schema** (`sanity/schemaTypes/product.ts`) — grouped into five tabs (① Artwork, ② Images, ③ The File, ④ Shop & Tags, ⑤ Stats):
 ```typescript
 {
   title: string
@@ -141,35 +89,25 @@ npm run generate-zips    # [DEPRECATED] Generate ZIP bundles (not used with Clou
   detailImage: image (1200×1600 for detail page)
   description: text (max 200 chars)
   longDescription: text
-  sizes: artSize[] (pre-filled with 4 standard sizes)
-  zipUrl: url (Cloudinary or Google Drive ZIP URL)
-  tags: string[]
-  category: string (Abstract, Nature, Maps, etc.)
-}
-```
-
-**Art Size Schema** (`sanity/schemaTypes/artSize.ts`)
-```typescript
-{
-  id: string (e.g., "4x5", "8x10")
-  displayLabel: string (primary label in cm/inches)
-  alternateLabel: string (secondary label)
-  dimensions: string (pixel dimensions)
-  fileName: string
-  fileSize: string
-  recommendedFor: string
-  availability: "available" | "coming-soon"
-  comingSoonMessage: string (if coming-soon)
-  highResAsset: {
-    assetType: "cloudinary" | "external"
+  artFile: {                    // ONE master file per artwork — prints at 4×5, 8×10, 16×20
     cloudinaryUrl?: string
     cloudinaryPublicId?: string
-    externalUrl?: string
-    filename: string
+    externalUrl?: string        // legacy only — no new external uploads
+    filename?: string
+    width?: number
+    height?: number
+    bytes?: number
     uploadedAt?: string
   }
+  category: string (Video Games, Quotes, Maps, Funny, Minimalist, Botanical)
+  tags: string[]
+  featured: boolean             // homepage hero; validated to allow only one
+  etsyListingUrl?: string
+  etsyPrintableUrl?: string
+  downloads: number             // auto-incremented by /api/claim-art
 }
 ```
+Ratio (`4:5` or `5:4`) and print sizes are derived from `artFile.width/height` via `config/print-sizes.ts` (`deriveRatio()`, `PRINT_SIZES`) — never hand-typed.
 
 ### Environment Variables
 
@@ -192,11 +130,18 @@ GOOGLE_API_KEY=<api-key>
 
 # Admin secret gating studio-only routes (/api/cloudinary/delete, /api/gemini/generate)
 ADMIN_API_SECRET=<long-random-string>
+
+# Email + signed download links
+RESEND_API_KEY=<key>
+RESEND_AUDIENCE_ID=<audience-id>
+EMAIL_FROM="The Pixel Prince <hello@thepixelprince.com>"
+DOWNLOAD_LINK_SECRET=<long-random-string>
+NEXT_PUBLIC_SITE_URL=https://www.thepixelprince.com
 ```
 
 **Development Only:**
 ```bash
-# Bypass download limits for testing
+# Bypass the email gate/token requirement for testing (?artId=<slug> works directly)
 DISABLE_DOWNLOAD_LIMIT=true
 ```
 
@@ -206,50 +151,33 @@ DISABLE_DOWNLOAD_LIMIT=true
 
 ### Adding New Art to Sanity
 
-1. Access Sanity Studio at `http://localhost:3000/studio`
-2. Click "Free Art Product" → Create new
-3. Fill in title, artist, descriptions (use AI generator if needed)
-4. Upload preview image (600×800) and detail image (1200×1600)
-5. For each size in the "Available Sizes" array:
-   - Set availability to "available" or "coming-soon"
-   - Upload high-res file via Cloudinary uploader component
-   - Or paste external URL (Google Drive/Dropbox)
-6. Upload ZIP of all sizes to Cloudinary or get external URL → paste in "ZIP Download URL"
-7. Add tags and category
-8. Publish
+See `docs/ADDING-NEW-ART.md` for the full walkthrough. Short version: `/studio` → **Artworks** → **Create new** → fill in the five numbered tabs (① Artwork, ② Images, ③ The File — one master PNG, ④ Shop & Tags, ⑤ Stats is automatic) → **Publish**.
 
-### Testing Download Limits
+### Testing Downloads
 
-**Option 1: Disable limits**
+**Option 1: Disable the email gate**
 ```bash
 echo "DISABLE_DOWNLOAD_LIMIT=true" >> .env.local
 npm run dev
+# then: curl -o test.zip "http://localhost:3000/api/claim-art?artId=<slug>"
 ```
 
-**Option 2: Manual cookie manipulation**
-```javascript
-// Browser console
-document.cookie = "pp_downloads=...; path=/; max-age=604800";
-```
-
-**Option 3: Clear cookie**
-```javascript
-// Browser console
-document.cookie = "pp_downloads=; path=/; max-age=0";
-```
+**Option 2: Full flow** — enter an email on an art page, click through the link sent by Resend (72-hour signed token via `/api/claim-art?token=...`).
 
 ### Debugging Download Issues
 
 1. Check browser console for errors
-2. Check Network tab → `/api/claim-art` request
-3. Inspect cookie: Application → Cookies → `pp_downloads`
-4. Check server logs for `[CLAIM-ART]` prefix
-5. Verify file URL is accessible (Cloudinary or external)
+2. Check Network tab → `/api/request-download` and `/api/claim-art` requests
+3. Check server logs for `[REQUEST-DL]` / `[CLAIM-ART]` prefixes
+4. Verify the artwork has `artFile.cloudinaryUrl` set in Sanity
+5. Check the subscriber's weekly count in the `subscriber-<hash>` document in Sanity
 
 **Common Issues:**
-- 403 error: Download limit reached or duplicate download
-- 404 error: Missing `zipUrl` or `highResAsset` in Sanity
-- 500 error: File URL unreachable or invalid
+- 401 error: missing/invalid download token
+- 403 error: expired (72h) or tampered token
+- 404 error: artwork not found, or missing `artFile`
+- 429 error: weekly limit (3/email) reached
+- 500 error: master file URL unreachable, or `how-to-print.pdf`/`LICENSE.txt` missing from `assets/download-extras/` (ZIP still ships without it — check `[CLAIM-ART] missing extra:` log)
 
 ### TypeScript Path Aliases
 
@@ -297,38 +225,28 @@ This provides:
 
 ## Important Notes
 
-### Cookie-Based Tracking Limitations
-- Users can clear cookies to bypass limits (this is acceptable - it's a free gift)
-- No authentication required (intentional design)
-- Weekly limit is a "soft" limit to prevent abuse, not absolute security
+### Download Limit Model
+- Weekly limit (3/email, `lib/subscriber-store.ts`) is tracked server-side per email in Sanity, not by cookie — clearing cookies no longer bypasses it, a new email address does
+- Download links are signed JWTs (`lib/download-token.ts`), 72-hour expiry, single artwork per token
+- `lib/download-tracking.ts` and `lib/use-download-tracking.ts` (cookie-based) are **dead code** left over from the pre-email-gate design — do not build on them; they have zero live imports
 
 ### Deprecated Features
-- `generate-zips.js` script (now use Cloudinary/external URLs)
-- `allSizesZip` field (replaced by `zipUrl`)
+- `generate-zips.js` script — ZIPs are now built on-demand server-side by `lib/build-download-zip.ts`
+- Per-size uploads / `sizes[]` / `artSize` schema / `zipUrl` / `allSizesZip` — replaced by the single `artFile` model (PLAN-12)
 - Local file storage in `/private/free/` (migrated to Cloudinary)
 
 ### API Routes
-- `/api/claim-art` → Download handler (GET with query params)
+- `/api/request-download` → Email-gate handler (POST): validates + rate-limits, signs token, sends email
+- `/api/claim-art` → Download handler (GET, `?token=...`): verifies token, streams the auto-built ZIP
 - `/api/gemini/generate` → AI description generator (POST, requires `x-admin-secret` header)
 - `/api/cloudinary/delete` → Delete Cloudinary assets (DELETE, requires `x-admin-secret` header)
 
-### File Streaming
-The download API uses Node.js streams for efficient large file transfer:
-```typescript
-const fileResponse = await fetch(downloadUrl)
-const fileStream = fileResponse.body
-return new NextResponse(fileStream, { headers: {...} })
-```
-
-This approach:
-- Works with serverless (Vercel/Netlify)
-- Handles 10+ MB files efficiently
-- Low memory footprint
+### ZIP Streaming
+`lib/build-download-zip.ts` pipes the fetched master PNG straight into `archiver`, which pipes into the response — nothing is buffered fully in memory. `maxDuration = 60` on the claim-art route covers slow first-byte from Cloudinary.
 
 ## Development Tips
 
 - Always use Server Components unless client interactivity is needed (`'use client'`)
 - Use `urlFor()` helper from `sanity/lib/image.ts` for Sanity images
-- Cookie polling interval is 1 second (adjust in `lib/use-download-tracking.ts` if needed)
-- Test download limits in incognito mode to simulate new users
-- Sanity Studio is accessible at `/studio` (no separate deployment needed)
+- Test the download flow with `DISABLE_DOWNLOAD_LIMIT=true` to skip the email gate locally
+- Sanity Studio is accessible at `/studio` (no separate deployment needed), forced into dark mode, and needs a Vercel redeploy to pick up schema code changes (content edits are live immediately)

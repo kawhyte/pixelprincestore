@@ -142,10 +142,10 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
                     </div>
                   )}
 
-                  {/* Available Sizes */}
+                  {/* Print Sizes */}
                   <div className="border-t border-border/50 pt-3">
                     <p className="text-xs text-muted-foreground">
-                      {art.sizes.length} sizes available
+                      Prints at 3 sizes
                     </p>
                   </div>
                 </div>

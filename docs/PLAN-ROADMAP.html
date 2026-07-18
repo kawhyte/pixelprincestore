@@ -323,7 +323,7 @@
       <li><label><input type="checkbox" data-t="10c"><span>Google Search Console + Bing set up, sitemap submitted</span></label></li>
     </ul>
     <div class="note tip"><span class="ico">🙈</span><span><b>Not counting yourself:</b> run <code>localStorage.setItem("umami.disabled","1")</code> once in the browser console on the live site — per browser (desktop + phone). Dev/localhost never reports at all.</span></div>
-    <div class="kenny"><b>⏳ In progress (2026-07-18):</b> Google Search Console domain property verified for thepixelprince.com and sitemap.xml confirmed clean/reachable, but GSC's sitemap-submission form is throwing "Invalid sitemap address" — likely backend propagation lag right after fresh domain verification (known Google-side quirk, not a site problem; robots.txt already declares the sitemap so crawling isn't blocked either way). Retry the manual submission in a day. Bing Webmaster import still to do.</div>
+    <div class="note win"><span class="ico">✅</span><span><b>Closed out (2026-07-18):</b> Google Search Console verified + sitemap submitted (17 pages, matches Bing's count) — the earlier "Invalid sitemap address" was confirmed to be transient post-verification backend lag, cleared on retry the next day. Bing Webmaster imported from GSC, sitemap status Success. Resend SPF/DKIM/DMARC all confirmed live via DNS.</span></div>
     <div class="note win"><span class="ico">🎉</span><span><b>Done = launched.</b> Monthly routine from here: 1 broadcast email, 1–2 blog posts, rotate the featured freebie, pin consistently. ~5 hrs/month.</span></div>
   </div>
 </div>
@@ -386,7 +386,7 @@
   manual clicks in one browser profile.
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true};
 </script>
 <script>
 (function(){

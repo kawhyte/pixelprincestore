@@ -95,6 +95,9 @@ export const post = defineType({
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
+      // Default to now so a hand-created post can't be "published" in Studio
+      // yet stay invisible on the site (blog queries filter publishedAt < now()).
+      initialValue: () => new Date().toISOString(),
       validation: (Rule) => Rule.required(),
     }),
     defineField({

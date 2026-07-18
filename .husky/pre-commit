@@ -1,0 +1,18 @@
+echo "Running pre-commit checks..."
+
+echo "-> tsc --noEmit"
+npx tsc --noEmit || exit 1
+
+echo "-> lint (staged files only)"
+npx lint-staged || exit 1
+
+echo "-> unit tests"
+npm test || exit 1
+
+echo "-> e2e tests"
+npm run test:e2e || exit 1
+
+echo "-> build"
+npm run build || exit 1
+
+echo "All pre-commit checks passed."

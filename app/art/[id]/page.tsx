@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/sanity/lib/client";
+import { generateMetadata as seoMeta } from "@/lib/seo";
 import ArtDetailClient from "./art-detail-client";
 
 interface PageProps {
@@ -16,6 +18,22 @@ export async function generateStaticParams() {
   return products.map((art) => ({
     id: art.id,
   }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const art = await getProductBySlug(id);
+  if (!art) return { title: "Art Not Found" };
+  const metadata = seoMeta({
+    title: `${art.title} — Free Printable Wall Art`,
+    description: art.description,
+    canonical: `https://www.thepixelprince.com/art/${art.id}`,
+  });
+  // Let the opengraph-image.tsx route convention supply og:image/twitter:image
+  // instead of the generic fallback seoMeta() would otherwise set.
+  if (metadata.openGraph) delete metadata.openGraph.images;
+  if (metadata.twitter) delete (metadata.twitter as { images?: unknown }).images;
+  return metadata;
 }
 
 export default async function ArtDetailPage({ params }: PageProps) {
@@ -36,7 +54,7 @@ export default async function ArtDetailPage({ params }: PageProps) {
     "@type": "Product",
     name: art.title,
     description: art.description,
-    image: art.previewImage,
+    image: art.detailImage || art.previewImage,
     brand: {
       "@type": "Brand",
       name: "The Pixel Prince"
@@ -46,7 +64,7 @@ export default async function ArtDetailPage({ params }: PageProps) {
       price: "0.00",
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
-      url: `https://thepixelprince.com/art/${art.id}`
+      url: `https://www.thepixelprince.com/art/${art.id}`
     }
   };
 

@@ -60,6 +60,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
 
+        {process.env.NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY && (
+          <meta name="p:domain_verify" content={process.env.NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY} />
+        )}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

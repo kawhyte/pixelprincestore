@@ -55,6 +55,8 @@ export interface SanityProduct {
   sizes: ArtSize[]
   allSizesZip: string // Deprecated: use zipUrl
   zipUrl?: string // Cloudinary or Google Drive URL for ZIP
+  etsyListingUrl?: string
+  etsyPrintableUrl?: string
   tags?: string[]
   category?: string
   downloads?: number
@@ -74,6 +76,8 @@ export interface FreeArt {
   sizes: ArtSize[]
   allSizesZip: string // Deprecated: use zipUrl
   zipUrl?: string // Cloudinary or Google Drive URL for ZIP
+  etsyListingUrl?: string
+  etsyPrintableUrl?: string
   tags: string[]
   category?: string
   downloads?: number
@@ -122,6 +126,8 @@ export async function getAllProducts(): Promise<FreeArt[]> {
     },
     allSizesZip,
     zipUrl,
+    etsyListingUrl,
+    etsyPrintableUrl,
     tags,
     category,
     downloads,
@@ -298,6 +304,8 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     },
     allSizesZip,
     zipUrl,
+    etsyListingUrl,
+    etsyPrintableUrl,
     tags,
     category,
     downloads,
@@ -346,6 +354,8 @@ export async function getProductBySlug(slug: string): Promise<FreeArt | null> {
     sizes: product.sizes || [],
     allSizesZip: product.allSizesZip,
     zipUrl: product.zipUrl,
+    etsyListingUrl: product.etsyListingUrl,
+    etsyPrintableUrl: product.etsyPrintableUrl,
     tags: product.tags || [],
     category: product.category,
     downloads: product.downloads || 0,
@@ -394,6 +404,8 @@ export async function getFeaturedProduct(): Promise<FreeArt | null> {
     },
     allSizesZip,
     zipUrl,
+    etsyListingUrl,
+    etsyPrintableUrl,
     tags,
     category,
     downloads,
@@ -439,6 +451,8 @@ export async function getFeaturedProduct(): Promise<FreeArt | null> {
     sizes: product.sizes || [],
     allSizesZip: product.allSizesZip,
     zipUrl: product.zipUrl,
+    etsyListingUrl: product.etsyListingUrl,
+    etsyPrintableUrl: product.etsyPrintableUrl,
     tags: product.tags || [],
     category: product.category,
     downloads: product.downloads || 0,

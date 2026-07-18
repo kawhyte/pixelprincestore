@@ -164,6 +164,18 @@ export const product = defineType({
       description: 'Direct URL to the ZIP file on Cloudinary or Google Drive containing all sizes',
     }),
     defineField({
+      name: 'etsyListingUrl',
+      title: 'Etsy Listing URL (printed version)',
+      type: 'url',
+      description: "Direct link to this artwork's listing in the main Etsy shop. Leave empty to fall back to the shop home.",
+    }),
+    defineField({
+      name: 'etsyPrintableUrl',
+      title: 'Etsy Printable URL',
+      type: 'url',
+      description: 'Direct link to the printable listing/bundle. Leave empty to fall back to the printables shop home.',
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',

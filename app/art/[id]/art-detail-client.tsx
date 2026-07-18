@@ -3,13 +3,15 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Download, Package, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, Package, Sparkles, Frame, FileDown } from "lucide-react";
 
 import { type FreeArt, type ArtSize } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
 import { LICENSE_SUMMARY } from "@/config/license";
+import { etsyUrl } from "@/config/links";
+import { resolveEtsyLinks } from "@/config/etsy-categories";
 
 interface ArtDetailClientProps {
   art: FreeArt;
@@ -21,6 +23,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
     () => art.sizes.find((s) => s.availability === "available") ?? null
   );
   const [gateSize, setGateSize] = useState<{ sizeId: string; sizeLabel: string } | null>(null);
+  const etsyLinks = resolveEtsyLinks(art);
 
   return (
     <div className="min-h-screen bg-cream">
@@ -84,6 +87,34 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             <div className="space-y-4">
               <p className="text-lg leading-relaxed text-soft-charcoal">
                 {art.longDescription || art.description}
+              </p>
+            </div>
+
+            {/* Etsy CTAs */}
+            <div className="space-y-3">
+              <h2 className="font-serif text-lg font-semibold text-charcoal">
+                Love this style?
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <a
+                  href={etsyUrl(etsyLinks.printed, `art-${art.id}`)}
+                  target="_blank" rel="noopener"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-charcoal px-6 py-4 font-semibold text-cream transition-all hover:shadow-lg"
+                >
+                  <Frame className="h-5 w-5" />
+                  {etsyLinks.styleLabel ? `Shop ${etsyLinks.styleLabel} prints` : "Shop the print shop"}
+                </a>
+                <a
+                  href={etsyUrl(etsyLinks.printable, `art-${art.id}`)}
+                  target="_blank" rel="noopener"
+                  className="flex items-center justify-center gap-2 rounded-2xl border-2 border-charcoal px-6 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
+                >
+                  <FileDown className="h-5 w-5" />
+                  {etsyLinks.styleLabel ? `Printable ${etsyLinks.styleLabel} bundles` : "Shop printable bundles"}
+                </a>
+              </div>
+              <p className="text-center text-xs text-muted-foreground">
+                Prints & bundles on Etsy — this exact piece stays free below.
               </p>
             </div>
 

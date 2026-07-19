@@ -85,7 +85,7 @@ export default function EmailGateDialog({
   return (
     <Dialog open={open} onOpenChange={(o) => !pending && onOpenChange(o)}>
       <DialogContent
-        className="rounded-2xl bg-card sm:max-w-md"
+        className="rounded-md bg-card sm:max-w-md"
         onInteractOutside={(e) => pending && e.preventDefault()}
       >
         {success ? (
@@ -103,7 +103,7 @@ export default function EmailGateDialog({
             </p>
             <Button
               onClick={() => onOpenChange(false)}
-              className="mt-2 w-full rounded-2xl bg-sage-500 hover:bg-sage-400"
+              className="mt-2 w-full rounded-md bg-sage-500 hover:bg-sage-400"
             >
               Done
             </Button>
@@ -134,7 +134,7 @@ export default function EmailGateDialog({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-base text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+                    className="h-12 w-full rounded-md border border-border bg-background pl-9 pr-3 text-base text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
                   />
                 </div>
               </div>
@@ -169,7 +169,7 @@ export default function EmailGateDialog({
               <Button
                 type="submit"
                 disabled={pending}
-                className="w-full rounded-2xl bg-sage-500 py-6 text-base font-semibold hover:bg-sage-400 disabled:opacity-50"
+                className="h-12 w-full rounded-md bg-sage-500 text-base font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
                 {pending ? (

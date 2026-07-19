@@ -100,7 +100,7 @@
 <header>
   <span class="crown">👑</span>
   <h1>The Pixel Prince — Rebuild Roadmap</h1>
-  <p class="sub sans">20 plans, in order. Each card is one plan file in <b>docs/</b>. Check things off as they're finished — this page remembers your progress.</p>
+  <p class="sub sans">29 plans, in order. Each card is one plan file in <b>docs/</b>. Check things off as they're finished — this page remembers your progress.</p>
 </header>
 
 <div class="progress-card">
@@ -486,7 +486,7 @@
 </div>
 
 <div class="step" data-step>
-  <div class="rail"><div class="dot">20</div></div>
+  <div class="rail"><div class="dot">20</div><div class="line"></div></div>
   <div class="card">
     <div class="card-head">
       <div><h2>Mobile-First Audit + Baselines</h2><div class="file">PLAN-20-high-mobile-audit-baselines.md</div></div>
@@ -503,6 +503,193 @@
     <div class="note warn"><span class="ico">📱</span><span><b>Sequencing:</b> depends on plans 14–17 — auditing earlier would mean measuring a UI that's about to change.</span></div>
     <div class="note win"><span class="ico">✅</span><span><b>Verified (2026-07-18):</b> code audit @375/390px + fixes (about-avatar <code>sizes</code>, mobile-menu body-scroll lock, 44px carousel-dot &amp; dialog-close hit areas, <code>scroll-mt-24</code> blog headings). Permanent Playwright viewport-matrix suite (<code>viewport-matrix.spec.ts</code>, 390/768/1440 — no horizontal overflow, hamburger 44px, dialog opens + 16px email input) green, 2.7s. Lighthouse mobile baselines recorded (prod build): A11y ≥95 / BP 100 / SEO 100 everywhere; Perf 87–98, with <code>/</code> (87) and <code>/blog</code> (89) accepted as LCP-bound (CLS 0, TBT 0, hero already <code>priority</code>+preconnect). No zoom-on-focus findings (all inputs 16px).</span></div>
     <div class="note tip"><span class="ico">📝</span><span><b>Pending Kenny (20a):</b> real-device pass on an iPhone-class phone — DevTools/Playwright can't reproduce iOS input-zoom or momentum/safe-area behavior. The 16px rule that prevents zoom is verified in code + asserted in the suite; a physical-device sweep is the only remaining acceptance item.</span></div>
+  </div>
+</div>
+
+<!-- ============ PHASE G ============ -->
+<div class="phase-label">Phase G · Design v2 &amp; SEO wave (July 2026)</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">21</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Design Tokens v2</h2><div class="file">PLAN-21-high-design-tokens-v2.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">Juniqe-level tightness: warm-paper background, white surfaces, ink text, one blue accent, 8px radius everywhere, 48px controls, a joined email input group, and exactly two shadow levels. Every later plan in this wave depends on it.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="21a"><span>globals.css tokens: cream, ink, white surfaces, single accent, warm neutrals</span></label></li>
+      <li><label><input type="checkbox" data-t="21b"><span>Homepage email capture renders as one joined pill group, 48px, at 390 &amp; 1440px</span></label></li>
+      <li><label><input type="checkbox" data-t="21c"><span>EmailGateDialog input + submit at 48px, font-size ≥16px</span></label></li>
+      <li><label><input type="checkbox" data-t="21d"><span>Button component default/lg render at 48px</span></label></li>
+      <li><label><input type="checkbox" data-t="21e"><span>Signup still posts correctly to /api/subscribe</span></label></li>
+      <li><label><input type="checkbox" data-t="21f"><span>clay/lavender tokens still present (deletion is PLAN-22's job)</span></label></li>
+      <li><label><input type="checkbox" data-t="21g"><span>PLAN-00-INDEX amended with the new design rule</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">🎨</span><span><b>Do not rename <code>sage-*</code>:</b> it's cornflower blue despite the name, used in 22 files. A deleted/renamed token silently emits no CSS — tsc/lint/build all stay green while the UI loses its accent.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">22</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Card Anatomy v2</h2><div class="file">PLAN-22-medium-card-anatomy.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Rebuild the shared ArtCard to the Juniqe anatomy: full-bleed image, no colored mats, one truncated title line + category below, subtle hover scale + shadow lift. Deletes the clay/lavender tokens for good. Depends on PLAN-21.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="22a"><span>No colored mats anywhere; clay/lavender tokens deleted (zero grep hits)</span></label></li>
+      <li><label><input type="checkbox" data-t="22b"><span>Cards render full-bleed on /, /free-downloads, a collection, and an art-related grid</span></label></li>
+      <li><label><input type="checkbox" data-t="22c"><span>Hover: image scale + shadow lift, 200ms, nothing else moves</span></label></li>
+      <li><label><input type="checkbox" data-t="22d"><span>Portrait/landscape/square aspect ratios render correctly</span></label></li>
+      <li><label><input type="checkbox" data-t="22e"><span>Collections Etsy footer link still clickable outside the card link</span></label></li>
+      <li><label><input type="checkbox" data-t="22f"><span>image-utils unit tests cover the new aspect function</span></label></li>
+      <li><label><input type="checkbox" data-t="22g"><span>art-card.spec.ts passes unmodified (keyboard focus + Enter)</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">23</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Nav Simplification + /prints</h2><div class="file">PLAN-23-medium-nav-and-prints-page.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Nav cut to Logo / Free Prints (pill) / Prints / About — Blog leaves the nav for the footer. A new /prints page becomes the single UTM-tracked hub for both Etsy shops. Depends on PLAN-21; parallel-safe with 22.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="23a"><span>Desktop nav shows exactly: wordmark, Free Prints pill, Prints, About</span></label></li>
+      <li><label><input type="checkbox" data-t="23b"><span>Mobile menu shows exactly: Prints, About, Free Prints filled CTA</span></label></li>
+      <li><label><input type="checkbox" data-t="23c"><span>/prints renders H1, two path cards, trust line, free-library link</span></label></li>
+      <li><label><input type="checkbox" data-t="23d"><span>Both /prints Etsy hrefs carry the correct UTM + campaign</span></label></li>
+      <li><label><input type="checkbox" data-t="23e"><span>/prints appears in the generated sitemap after build</span></label></li>
+      <li><label><input type="checkbox" data-t="23f"><span>Footer unchanged (Blog + collections + Etsy links all still present)</span></label></li>
+      <li><label><input type="checkbox" data-t="23g"><span>Updated smoke + viewport-matrix specs pass at 390/768/1440</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">24</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Homepage Rebuild v2</h2><div class="file">PLAN-24-high-homepage-rebuild-v2.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">Seven-section Juniqe order: hero, trust strip, free grid, collection tiles, about teaser, one quiet Etsy band to /prints, footer. New H1 "Art for your walls. Free, monthly." Depends on 21+22+23; parallel-safe with 25.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="24a"><span>Section order top to bottom matches the seven-section spec exactly</span></label></li>
+      <li><label><input type="checkbox" data-t="24b"><span>New H1 + joined pill email capture with consent line</span></label></li>
+      <li><label><input type="checkbox" data-t="24c"><span>Featured card: full-bleed, chip, white bottom strip, no mat, no whole-card zoom</span></label></li>
+      <li><label><input type="checkbox" data-t="24d"><span>Trust strip shows the four claims, 4-up desktop / 2x2 at 390px</span></label></li>
+      <li><label><input type="checkbox" data-t="24e"><span>Three collection tiles link correctly with real product images</span></label></li>
+      <li><label><input type="checkbox" data-t="24f"><span>About teaser shows both avatars, links to /about, old TODO block gone</span></label></li>
+      <li><label><input type="checkbox" data-t="24g"><span>Exactly one Etsy-related CTA on the page, pointing at /prints</span></label></li>
+      <li><label><input type="checkbox" data-t="24h"><span>No em dashes, no Title Case headings anywhere on the page</span></label></li>
+      <li><label><input type="checkbox" data-t="24i"><span>Updated smoke spec + viewport matrix pass</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">25</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Art Detail Flow v2</h2><div class="file">PLAN-25-medium-art-detail-flow-v2.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Reorders /art/[id] so the free download completes before any selling: title, description, size chips, primary free-email CTA, what's-included, then one quiet Etsy card. Fixes v1's #1 flow mistake. Depends on PLAN-21; parallel-safe with 24.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="25a"><span>Right-column order matches the spec; Etsy card visually below the free CTA at all viewports</span></label></li>
+      <li><label><input type="checkbox" data-t="25b"><span>Exactly one Etsy link in main, labeled "View on Etsy", correct UTM</span></label></li>
+      <li><label><input type="checkbox" data-t="25c"><span>CTA button reads "Email me this print (free)", 48px, still opens the dialog</span></label></li>
+      <li><label><input type="checkbox" data-t="25d"><span>Headings sentence case (Prints at 3 sizes, What's included, You might also like)</span></label></li>
+      <li><label><input type="checkbox" data-t="25e"><span>No em dash characters anywhere in the two touched files</span></label></li>
+      <li><label><input type="checkbox" data-t="25f"><span>Meta title format: &lt;Title&gt; | Free printable wall art</span></label></li>
+      <li><label><input type="checkbox" data-t="25g"><span>Related section shows at most 3 cards</span></label></li>
+      <li><label><input type="checkbox" data-t="25h"><span>download-dialog, viewport-matrix, and new order-guard specs pass</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">26</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Copy Purge — Zero Em Dashes</h2><div class="file">PLAN-26-simple-copy-purge.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">Removes every em dash and AI-tell phrase from user-facing strings sitewide and adds a permanent build-time test so one never comes back. Runs after 24/25 so it never polishes files about to be rewritten.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="26a"><span>Zero em dash hits across app/components/config/lib</span></label></li>
+      <li><label><input type="checkbox" data-t="26b"><span>Zero AI-tell phrase hits (curated digital art, modern living, captivating, elevate your)</span></label></li>
+      <li><label><input type="checkbox" data-t="26c"><span>New metadata title/description live on the homepage</span></label></li>
+      <li><label><input type="checkbox" data-t="26d"><span>Footer shows the new tagline + bottom line</span></label></li>
+      <li><label><input type="checkbox" data-t="26e"><span>tests/unit/no-em-dash.test.ts exists, passes, and fails when an em dash is reintroduced</span></label></li>
+      <li><label><input type="checkbox" data-t="26f"><span>All previously-passing unit tests still pass (email-template, gemini-prompt updated)</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">27</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Sanity Description Rewrites</h2><div class="file">PLAN-27-medium-sanity-description-rewrites.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">A Gemini-drafted, Kenny-approved pipeline rewrites every artwork's short description in Kenny's voice: draft script → review file → explicit approval → patch. Nothing publishes without sign-off. Runs after PLAN-26.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="27a"><span>Draft script produces both review files, zero mutations, prints DRY RUN</span></label></li>
+      <li><label><input type="checkbox" data-t="27b"><span>Every proposed description passes checkDescription or is marked NEEDS-HUMAN</span></label></li>
+      <li><label><input type="checkbox" data-t="27c"><span>--apply patches exactly the approved row; new text appears on its art page</span></label></li>
+      <li><label><input type="checkbox" data-t="27d"><span>A Studio edit after drafting causes --apply to skip that row with a warning</span></label></li>
+      <li><label><input type="checkbox" data-t="27e"><span>A row with an unpublished Studio draft is skipped with a draft warning</span></label></li>
+      <li><label><input type="checkbox" data-t="27f"><span>description-rules unit tests pass; npm test overall passes</span></label></li>
+      <li><label><input type="checkbox" data-t="27g"><span>HUMAN GATE: Kenny has reviewed and approved rows before any --apply run</span></label></li>
+    </ul>
+    <div class="kenny"><b>✍️ Kenny homework:</b> review <code>docs/info/description-rewrites-review.md</code> and approve rows in the JSON sidecar before anyone runs <code>--apply</code>.</div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">28</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>SEO Hubs + Sitemap Fix</h2><div class="file">PLAN-28-medium-seo-collections-and-sitemap.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Lands the basketball-wall-art hub now (so it ages before arena products exist), fixes the sitemap to include collection pages (missing today), and retargets /free-downloads at "free printable wall art". Depends on PLAN-23; parallel-safe with 27.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="28a"><span>/collections/basketball-wall-art builds, renders intro + waitlist + FAQ + JSON-LD</span></label></li>
+      <li><label><input type="checkbox" data-t="28b"><span>Zero team names/trademarks on the basketball page</span></label></li>
+      <li><label><input type="checkbox" data-t="28c"><span>Sitemap contains all 5 /collections/* URLs, /prints, and blog posts after build</span></label></li>
+      <li><label><input type="checkbox" data-t="28d"><span>/free-downloads H1, title, meta description retargeted; canonical present</span></label></li>
+      <li><label><input type="checkbox" data-t="28e"><span>Footer shows the basketball link; footer.spec passes</span></label></li>
+      <li><label><input type="checkbox" data-t="28f"><span>sitemap-collections.test.ts fails if a slug is added without updating the sitemap list</span></label></li>
+      <li><label><input type="checkbox" data-t="28g"><span>Updated smoke + viewport-matrix specs pass at 390/768/1440</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">29</div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Blog Skill Update</h2><div class="file">PLAN-29-simple-blog-skill-update.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">Updates the pixelprince-blog Claude skill (outside the repo) for a total em-dash ban, the keyword doc as priority queue, pillar-3 basketball IP guardrails + Meet-The-Whytes cross-links, and the new basketball-wall-art slug. Runs last — depends on PLAN-28's slug existing.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="29a"><span>Zero em dash hits across SKILL.md and references/*.md</span></label></li>
+      <li><label><input type="checkbox" data-t="29b"><span>voice.md carries the total em-dash ban wording; old "chain" wording gone</span></label></li>
+      <li><label><input type="checkbox" data-t="29c"><span>SKILL.md names the keyword doc path, missing-file fallback, and priority queue</span></label></li>
+      <li><label><input type="checkbox" data-t="29d"><span>seo-structure.md lists all 5 collection slugs including basketball-wall-art</span></label></li>
+      <li><label><input type="checkbox" data-t="29e"><span>Pillar-3 section (IP guardrail + MTW cross-link) added; self-check has the 3 new items</span></label></li>
+      <li><label><input type="checkbox" data-t="29f"><span>Deliverables list includes the targetKeyword output</span></label></li>
+      <li><label><input type="checkbox" data-t="29g"><span>Dry run with a real keyword confirms the outline checkpoint reflects the new rules</span></label></li>
+    </ul>
   </div>
 </div>
 
@@ -529,7 +716,7 @@
 
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20c":true,"20d":true,"20e":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20c":true,"20d":true,"20e":true,"21a":true,"21b":true,"21c":true,"21d":true,"21e":true,"21f":true};
 const AGENT_IN_PROGRESS = {"13g":true,"15b":true,"18e":true,"20a":true};
 </script>
 <script>

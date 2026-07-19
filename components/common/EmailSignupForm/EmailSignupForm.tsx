@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { trackEmailSignup } from "@/lib/analytics";
 
 interface EmailSignupFormProps {
@@ -57,22 +56,22 @@ export default function EmailSignupForm({ source, className }: EmailSignupFormPr
 
   return (
     <form onSubmit={handleSubmit} className={`space-y-3 ${className || ""}`}>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex h-12 w-full max-w-xl overflow-hidden rounded-full border border-border bg-card focus-within:border-sage-500 focus-within:ring-2 focus-within:ring-sage-200">
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-base text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+          className="h-full min-w-0 flex-1 border-0 bg-transparent px-5 text-base text-charcoal outline-none"
         />
-        <Button
+        <button
           type="submit"
           disabled={pending}
-          className="rounded-2xl bg-sage-500 px-6 py-3 text-sm font-semibold text-white hover:bg-sage-400 disabled:opacity-50"
+          className="h-full shrink-0 bg-sage-500 px-6 text-sm font-semibold text-white transition-colors hover:bg-sage-400 disabled:opacity-50"
         >
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Get the free prints"}
-        </Button>
+        </button>
       </div>
 
       <label className="flex items-start gap-2 text-xs text-soft-charcoal">

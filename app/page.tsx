@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import Hero from "@/components/ui/Hero/Hero";
@@ -71,6 +70,9 @@ export default async function Home() {
             <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
               Want it printed, framed and shipped?
             </h2>
+            <p className="mt-3 text-sm text-soft-charcoal">
+              Printed in the USA · Free US shipping · 7,000+ orders shipped on Etsy
+            </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
@@ -111,14 +113,9 @@ export default async function Home() {
       <section className="bg-cream py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full">
-              {/* TODO(KENNY): replace with real photo */}
-              <Image
-                src="/categories/quotes.webp"
-                alt="Kenny and Rene, The Pixel Prince"
-                fill
-                className="object-cover"
-              />
+            {/* TODO(KENNY): real photo of Kenny & Rene — placeholder monogram until then */}
+            <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-sage-100 text-2xl font-semibold tracking-tight text-sage-600">
+              PP
             </div>
             <p className="text-base leading-relaxed text-soft-charcoal sm:text-lg">
               We&apos;re Kenny and Rene — we design every piece ourselves,

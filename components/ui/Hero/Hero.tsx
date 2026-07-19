@@ -10,19 +10,17 @@ interface HeroProps {
 
 export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
   return (
-    <section className="relative overflow-hidden bg-cream py-20 lg:py-12">
+    <section className="relative overflow-hidden bg-cream py-16 lg:py-24">
       <div className="container mx-auto px-4">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Left: Text Content */}
           <div className="space-y-8">
-            {/* Eyebrow */}
-            <div className="inline-block">
-              <span className="rounded-full bg-sage-100 px-4 py-2 text-sm font-medium text-sage-500">
-                Pixel Masterpieces. 100% Free.
-              </span>
-            </div>
+            {/* Eyebrow — plain small-caps, no pill */}
+            <p className="text-xs font-medium uppercase tracking-widest text-soft-charcoal">
+              A new free print every month
+            </p>
 
-            {/* Headline - Massive Serif */}
+            {/* Headline */}
             <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
               Free retro gaming &amp; map wall art — a new print every month
             </h1>
@@ -36,6 +34,10 @@ export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
 
             <div className="space-y-3">
               <EmailSignupForm source="home-hero" />
+              {/* Trust microline above the fold */}
+              <p className="text-xs text-muted-foreground">
+                Free downloads · Printed in the USA · 7,000+ orders shipped on Etsy
+              </p>
               <Link
                 href="/free-downloads"
                 className="inline-block text-sm font-medium text-sage-500 transition-colors hover:text-sage-400"
@@ -61,7 +63,7 @@ export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
                 href={`/art/${featured.id}`}
                 className="group relative z-10 block transform transition-transform duration-700 hover:scale-105"
               >
-                <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-xl">
+                <div className="relative aspect-square w-full overflow-hidden rounded-md shadow-xl">
                   <Image
                     src={featured.previewImage}
                     alt={featured.title}
@@ -71,7 +73,7 @@ export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
                     className="object-cover"
                   />
                 </div>
-                <span className="absolute left-4 top-4 rounded-full bg-lavender-100 px-4 py-2 text-sm font-medium text-lavender-500 shadow-sm">
+                <span className="absolute left-3 top-3 rounded-md bg-sage-500 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
                   Featured this month
                 </span>
               </Link>

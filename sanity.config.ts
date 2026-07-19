@@ -12,7 +12,10 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
-import {pixelPrinceTheme} from './sanity/theme'
+// PLAN-13 fallback #1: the `buildLegacyTheme` palette in ./sanity/theme.ts is an
+// older theming layer that overrides `scheme` and suppresses the Appearance menu.
+// Removed so the light/dark toggle works. Brand accent colors are sacrificed.
+// import {pixelPrinceTheme} from './sanity/theme'
 
 // NOTE: sanity-plugin-media requires sanity ^5 || ^6.0.0-0; this project is
 // pinned to sanity ^4.19.0, so it can't be installed. Use the built-in asset
@@ -23,7 +26,6 @@ export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
-  theme: pixelPrinceTheme,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
   plugins: [

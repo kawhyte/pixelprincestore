@@ -7,13 +7,31 @@
  * https://github.com/sanity-io/next-sanity
  */
 
+'use client'
+
+import { useState } from 'react'
 import { NextStudio } from 'next-sanity/studio'
+import type { StudioThemeColorSchemeKey } from 'sanity'
 import config from '../../../sanity.config'
 
-export const dynamic = 'force-static'
+const STORAGE_KEY = 'pp_studio_scheme'
 
-export { metadata, viewport } from 'next-sanity/studio'
+function readStoredScheme(): StudioThemeColorSchemeKey {
+  if (typeof window === 'undefined') return 'dark'
+  const saved = window.localStorage.getItem(STORAGE_KEY)
+  return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'dark'
+}
 
 export default function StudioPage() {
-  return <NextStudio config={config} scheme="dark" />
+  // NextStudio renders behind `<Suspense fallback={null}>` internally, so the SSR
+  // output is always null regardless of `scheme` — reading localStorage here can't
+  // cause a hydration mismatch.
+  const [scheme, setScheme] = useState<StudioThemeColorSchemeKey>(readStoredScheme)
+
+  const handleSchemeChange = (next: StudioThemeColorSchemeKey) => {
+    setScheme(next)
+    window.localStorage.setItem(STORAGE_KEY, next)
+  }
+
+  return <NextStudio config={config} scheme={scheme} onSchemeChange={handleSchemeChange} />
 }

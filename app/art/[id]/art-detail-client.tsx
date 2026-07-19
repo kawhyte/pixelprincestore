@@ -48,14 +48,14 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr]">
           {/* Left Column - Image */}
           <div className="space-y-6">
             <div className={`relative ${
               art.previewImageOrientation
                 ? getCardAspectClass(art.previewImageOrientation.orientation)
                 : 'aspect-3/4'
-            } overflow-hidden rounded-2xl bg-muted shadow-xl`}>
+            } overflow-hidden rounded-md bg-muted shadow-xl`}>
               <Image
                 src={art.detailImage || art.previewImage}
                 alt={art.title}
@@ -71,7 +71,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               {art.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-sage-100 px-4 py-2 text-sm font-medium text-sage-700"
+                  className="rounded-md bg-sage-100 px-3 py-1 text-sm font-medium text-sage-700"
                 >
                   {tag}
                 </span>
@@ -96,28 +96,28 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               </p>
             </div>
 
-            {/* Etsy CTAs */}
-            <div className="space-y-3">
+            {/* Etsy cross-sell — quiet card */}
+            <div className="space-y-3 rounded-md border border-border bg-card p-6">
               <h2 className="text-lg font-semibold text-charcoal">
                 Love this style?
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 <EtsyLink
                   href={etsyUrl(etsyLinks.printed, `art-${art.id}`)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-charcoal px-6 py-4 font-semibold text-cream transition-all hover:shadow-lg"
+                  className="flex items-center justify-center gap-2 rounded-md bg-charcoal px-6 py-3 font-semibold text-cream transition-all hover:shadow-md"
                 >
                   <Frame className="h-5 w-5" />
                   {etsyLinks.styleLabel ? `Shop ${etsyLinks.styleLabel} prints` : "Shop the print shop"}
                 </EtsyLink>
                 <EtsyLink
                   href={etsyUrl(etsyLinks.printable, `art-${art.id}`)}
-                  className="flex items-center justify-center gap-2 rounded-2xl border-2 border-charcoal px-6 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
+                  className="flex items-center justify-center gap-2 rounded-md border border-charcoal px-6 py-3 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
                 >
                   <FileDown className="h-5 w-5" />
                   {etsyLinks.styleLabel ? `Printable ${etsyLinks.styleLabel} bundles` : "Shop printable bundles"}
                 </EtsyLink>
               </div>
-              <p className="text-center text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Prints & bundles on Etsy — this exact piece stays free below.
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                 {printSizes.map((size) => (
                   <div
                     key={size.label}
-                    className="rounded-xl border-2 border-border bg-card p-4"
+                    className="rounded-md border border-border bg-card p-4"
                   >
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4 text-sage-500" />
@@ -153,7 +153,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               <Button
                 onClick={() => setGateOpen(true)}
                 disabled={!hasFile}
-                className="w-full rounded-2xl bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
+                className="w-full rounded-md bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
                 <Download className="h-5 w-5" />
@@ -162,7 +162,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             </div>
 
             {/* Info Banner */}
-            <div className="rounded-2xl border border-sage-200 bg-sage-50 p-6">
+            <div className="rounded-md border border-sage-200 bg-sage-50 p-6">
               <h3 className="mb-2 flex items-center gap-2 font-semibold text-charcoal">
                 <Sparkles className="h-5 w-5 text-sage-600" />
                 High-Resolution Printable File

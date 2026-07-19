@@ -1,5 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
-import { Gift, FileText, Users } from 'lucide-react'
+import { Gift, FileText, Users, Images } from 'lucide-react'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -21,6 +21,19 @@ export const structure: StructureResolver = (S) =>
           S.documentTypeList('post')
             .title('Blog Posts')
             .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
+        ),
+      // Media Library: native Sanity asset browser. sanity-plugin-media needs
+      // Sanity v5/v6 and this project is pinned to v4.19.0, so we list the
+      // built-in `sanity.imageAsset` documents instead — every uploaded preview
+      // & detail image, newest first, with thumbnails. (Print files live on
+      // Cloudinary, not here.)
+      S.listItem()
+        .title('Media Library')
+        .icon(Images)
+        .child(
+          S.documentTypeList('sanity.imageAsset')
+            .title('Media Library')
+            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
         ),
       S.divider(),
       S.listItem()

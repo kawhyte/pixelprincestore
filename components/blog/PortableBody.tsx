@@ -58,13 +58,13 @@ const components: PortableTextComponents = {
           alt={value.alt || ""}
           width={800}
           height={450}
-          className="my-8 rounded-2xl"
+          className="my-8 rounded-md"
         />
       );
     },
     productEmbed: ({ value }) => <ProductEmbedCard product={value.product} note={value.note} />,
     emailCapture: ({ value }) => (
-      <div className="my-8 rounded-2xl bg-sage-50 p-6">
+      <div className="my-8 rounded-md bg-sage-50 p-6">
         <h3 className="text-xl font-semibold text-charcoal">
           {value.heading || "Get a new free print every month"}
         </h3>

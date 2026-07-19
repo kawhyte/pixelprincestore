@@ -120,7 +120,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </p>
 
         {post.hero && (
-          <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl bg-muted">
+          <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-md bg-muted">
             <Image
               src={post.hero}
               alt={post.title}
@@ -145,7 +145,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         )}
 
-        <div className="mt-16 rounded-2xl bg-sage-50 p-8">
+        <div className="mt-20 rounded-md bg-sage-50 p-8">
           <h2 className="text-2xl font-semibold text-charcoal">
             Get a new free print every month
           </h2>
@@ -160,15 +160,15 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <Link
                   key={related.slug}
                   href={`/blog/${related.slug}`}
-                  className="group block overflow-hidden rounded-2xl bg-sage-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                  className="group block overflow-hidden rounded-md bg-card transition-all duration-300 hover:shadow-md"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted">
                     {related.hero && (
                       <Image
                         src={related.hero}
                         alt={related.title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 640px) 100vw, 33vw"
                       />
                     )}

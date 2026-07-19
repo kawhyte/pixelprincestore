@@ -30,7 +30,7 @@ export default async function BlogIndexPage() {
         <h1 className="text-4xl font-bold text-charcoal lg:text-5xl">Blog</h1>
 
         {posts.length === 0 ? (
-          <div className="mt-12 rounded-2xl border border-border bg-card p-12 text-center">
+          <div className="mt-12 rounded-md border border-border bg-card p-12 text-center">
             <p className="text-base text-muted-foreground sm:text-lg">
               First post is in the works — join the list and you won&apos;t miss it.
             </p>
@@ -42,15 +42,15 @@ export default async function BlogIndexPage() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group block overflow-hidden rounded-2xl bg-sage-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                className="group block overflow-hidden rounded-md bg-card transition-all duration-300 hover:shadow-md"
               >
-                <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted">
                   {post.hero && (
                     <Image
                       src={post.hero}
                       alt={post.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   )}

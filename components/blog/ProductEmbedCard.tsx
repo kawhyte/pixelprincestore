@@ -16,9 +16,9 @@ export default function ProductEmbedCard({ product, note }: ProductEmbedCardProp
   const etsyLinks = resolveEtsyLinks(product);
 
   return (
-    <div className="my-8 flex gap-4 rounded-2xl border border-border bg-card p-4">
+    <div className="my-8 flex gap-4 rounded-md border border-border bg-card p-4">
       {product.previewImage && (
-        <div className="relative h-[160px] w-[120px] shrink-0 overflow-hidden rounded-xl bg-muted">
+        <div className="relative h-[160px] w-[120px] shrink-0 overflow-hidden rounded-md bg-muted">
           <Image
             src={product.previewImage}
             alt={product.title}

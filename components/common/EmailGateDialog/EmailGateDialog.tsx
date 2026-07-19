@@ -92,7 +92,7 @@ export default function EmailGateDialog({
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sage-100">
               <CheckCircle2 className="h-8 w-8 text-sage-600" />
             </div>
-            <h2 className="font-serif text-2xl font-bold text-charcoal">
+            <h2 className="text-2xl font-bold text-charcoal">
               Check your inbox!
             </h2>
             <p className="text-sm text-soft-charcoal">
@@ -109,7 +109,7 @@ export default function EmailGateDialog({
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="font-serif text-2xl text-charcoal">
+              <DialogTitle className="text-2xl text-charcoal">
                 Get your free print
               </DialogTitle>
               <DialogDescription>
@@ -132,7 +132,7 @@ export default function EmailGateDialog({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+                    className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-base text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
                   />
                 </div>
               </div>

@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           <span className="line-clamp-1 text-charcoal">{post.title}</span>
         </nav>
 
-        <h1 className="mt-4 font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+        <h1 className="mt-4 text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
           {post.title}
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
@@ -138,7 +138,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {post.faq.length > 0 && (
           <div className="mt-12">
-            <h2 className="font-serif text-2xl font-semibold text-charcoal">FAQ</h2>
+            <h2 className="text-2xl font-semibold text-charcoal">FAQ</h2>
             <div className="mt-6">
               <FaqAccordion faq={post.faq} />
             </div>
@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         )}
 
         <div className="mt-16 rounded-2xl bg-sage-50 p-8">
-          <h2 className="font-serif text-2xl font-semibold text-charcoal">
+          <h2 className="text-2xl font-semibold text-charcoal">
             Get a new free print every month
           </h2>
           <EmailSignupForm source="blog-end" className="mt-4 max-w-xl" />
@@ -154,7 +154,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {relatedPosts.length > 0 && (
           <div className="mt-16">
-            <h2 className="font-serif text-2xl font-semibold text-charcoal">More from the blog</h2>
+            <h2 className="text-2xl font-semibold text-charcoal">More from the blog</h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-3">
               {relatedPosts.map((related) => (
                 <Link
@@ -174,7 +174,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     )}
                   </div>
                   <div className="space-y-1 p-4">
-                    <h3 className="line-clamp-2 font-serif text-base font-bold leading-snug text-charcoal">
+                    <h3 className="line-clamp-2 text-base font-bold leading-snug text-charcoal">
                       {related.title}
                     </h3>
                   </div>

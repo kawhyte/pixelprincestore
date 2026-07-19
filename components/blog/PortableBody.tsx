@@ -18,17 +18,17 @@ function slugifyHeading(block: PortableTextBlock): string {
 const components: PortableTextComponents = {
   block: {
     h1: ({ children, value }) => (
-      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 font-serif text-2xl font-bold text-charcoal">
+      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 text-2xl font-bold text-charcoal">
         {children}
       </h2>
     ),
     h2: ({ children, value }) => (
-      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 font-serif text-2xl font-bold text-charcoal">
+      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 text-2xl font-bold text-charcoal">
         {children}
       </h2>
     ),
     h3: ({ children, value }) => (
-      <h3 id={slugifyHeading(value)} className="mt-8 mb-3 font-serif text-xl font-semibold text-charcoal">
+      <h3 id={slugifyHeading(value)} className="mt-8 mb-3 text-xl font-semibold text-charcoal">
         {children}
       </h3>
     ),
@@ -65,7 +65,7 @@ const components: PortableTextComponents = {
     productEmbed: ({ value }) => <ProductEmbedCard product={value.product} note={value.note} />,
     emailCapture: ({ value }) => (
       <div className="my-8 rounded-2xl bg-sage-50 p-6">
-        <h3 className="font-serif text-xl font-semibold text-charcoal">
+        <h3 className="text-xl font-semibold text-charcoal">
           {value.heading || "Get a new free print every month"}
         </h3>
         <EmailSignupForm source="blog-inline" className="mt-4" />

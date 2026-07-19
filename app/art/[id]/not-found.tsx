@@ -44,9 +44,9 @@ export default function ArtNotFound() {
           <line x1="162" y1="50" x2="172" y2="56" stroke="#2a2a2a" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
 
-        <h1 className="mb-2 font-serif text-5xl font-bold text-charcoal">404</h1>
-        <h2 className="mb-3 font-serif text-2xl font-semibold text-charcoal">
-          We couldn't find this piece
+        <h1 className="mb-2 text-5xl font-bold text-charcoal">404</h1>
+        <h2 className="mb-3 text-2xl font-semibold text-charcoal">
+          We couldn&apos;t find this piece
         </h2>
         <p className="mb-8 text-soft-charcoal">
           This artwork may have moved or been removed from the gallery.

@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           {/* Column 1: Brand */}
           <div className="space-y-4">
-            <h2 className="font-serif text-xl font-bold sm:text-2xl">The Pixel Prince</h2>
+            <h2 className="text-xl font-bold sm:text-2xl">The Pixel Prince</h2>
             <p className="text-sm leading-relaxed text-cream/70">
               Curated digital art for modern living. Transform your space with
               premium downloadable prints.
@@ -79,7 +79,7 @@ export default function Footer() {
 
           {/* Column 2: Shop */}
           <div className="space-y-4">
-            <h3 className="font-serif text-lg font-semibold">Shop</h3>
+            <h3 className="text-lg font-semibold">Shop</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
@@ -118,7 +118,7 @@ export default function Footer() {
 
           {/* Column 3: Collections */}
           <div className="space-y-4">
-            <h3 className="font-serif text-lg font-semibold">Collections</h3>
+            <h3 className="text-lg font-semibold">Collections</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
@@ -157,7 +157,7 @@ export default function Footer() {
 
           {/* Column 4: Support */}
           <div className="space-y-4">
-            <h3 className="font-serif text-lg font-semibold">Support</h3>
+            <h3 className="text-lg font-semibold">Support</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
@@ -172,7 +172,7 @@ export default function Footer() {
 
           {/* Column 5: Legal */}
           <div className="space-y-4">
-            <h3 className="font-serif text-lg font-semibold">Legal</h3>
+            <h3 className="text-lg font-semibold">Legal</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link

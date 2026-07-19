@@ -49,12 +49,12 @@ export default function NotFound() {
           <line x1="128" y1="133" x2="128" y2="140" stroke="#4a7bc7" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
 
-        <h1 className="mb-2 font-serif text-5xl font-bold text-charcoal">404</h1>
-        <h2 className="mb-3 font-serif text-2xl font-semibold text-charcoal">
+        <h1 className="mb-2 text-5xl font-bold text-charcoal">404</h1>
+        <h2 className="mb-3 text-2xl font-semibold text-charcoal">
           Looks like this canvas is blank
         </h2>
         <p className="mb-8 text-soft-charcoal">
-          The page you're looking for doesn't exist — but there's plenty of art waiting for you.
+          The page you&apos;re looking for doesn&apos;t exist — but there&apos;s plenty of art waiting for you.
         </p>
         <Link
           href="/free-downloads"

@@ -47,7 +47,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
               <Gift className="h-6 w-6 text-sage-500 sm:h-8 sm:w-8" />
             </div>
             <div className="flex-1">
-              <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
                 Free Wall Art Downloads
               </h1>
               <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
@@ -68,7 +68,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
               <Sparkles className="h-6 w-6 text-sage-500" />
             </div>
             <div className="flex-1">
-              <h2 className="font-serif text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
+              <h2 className="text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
               <p className="mt-2 text-base leading-relaxed text-soft-charcoal sm:text-lg">
                 Browse our collection and download up to{" "}
                 <strong className="text-sage-500">3 sizes per week</strong>. Choose individual sizes or grab them all in a ZIP file. Each piece is available in 4 print-ready sizes, perfect for any frame or space.
@@ -120,7 +120,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
 
                 {/* Card Content */}
                 <div className="space-y-3 p-4 sm:p-5">
-                  <h3 className="line-clamp-2 font-serif text-lg font-bold leading-snug text-charcoal sm:text-xl">
+                  <h3 className="line-clamp-2 text-lg font-bold leading-snug text-charcoal sm:text-xl">
                     {art.title}
                   </h3>
                   <p className="text-sm text-sage-500">by {art.artist}</p>

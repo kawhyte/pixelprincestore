@@ -4,9 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Typography - Anthropic-inspired serif and sans */
+  /* Typography - sans-serif system (Inter) */
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
 
   /* Core Brand Colors - Earthtone Modern */
   --color-cream: #f3f1e8;
@@ -146,7 +145,7 @@
 
   /* Typography defaults */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-sans font-semibold tracking-tight;
   }
 
   p, span, div {

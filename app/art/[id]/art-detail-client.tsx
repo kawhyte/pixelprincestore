@@ -82,7 +82,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
           <div className="space-y-8">
             {/* Title & Artist */}
             <div className="space-y-3">
-              <h1 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+              <h1 className="text-4xl font-bold text-charcoal lg:text-5xl">
                 {art.title}
               </h1>
               <p className="text-lg text-sage-500">by {art.artist}</p>
@@ -97,7 +97,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
 
             {/* Etsy CTAs */}
             <div className="space-y-3">
-              <h2 className="font-serif text-lg font-semibold text-charcoal">
+              <h2 className="text-lg font-semibold text-charcoal">
                 Love this style?
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -123,7 +123,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
 
             {/* Print Sizes */}
             <div className="space-y-4">
-              <h2 className="font-serif text-2xl font-semibold text-charcoal">
+              <h2 className="text-2xl font-semibold text-charcoal">
                 Prints At 3 Sizes
               </h2>
 
@@ -183,7 +183,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
         {/* Related Products Section */}
         {relatedArt.length > 0 && (
           <section className="mt-20 border-t border-border pt-12">
-            <h2 className="mb-8 font-serif text-3xl font-bold text-charcoal">
+            <h2 className="mb-8 text-3xl font-bold text-charcoal">
               You Might Also Like
             </h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -207,7 +207,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="font-serif text-xl font-semibold text-charcoal group-hover:text-sage-600 transition-colors">
+                    <h3 className="text-xl font-semibold text-charcoal group-hover:text-sage-600 transition-colors">
                       {relatedItem.title}
                     </h3>
                     <p className="mt-2 text-sm text-muted-foreground line-clamp-2">

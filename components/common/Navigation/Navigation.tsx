@@ -16,7 +16,7 @@ export default function Navigation() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="group z-50">
-              <h1 className="font-serif text-xl font-bold text-charcoal transition-colors group-hover:text-sage-500 sm:text-2xl">
+              <h1 className="text-xl font-bold text-charcoal transition-colors group-hover:text-sage-500 sm:text-2xl">
                 The Pixel Prince
               </h1>
             </Link>

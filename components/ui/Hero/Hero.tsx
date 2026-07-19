@@ -23,7 +23,7 @@ export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
             </div>
 
             {/* Headline - Massive Serif */}
-            <h1 className="text-balance font-serif text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
+            <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
               Free retro gaming &amp; map wall art — a new print every month
             </h1>
 

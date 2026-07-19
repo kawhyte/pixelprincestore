@@ -27,7 +27,7 @@ export default async function BlogIndexPage() {
   return (
     <div className="min-h-screen bg-cream">
       <main className="container mx-auto px-4 py-12 sm:py-16">
-        <h1 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">Blog</h1>
+        <h1 className="text-4xl font-bold text-charcoal lg:text-5xl">Blog</h1>
 
         {posts.length === 0 ? (
           <div className="mt-12 rounded-2xl border border-border bg-card p-12 text-center">
@@ -59,7 +59,7 @@ export default async function BlogIndexPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     {formatDate(post.publishedAt)}
                   </p>
-                  <h2 className="line-clamp-2 font-serif text-xl font-bold leading-snug text-charcoal">
+                  <h2 className="line-clamp-2 text-xl font-bold leading-snug text-charcoal">
                     {post.title}
                   </h2>
                   <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">

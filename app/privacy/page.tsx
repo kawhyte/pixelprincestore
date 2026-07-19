@@ -8,7 +8,7 @@ export const metadata = buildMetadata({
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl">
+      <h1 className="text-3xl font-bold text-charcoal sm:text-4xl">
         Privacy Policy
       </h1>
       <p className="mt-4 text-sm text-soft-charcoal">
@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       </p>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           What we collect
         </h2>
         <p className="text-soft-charcoal">
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           What we do with it
         </h2>
         <p className="text-soft-charcoal">
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Where it lives
         </h2>
         <p className="text-soft-charcoal">
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Your rights
         </h2>
         <p className="text-soft-charcoal">
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Cookies
         </h2>
         <p className="text-soft-charcoal">
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Contact
         </h2>
         <p className="text-soft-charcoal">

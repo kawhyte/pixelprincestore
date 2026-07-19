@@ -11,7 +11,7 @@ export const metadata = buildMetadata({
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl">
+      <h1 className="text-3xl font-bold text-charcoal sm:text-4xl">
         Terms of Use
       </h1>
       <p className="mt-4 text-sm text-soft-charcoal">
@@ -19,7 +19,7 @@ export default function TermsPage() {
       </p>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Acceptance of terms
         </h2>
         <p className="text-soft-charcoal">
@@ -29,7 +29,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Personal-use license
         </h2>
         <p className="text-soft-charcoal">{LICENSE_SUMMARY}</p>
@@ -54,7 +54,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Purchases
         </h2>
         <p className="text-soft-charcoal">
@@ -65,7 +65,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           No warranty
         </h2>
         <p className="text-soft-charcoal">
@@ -76,7 +76,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Ownership
         </h2>
         <p className="text-soft-charcoal">
@@ -87,7 +87,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Changes to these terms
         </h2>
         <p className="text-soft-charcoal">
@@ -97,7 +97,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 mt-10 font-serif text-2xl font-semibold text-charcoal">
+        <h2 className="mb-3 mt-10 text-2xl font-semibold text-charcoal">
           Contact
         </h2>
         <p className="text-soft-charcoal">

@@ -64,7 +64,7 @@ export default function EmailSignupForm({ source, className }: EmailSignupFormPr
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+          className="w-full flex-1 rounded-2xl border border-border bg-card px-4 py-3 text-base text-charcoal outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
         />
         <Button
           type="submit"

@@ -35,7 +35,7 @@ export default async function Home() {
       <section className="bg-card py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
               Browse the free collection
             </h2>
           </div>
@@ -72,7 +72,7 @@ export default async function Home() {
                     />
                   </div>
                   <div className="space-y-2 p-4 sm:p-5">
-                    <h3 className="line-clamp-2 font-serif text-lg font-bold leading-snug text-charcoal">
+                    <h3 className="line-clamp-2 text-lg font-bold leading-snug text-charcoal">
                       {art.title}
                     </h3>
                     <p className="text-sm text-sage-500">by {art.artist}</p>
@@ -97,14 +97,14 @@ export default async function Home() {
       <section className="bg-sage-50 py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
               Want it printed, framed and shipped?
             </h2>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="rounded-2xl bg-cream p-8 text-center shadow-sm">
-              <h3 className="font-serif text-xl font-semibold text-charcoal">
+              <h3 className="text-xl font-semibold text-charcoal">
                 The Pixel Prince on Etsy
               </h3>
               <p className="mt-2 text-sm text-soft-charcoal">
@@ -119,7 +119,7 @@ export default async function Home() {
             </div>
 
             <div className="rounded-2xl bg-cream p-8 text-center shadow-sm">
-              <h3 className="font-serif text-xl font-semibold text-charcoal">
+              <h3 className="text-xl font-semibold text-charcoal">
                 Pixel Prince Printables
               </h3>
               <p className="mt-2 text-sm text-soft-charcoal">

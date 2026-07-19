@@ -70,7 +70,7 @@ export default async function CollectionPage({ params }: PageProps) {
 
       <main className="container mx-auto px-4 py-12 sm:py-16">
         <div className="max-w-3xl">
-          <h1 className="font-serif text-4xl font-bold text-charcoal lg:text-5xl">
+          <h1 className="text-4xl font-bold text-charcoal lg:text-5xl">
             {collection.title}
           </h1>
           <div className="mt-6 space-y-4">
@@ -115,7 +115,7 @@ export default async function CollectionPage({ params }: PageProps) {
                         />
                       </div>
                       <div className="space-y-2 p-4 sm:p-5">
-                        <h3 className="line-clamp-2 font-serif text-lg font-bold leading-snug text-charcoal sm:text-xl">
+                        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-charcoal sm:text-xl">
                           {art.title}
                         </h3>
                         <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
@@ -142,14 +142,14 @@ export default async function CollectionPage({ params }: PageProps) {
         </div>
 
         <div className="mt-16 rounded-2xl bg-sage-50 p-8">
-          <h2 className="font-serif text-2xl font-semibold text-charcoal">
+          <h2 className="text-2xl font-semibold text-charcoal">
             Get a new free print every month
           </h2>
           <EmailSignupForm source={`collection-${slug}`} className="mt-4 max-w-xl" />
         </div>
 
         <div className="mt-16 max-w-3xl">
-          <h2 className="font-serif text-2xl font-semibold text-charcoal">Common questions</h2>
+          <h2 className="text-2xl font-semibold text-charcoal">Common questions</h2>
           <div className="mt-6">
             <FaqAccordion faq={collection.faq} />
           </div>

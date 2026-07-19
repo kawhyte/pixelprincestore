@@ -29,7 +29,7 @@ export default function ProductEmbedCard({ product, note }: ProductEmbedCardProp
         </div>
       )}
       <div className="flex flex-col justify-center gap-2">
-        <h4 className="font-serif text-lg font-semibold text-charcoal">{product.title}</h4>
+        <h4 className="text-lg font-semibold text-charcoal">{product.title}</h4>
         {note && <p className="text-sm text-soft-charcoal">{note}</p>}
         <p className="line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
         <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">

@@ -52,6 +52,7 @@
   .line{width:2px;flex:1;background:var(--border);min-height:24px}
   .step:last-of-type .line{background:transparent}
   .step.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+  .step.active .dot{background:var(--amber);border-color:var(--amber);color:#fff}
 
   .card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px 24px;margin-bottom:26px;flex:1;box-shadow:0 2px 10px rgba(42,42,42,.04);transition:opacity .3s}
   .step.done .card{opacity:.72}
@@ -70,6 +71,7 @@
   .tasks input:checked + span{color:var(--muted);text-decoration:line-through}
   .tasks input:disabled{cursor:default;opacity:.9}
   .verified-badge{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;font-weight:700;color:var(--green);background:var(--green-light);border-radius:999px;padding:2px 8px;margin-left:8px;flex-shrink:0;white-space:nowrap}
+  .progress-badge{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10px;font-weight:700;color:var(--amber);background:var(--amber-light);border-radius:999px;padding:2px 8px;margin-left:8px;flex-shrink:0;white-space:nowrap}
 
   .note{border-radius:14px;padding:12px 14px;margin-top:14px;font-family:Helvetica,Arial,sans-serif;font-size:13px;display:flex;gap:10px;align-items:flex-start}
   .note b{font-weight:700}
@@ -98,7 +100,7 @@
 <header>
   <span class="crown">👑</span>
   <h1>The Pixel Prince — Rebuild Roadmap</h1>
-  <p class="sub sans">12 plans, in order. Each card is one plan file in <b>docs/</b>. Check things off as they're finished — this page remembers your progress.</p>
+  <p class="sub sans">20 plans, in order. Each card is one plan file in <b>docs/</b>. Check things off as they're finished — this page remembers your progress.</p>
 </header>
 
 <div class="progress-card">
@@ -353,22 +355,149 @@
   </div>
 </div>
 
+<!-- ============ PHASE F ============ -->
+<div class="phase-label">Phase F · Design refresh &amp; growth polish (July 2026 wave)</div>
+
 <div class="step" data-step>
-  <div class="rail"><div class="dot">13</div></div>
+  <div class="rail"><div class="dot">13</div><div class="line"></div></div>
   <div class="card">
     <div class="card-head">
-      <div><h2>Mobile-First UX Audit</h2><div class="file">PLAN-13-medium-mobile-first-ux.md (not yet written)</div></div>
+      <div><h2>Studio Light/Dark Toggle</h2><div class="file">PLAN-13-simple-studio-theme-toggle.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">The forced dark mode never worked. Instead: a real toggle via the Studio's own appearance menu, remembered between visits. Isolated warm-up before the big refresh.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="13f"><span>Studio scheme toggle switches light ↔ dark both ways</span></label></li>
+      <li><label><input type="checkbox" data-t="13g"><span>Choice persists across reloads; Studio fully functional</span></label></li>
+    </ul>
+    <div class="note win"><span class="ico">✅</span><span><b>Toggle confirmed working (2026-07-18):</b> the forced dark mode never worked because <code>buildLegacyTheme</code> (sanity/theme.ts) locks the color scheme and hides the Appearance menu entirely — removed <code>theme: pixelPrinceTheme</code> from sanity.config.ts to unblock it. Kenny confirmed in-browser the Appearance menu now appears in the avatar dropdown and switches light ↔ dark both directions. tsc/lint/build/unit+e2e tests all green. Brand accent color sacrificed as a known trade-off (flagged in the plan file).</span></div>
+    <div class="note tip"><span class="ico">🔁</span><span><b>Still to confirm:</b> that the choice survives a page reload (localStorage) and that Artworks/Blog Posts/Subscribers stay fully editable with the legacy theme removed — not yet explicitly re-checked.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">14</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Design Refresh — 90% Gallery / 10% Pixel</h2><div class="file">PLAN-14-critical-design-refresh-90-10.md</div></div>
+      <span class="pill sans sev-critical">CRITICAL</span>
+    </div>
+    <p class="why">Site-wide Desenio/Juniqe restyle: clean sans typography, white space, neutral small-radius cards, trust elements everywhere — with the pixel personality confined to wordmark, blue accent, micro-icons, micro-interactions, and copy voice.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="14a"><span>Phase A: sans headings sitewide, blue confetti, 16px inputs, 44px buttons</span></label></li>
+      <li><label><input type="checkbox" data-t="14b"><span>Phase B: footer on every page (current year + trust line), nav polish, Wordmark extracted</span></label></li>
+      <li><label><input type="checkbox" data-t="14c"><span>Phase C: one ArtCard component (Juniqe small-radius, keyboard-accessible) across all 4 grids</span></label></li>
+      <li><label><input type="checkbox" data-t="14d"><span>Phase D: per-page passes — hero pill removed, trust proof above the fold, blog typography</span></label></li>
+      <li><label><input type="checkbox" data-t="14e"><span>Phase E: pixel personality (copy voice, PixelIcons, optional pixelate hover)</span></label></li>
+      <li><label><input type="checkbox" data-t="14f"><span>Playwright: footer-everywhere, card keyboard-nav, download smoke at phone + desktop viewports</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">🎨</span><span><b>Hard rules:</b> no pixel body fonts, no 8-bit borders, no scanlines, no eyebrow pills on the hero. The art is the hero; the theme never competes.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">15</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Art Page Photo Carousel</h2><div class="file">PLAN-15-medium-art-detail-photo-carousel.md</div></div>
       <span class="pill sans sev-medium">MEDIUM</span>
     </div>
-    <p class="why">Most visitors will land here on a phone, not a laptop — every page needs to be audited and tuned mobile-first, not just "responsive enough." Cover every route added so far (home, free-downloads, art detail, collections, about, blog index + post, studio-adjacent public pages) plus anything shipped after this is written.</p>
+    <p class="why">Juniqe-style product photos: each artwork can show one image (exactly like today) or a swipeable set of room/framed shots via a new optional Sanity field.</p>
     <ul class="tasks">
-      <li><label><input type="checkbox" data-t="13a"><span>Full-site pass on real phone viewports (not just DevTools) — tap targets, font sizes, spacing, sticky nav behavior</span></label></li>
-      <li><label><input type="checkbox" data-t="13b"><span>Forms (email signup, size selection, download flow) verified thumb-friendly with no zoom-on-focus issues</span></label></li>
-      <li><label><input type="checkbox" data-t="13c"><span>Images/hero sections checked for layout shift and load speed on throttled mobile connections</span></label></li>
-      <li><label><input type="checkbox" data-t="13d"><span>Blog post pages (long-form text + embeds) checked for readability and scroll comfort on small screens</span></label></li>
-      <li><label><input type="checkbox" data-t="13e"><span>Lighthouse mobile scores captured as a baseline + regression check added to the workflow</span></label></li>
+      <li><label><input type="checkbox" data-t="15a"><span>Optional galleryImages field in Studio (② Images tab, alt required)</span></label></li>
+      <li><label><input type="checkbox" data-t="15b"><span>Carousel: swipe on mobile, arrows + thumbnails on desktop, zero CLS</span></label></li>
+      <li><label><input type="checkbox" data-t="15c"><span>Single-image artworks render exactly as before (no carousel chrome)</span></label></li>
+      <li><label><input type="checkbox" data-t="15d"><span>Transform unit test + ADDING-NEW-ART doc updated</span></label></li>
     </ul>
-    <div class="note warn"><span class="ico">📱</span><span><b>Why this matters:</b> ~60% of expected traffic is mobile — a broken or clunky mobile experience is a bigger risk to conversions than any single feature gap.</span></div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">16</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>About Page Overhaul</h2><div class="file">PLAN-16-medium-about-page-overhaul.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Photo-led story layout with a stats/trust band (18+ countries, 7,000+ orders, printed in USA) and copy rewritten to sound like Kenny, not a template.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="16a"><span>New 5-section layout (hero photo, story, stats band, how-it-works, CTA)</span></label></li>
+      <li><label><input type="checkbox" data-t="16b"><span>Humanized copy in place (verbatim from the plan)</span></label></li>
+      <li><label><input type="checkbox" data-t="16c"><span>AboutPage/Person JSON-LD live; metadata unchanged</span></label></li>
+    </ul>
+    <div class="kenny"><b>✍️ Kenny homework:</b> a real photo of you two — the layout ships with the placeholder slot ready for a one-line swap.</div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">17</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Blog Photo Layouts + Attribution</h2><div class="file">PLAN-17-medium-blog-image-layouts-attribution.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Blog bodies get side-by-side and grid photo blocks, and every image slot gets an optional "Photo by X" credit with a source link — one shared image object powers all of it.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="17a"><span>Reusable blogImage object (alt + optional credit/source) registered</span></label></li>
+      <li><label><input type="checkbox" data-t="17b"><span>imageRow (2-up) + imageGrid (2–4) body blocks in Studio with validation</span></label></li>
+      <li><label><input type="checkbox" data-t="17c"><span>Renderers + credit captions live; mobile stacking correct</span></label></li>
+      <li><label><input type="checkbox" data-t="17d"><span>Existing posts render unchanged</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">18</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Branded Emails (Resend)</h2><div class="file">PLAN-18-medium-resend-email-branding.md</div></div>
+      <span class="pill sans sev-medium">MEDIUM</span>
+    </div>
+    <p class="why">Download, welcome, and the monthly broadcast finally look like one brand: shared cream/charcoal/blue wrapper in code, plus a reusable broadcast template in the Resend dashboard (currently empty).</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="18a"><span>Shared branded email wrapper (email-safe tables, dark-mode tested)</span></label></li>
+      <li><label><input type="checkbox" data-t="18b"><span>Download + welcome emails restyled — subjects/links byte-identical</span></label></li>
+      <li><label><input type="checkbox" data-t="18c"><span>monthly-free-print Template created in Resend (unsubscribe + mailing address)</span></label></li>
+      <li><label><input type="checkbox" data-t="18d"><span>Renders checked in Gmail + Apple Mail, light and dark</span></label></li>
+      <li><label><input type="checkbox" data-t="18e"><span>Template unit tests green, lib coverage held ≥80%</span></label></li>
+    </ul>
+    <div class="kenny"><b>✍️ Kenny homework:</b> a mailing address (PO box fine) for the broadcast footer — US law requires it before the first real send.</div>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">19</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>SEO-Aware AI Descriptions</h2><div class="file">PLAN-19-simple-gemini-seo-prompts.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">The Studio's Gemini button learns what you're trying to rank for: category, tags, and a per-category keyword list feed the prompt so descriptions work for search without sounding stuffed.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="19a"><span>config/seo-keywords.ts — one keyword source for all AI-assist tools</span></label></li>
+      <li><label><input type="checkbox" data-t="19b"><span>Prompt builder + route accept category/tags/keywords (old requests still work)</span></label></li>
+      <li><label><input type="checkbox" data-t="19c"><span>Studio generator sends them; soft "no keyword landed" toast</span></label></li>
+      <li><label><input type="checkbox" data-t="19d"><span>Prompt-builder unit tests green</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">20</div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Mobile-First Audit + Baselines</h2><div class="file">PLAN-20-high-mobile-audit-baselines.md</div></div>
+      <span class="pill sans sev-high">HIGH</span>
+    </div>
+    <p class="why">Runs LAST, after the redesign settles: full-site pass on real phones, fixes in small commits, Lighthouse mobile baselines recorded, and a Playwright viewport matrix as the permanent regression gate. ~60% of traffic is mobile — this locks in the win.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="20a"><span>Full-site pass on real phone viewports — tap targets, fonts, spacing, sticky nav</span></label></li>
+      <li><label><input type="checkbox" data-t="20b"><span>Forms verified thumb-friendly, no zoom-on-focus anywhere</span></label></li>
+      <li><label><input type="checkbox" data-t="20c"><span>Images/heroes checked for layout shift + throttled load speed</span></label></li>
+      <li><label><input type="checkbox" data-t="20d"><span>Blog long-form readability + embeds checked on small screens</span></label></li>
+      <li><label><input type="checkbox" data-t="20e"><span>Lighthouse mobile baselines recorded + Playwright viewport matrix committed</span></label></li>
+    </ul>
+    <div class="note warn"><span class="ico">📱</span><span><b>Sequencing:</b> depends on plans 14–17 — auditing earlier would mean measuring a UI that's about to change.</span></div>
   </div>
 </div>
 
@@ -381,15 +510,22 @@
 
 <script>
 /*
-  AGENT_VERIFIED: filled in by Claude directly in this file, not by clicking in
-  the browser. A task id goes in here only after its plan step is implemented
-  AND verified (tests/build green, feature checked working). This is the
-  file's own persistence layer, so it survives closing/reopening the doc in
-  any browser — unlike localStorage below, which only remembers Kenny's own
-  manual clicks in one browser profile.
+  AGENT_VERIFIED / AGENT_IN_PROGRESS: filled in by Claude directly in this file,
+  not by clicking in the browser. They are the file's own persistence layer, so
+  they survive closing/reopening the doc in any browser — unlike localStorage
+  below, which only remembers Kenny's own manual clicks in one browser profile.
+
+  - AGENT_VERIFIED[id]=true  -> task implemented AND verified with real evidence
+    (tests/build green, feature checked working). Renders checked + disabled +
+    green "✓ verified" badge.
+  - AGENT_IN_PROGRESS[id]=true -> task actively being worked, not yet verified.
+    Renders unchecked + amber "⏳ in progress" badge. Move it to AGENT_VERIFIED
+    (and remove from here) once verified. AGENT_VERIFIED wins if an id is in both.
+
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11d":true,"11e":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11d":true,"11e":true,"13f":true};
+const AGENT_IN_PROGRESS = {"13g":true};
 </script>
 <script>
 (function(){
@@ -397,13 +533,20 @@ const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":t
   const boxes=[...document.querySelectorAll('.tasks input')];
   const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
   boxes.forEach(b=>{
-    const verified=!!AGENT_VERIFIED[b.dataset.t];
-    b.checked = verified || !!saved[b.dataset.t];
+    const id=b.dataset.t;
+    const verified=!!AGENT_VERIFIED[id];
+    const inProgress=!verified && !!AGENT_IN_PROGRESS[id];
+    b.checked = verified || !!saved[id];
     if(verified){
       b.disabled=true;
       const badge=document.createElement('span');
       badge.className='verified-badge';
       badge.textContent='✓ verified';
+      b.closest('label').appendChild(badge);
+    } else if(inProgress){
+      const badge=document.createElement('span');
+      badge.className='progress-badge';
+      badge.textContent='⏳ in progress';
       b.closest('label').appendChild(badge);
     }
     b.addEventListener('change',update);
@@ -413,13 +556,16 @@ const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":t
     boxes.forEach(b=>{ if(!AGENT_VERIFIED[b.dataset.t]) state[b.dataset.t]=b.checked; });
     localStorage.setItem(KEY,JSON.stringify(state));
     const done=boxes.filter(b=>b.checked).length;
-    const pct=Math.round(done/boxes.length*100);
+    const pct=boxes.length?Math.round(done/boxes.length*100):0;
     document.getElementById('fill').style.width=pct+"%";
     document.getElementById('pct').textContent=pct+"% complete";
     document.getElementById('count').textContent=done+" of "+boxes.length+" tasks done";
     document.querySelectorAll('[data-step]').forEach(step=>{
       const bs=[...step.querySelectorAll('input')];
-      step.classList.toggle('done',bs.length>0&&bs.every(b=>b.checked));
+      const allDone=bs.length>0&&bs.every(b=>b.checked);
+      step.classList.toggle('done',allDone);
+      const anyProg=bs.some(b=>AGENT_IN_PROGRESS[b.dataset.t]&&!AGENT_VERIFIED[b.dataset.t]);
+      step.classList.toggle('active',!allDone&&anyProg);
     });
   }
   document.getElementById('reset').addEventListener('click',()=>{

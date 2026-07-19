@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ConditionalNavigation from "@/components/common/Navigation/ConditionalNavigation";
+import ConditionalFooter from "@/components/common/Footer/ConditionalFooter";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
 
 const inter = Inter({
@@ -79,6 +80,7 @@ export default function RootLayout({
       <body className="antialiased">
         <ConditionalNavigation />
         {children}
+        <ConditionalFooter />
         <Toaster />
         {process.env.NODE_ENV === "production" &&
           process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (

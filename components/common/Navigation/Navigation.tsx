@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
+import Wordmark from "@/components/common/Wordmark/Wordmark";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,9 +17,7 @@ export default function Navigation() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="group z-50">
-              <h1 className="text-xl font-bold text-charcoal transition-colors group-hover:text-sage-500 sm:text-2xl">
-                The Pixel Prince
-              </h1>
+              <Wordmark className="text-xl transition-colors group-hover:text-sage-500 sm:text-2xl" />
             </Link>
 
             {/* Desktop Navigation - Hidden on mobile */}
@@ -43,7 +42,7 @@ export default function Navigation() {
               </Link>
               <Link
                 href="/free-downloads"
-                className="rounded-2xl bg-sage-500 px-6 py-2.5 font-sans text-sm font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-md"
+                className="rounded-md border border-sage-500 px-4 py-2 font-sans text-sm font-semibold text-sage-500 transition-colors hover:bg-sage-500 hover:text-white"
               >
                 Free Downloads
               </Link>
@@ -65,7 +64,7 @@ export default function Navigation() {
             <div className="flex items-center gap-2 md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="z-50 rounded-lg p-2 text-charcoal transition-colors hover:bg-sage-100"
+                className="z-50 flex size-11 items-center justify-center rounded-lg text-charcoal transition-colors hover:bg-sage-100"
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? (
@@ -81,7 +80,7 @@ export default function Navigation() {
 
       {/* Mobile Menu - moved outside nav to escape backdrop-filter stacking context */}
       <div
-        className={`fixed inset-0 top-16 z-40 transform bg-[#f3f1e8] transition-transform duration-300 md:hidden ${
+        className={`fixed inset-0 top-16 z-40 transform bg-background transition-transform duration-300 md:hidden ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

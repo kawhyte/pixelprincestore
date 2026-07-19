@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Hero from "@/components/ui/Hero/Hero";
-import Footer from "@/components/common/Footer/Footer";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import { getAllProducts, getFeaturedProduct } from "@/sanity/lib/client";
 import { getCardAspectClass } from "@/lib/image-utils";
@@ -156,9 +155,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

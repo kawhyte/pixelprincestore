@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Gift, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { FreeArt } from "@/sanity/lib/client";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
@@ -34,18 +34,13 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
             Back to Home
           </Link>
 
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-sage-100 sm:h-16 sm:w-16">
-              <Gift className="h-6 w-6 text-sage-500 sm:h-8 sm:w-8" />
-            </div>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
-                Free Wall Art Downloads
-              </h1>
-              <p className="mt-2 text-base text-soft-charcoal sm:text-lg">
-                Free print-ready wall art, delivered to your inbox. 3 downloads a week.
-              </p>
-            </div>
+          <div className="max-w-2xl">
+            <h1 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+              Free Wall Art Downloads
+            </h1>
+            <p className="mt-3 text-base text-soft-charcoal sm:text-lg">
+              Free print-ready wall art, delivered to your inbox. 3 downloads a week.
+            </p>
           </div>
         </div>
       </header>
@@ -77,7 +72,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 xl:grid-cols-4">
             {artWithVariants.map((art) => (
               <ArtCard
                 key={art.id}

@@ -6,20 +6,11 @@ import { ArrowLeft } from "lucide-react";
 import { FreeArt } from "@/sanity/lib/client";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
 
-// Earth-tone variant assignment
-const variants = ["sage", "clay", "lavender", "sage"] as const;
-
 interface FreeDownloadsClientProps {
   products: FreeArt[];
 }
 
 export default function FreeDownloadsClient({ products }: FreeDownloadsClientProps) {
-  // Assign earth-tone variants to each art piece
-  const artWithVariants = products.map((art, index) => ({
-    ...art,
-    variant: variants[index % 4],
-  }));
-
   return (
     <div className="min-h-screen bg-cream">
       {/* Header */}
@@ -65,7 +56,7 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
         </div> */}
 
         {/* Art Grid */}
-        {artWithVariants.length === 0 ? (
+        {products.length === 0 ? (
           <div className="rounded-2xl border border-border bg-card p-12 text-center">
             <p className="text-lg text-muted-foreground">
               No free art available yet. Check back soon!
@@ -73,14 +64,12 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 xl:grid-cols-4">
-            {artWithVariants.map((art) => (
+            {products.map((art) => (
               <ArtCard
                 key={art.id}
                 art={art}
                 href={`/art/${art.id}`}
-                variant={art.variant}
                 subtitle={art.category}
-                overlayLabel="View details"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
             ))}

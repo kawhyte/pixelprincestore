@@ -64,6 +64,23 @@ export function getCardAspectClass(orientation: ImageOrientation['orientation'])
 }
 
 /**
+ * Aspect for grid/gallery CARDS (Juniqe anatomy): portrait art gets the 2:3
+ * editorial crop, landscape gets 3:2, square stays square. The detail-page
+ * gallery keeps using getCardAspectClass so artwork there is never re-cropped.
+ */
+export function getGridCardAspectClass(orientation: ImageOrientation['orientation']): string {
+  switch (orientation) {
+    case 'landscape':
+      return 'aspect-[3/2]';
+    case 'square':
+      return 'aspect-square';
+    case 'portrait':
+    default:
+      return 'aspect-[2/3]';
+  }
+}
+
+/**
  * Calculate optimal image transform dimensions based on orientation
  *
  * Maintains original aspect ratio while constraining to maximum dimension.

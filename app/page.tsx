@@ -7,16 +7,11 @@ import PixelIcon from "@/components/common/PixelIcon/PixelIcon";
 import { getAllProducts, getFeaturedProduct } from "@/sanity/lib/client";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
 
-const variants = ["sage", "clay", "lavender", "sage"] as const;
-
 export default async function Home() {
   const products = await getAllProducts();
   const featured = (await getFeaturedProduct()) ?? products[0] ?? null;
   const totalDownloads = products.reduce((sum, p) => sum + (p.downloads || 0), 0);
-  const gridProducts = products.slice(0, 8).map((art, index) => ({
-    ...art,
-    variant: variants[index % 4],
-  }));
+  const gridProducts = products.slice(0, 8);
 
   return (
     <div className="min-h-screen">
@@ -46,7 +41,6 @@ export default async function Home() {
                   key={art.id}
                   art={art}
                   href={`/art/${art.id}`}
-                  variant={art.variant}
                   subtitle={art.category}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />

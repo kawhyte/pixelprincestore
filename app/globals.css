@@ -23,21 +23,6 @@
   --color-sage-400: #5b8fdb;
   --color-sage-500: #4a7bc7;
 
-  /* DEPRECATED: clay-* and lavender-* are removed in PLAN-22. Do not add new usages. */
-  --color-clay-50: #faf7f5;
-  --color-clay-100: #f2ebe6;
-  --color-clay-200: #e5d8cd;
-  --color-clay-300: #d4bfae;
-  --color-clay-400: #c0a18a;
-  --color-clay-500: #a8856b;
-
-  --color-lavender-50: #f8f7fb;
-  --color-lavender-100: #eeebf5;
-  --color-lavender-200: #dfd9eb;
-  --color-lavender-300: #cbbfdd;
-  --color-lavender-400: #b3a1cc;
-  --color-lavender-500: #9b84ba;
-
   /* Shadcn Design System Integration */
   --color-background: var(--background);
   --color-foreground: var(--foreground);

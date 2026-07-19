@@ -61,6 +61,7 @@ export default function AboutPage() {
                 src="/about/avatar_mr.png"
                 alt="Kenny"
                 fill
+                sizes="(min-width: 640px) 144px, 112px"
                 className="object-contain"
               />
             </div>
@@ -69,6 +70,7 @@ export default function AboutPage() {
                 src="/about/avatar_mrs.png"
                 alt="Rene"
                 fill
+                sizes="(min-width: 640px) 144px, 112px"
                 className="object-contain"
               />
             </div>

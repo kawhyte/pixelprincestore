@@ -123,8 +123,8 @@ export default function ArtGallery({
         </button>
       </div>
 
-      {/* Dots — mobile */}
-      <div className="flex justify-center gap-2 md:hidden">
+      {/* Dots — mobile (44px tall hit area, small visual dot) */}
+      <div className="-my-3 flex justify-center gap-1 md:hidden">
         {images.map((_, i) => (
           <button
             type="button"
@@ -132,10 +132,14 @@ export default function ArtGallery({
             aria-label={`Go to photo ${i + 1}`}
             aria-current={i === active}
             onClick={() => scrollToSlide(i)}
-            className={`h-2 rounded-full transition-all ${
-              i === active ? "w-6 bg-sage-500" : "w-2 bg-sage-200"
-            }`}
-          />
+            className="flex h-11 items-center px-1"
+          >
+            <span
+              className={`h-2 rounded-full transition-all ${
+                i === active ? "w-6 bg-sage-500" : "w-2 bg-sage-200"
+              }`}
+            />
+          </button>
         ))}
       </div>
 

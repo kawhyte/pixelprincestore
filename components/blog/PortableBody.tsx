@@ -94,17 +94,17 @@ function slugifyHeading(block: PortableTextBlock): string {
 const components: PortableTextComponents = {
   block: {
     h1: ({ children, value }) => (
-      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 text-2xl font-bold text-charcoal">
+      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 scroll-mt-24 text-2xl font-bold text-charcoal">
         {children}
       </h2>
     ),
     h2: ({ children, value }) => (
-      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 text-2xl font-bold text-charcoal">
+      <h2 id={slugifyHeading(value)} className="mt-10 mb-4 scroll-mt-24 text-2xl font-bold text-charcoal">
         {children}
       </h2>
     ),
     h3: ({ children, value }) => (
-      <h3 id={slugifyHeading(value)} className="mt-8 mb-3 text-xl font-semibold text-charcoal">
+      <h3 id={slugifyHeading(value)} className="mt-8 mb-3 scroll-mt-24 text-xl font-semibold text-charcoal">
         {children}
       </h3>
     ),

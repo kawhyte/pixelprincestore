@@ -7,6 +7,7 @@ import { useClient, useFormValue } from 'sanity'
 import imageUrlBuilder from '@sanity/image-url'
 import { toast } from 'sonner'
 import { getAdminSecret } from '@/lib/admin-secret-client'
+import { keywordsForCategory } from '@/config/seo-keywords'
 
 interface ImageAsset {
   _type: 'image'
@@ -24,6 +25,14 @@ export function GeminiGenerator() {
   const title = useFormValue(['title']) as string | undefined
   const previewImage = useFormValue(['previewImage']) as ImageAsset | undefined
   const documentId = useFormValue(['_id']) as string | undefined
+
+  const categoryValue = useFormValue(['category'])
+  const tagsValue = useFormValue(['tags'])
+  const category =
+    typeof categoryValue === 'string' ? categoryValue : undefined
+  const tags = Array.isArray(tagsValue)
+    ? tagsValue.filter((t): t is string => typeof t === 'string')
+    : undefined
 
   // Build image URL
   const builder = imageUrlBuilder(client)
@@ -53,6 +62,7 @@ export function GeminiGenerator() {
       // Resolve the image URL
       const imageUrl = urlFor(previewImage).width(800).url()
       const adminSecret = getAdminSecret()
+      const keywords = keywordsForCategory(category)
 
       // Call the Next.js API route
       const response = await fetch('/api/gemini/generate', {
@@ -64,6 +74,9 @@ export function GeminiGenerator() {
         body: JSON.stringify({
           title,
           imageUrl,
+          category,
+          tags,
+          keywords,
         }),
       })
 
@@ -87,6 +100,15 @@ export function GeminiGenerator() {
 
       toast.dismiss(loadingToast)
       toast.success('Descriptions generated successfully!')
+
+      // Non-blocking SEO nudge — never blocks the patch above.
+      const generated = `${result.short ?? ''} ${result.long ?? ''}`.toLowerCase()
+      const hasKeyword = keywords.some((k) =>
+        generated.includes(k.toLowerCase())
+      )
+      if (!hasKeyword) {
+        toast('Generated — no target keyword made it in; consider regenerating')
+      }
     } catch (error) {
       toast.dismiss(loadingToast)
       toast.error(
@@ -98,7 +120,7 @@ export function GeminiGenerator() {
     } finally {
       setIsGenerating(false)
     }
-  }, [title, previewImage, documentId, client, urlFor])
+  }, [title, previewImage, documentId, category, tags, client, urlFor])
 
   return (
     <Card padding={4} radius={2} shadow={1} tone="primary">

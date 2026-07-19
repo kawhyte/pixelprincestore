@@ -1,10 +1,14 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdminSecret } from '@/lib/admin-auth'
+import { buildDescriptionPrompt } from '@/lib/gemini-prompt'
 
 interface GenerateRequest {
   title: string
   imageUrl: string
+  category?: string
+  tags?: string[]
+  keywords?: string[]
 }
 
 interface GenerateResponse {
@@ -29,6 +33,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: 400 }
       )
     }
+
+    // Optional SEO context — sanitized, all backward-compatible
+    const category =
+      typeof body.category === 'string' ? body.category : undefined
+    const tags = Array.isArray(body.tags)
+      ? body.tags.filter((t): t is string => typeof t === 'string').slice(0, 15)
+      : undefined
+    const keywords = Array.isArray(body.keywords)
+      ? body.keywords
+          .filter((k): k is string => typeof k === 'string' && k.length <= 60)
+          .slice(0, 10)
+      : undefined
 
     let imageHost: string
     try {
@@ -71,10 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // *** FIX: Use the specific pinned version ***
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-    const prompt = `You are an art curator. Write two descriptions for a digital artwork titled '${title}'.
-1. A 'short' catchy one-liner (max 15 words).
-2. A 'long' engaging paragraph (approx 50-80 words) describing the visual style and mood.
-Return ONLY valid JSON format: { "short": "...", "long": "..." }`
+    const prompt = buildDescriptionPrompt({ title, category, tags, keywords })
 
     console.log('Calling Gemini API...')
 
@@ -98,13 +111,13 @@ Return ONLY valid JSON format: { "short": "...", "long": "..." }`
 
     return NextResponse.json(generatedContent)
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error generating descriptions:', error)
     // Return the REAL error message so we can debug
     return NextResponse.json(
       {
         error: 'Failed to generate descriptions',
-        details: error.message || 'Unknown error',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     )

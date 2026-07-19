@@ -1,4 +1,4 @@
-import { defineType, defineField, type ImageValue } from 'sanity'
+import { defineType, defineField, defineArrayMember, type ImageValue } from 'sanity'
 import { Gift } from 'lucide-react'
 import { GeminiGenerator } from '../components/GeminiGenerator'
 import { HighResAssetInput } from '../components/HighResAssetInput'
@@ -10,9 +10,9 @@ export const product = defineType({
   type: 'document',
   icon: Gift,
   groups: [
-    { name: 'artwork', title: '① Artwork', default: true },
+    { name: 'artwork', title: '① Details', default: true },
     { name: 'images', title: '② Images' },
-    { name: 'file', title: '③ The File' },
+    { name: 'file', title: '③ Print File' },
     { name: 'shop', title: '④ Shop & Tags' },
     { name: 'stats', title: '⑤ Stats' },
   ],
@@ -108,13 +108,36 @@ export const product = defineType({
     }),
     defineField({
       name: 'detailImage',
-      title: 'Detail Image',
+      title: 'Main Image',
       type: 'image',
-      description: 'The big image on the artwork\'s own page (1200×1600). Optional — the preview image is used if empty.',
+      description: 'The artwork itself, large (1200×1600) — shown as the first/main image on the art page. This is the art, not a room shot. Optional — the preview image is reused if empty.',
       group: 'images',
       options: {
         hotspot: true,
       },
+    }),
+    defineField({
+      name: 'galleryImages',
+      title: 'Extra gallery photos (optional)',
+      description:
+        'Context shots — the artwork framed on a wall, in a room, lifestyle. These appear after the main image as a carousel on the art page. The artwork itself goes in Detail Image above, not here. Leave empty to show only the detail image. 1200×1600 or wider recommended.',
+      type: 'array',
+      group: 'images',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt text',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        }),
+      ],
+      validation: (rule) => rule.max(6),
     }),
     defineField({
       name: 'artFile',

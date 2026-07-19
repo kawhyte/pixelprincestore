@@ -2,6 +2,7 @@ import { createClient } from 'next-sanity'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { urlFor } from './image'
 import { getImageOrientation, getOptimalImageDimensions, type ImageOrientation } from '@/lib/image-utils'
+import { mapGalleryImages, type GalleryImage, type RawGalleryImage } from '@/lib/gallery-images'
 
 import { apiVersion, dataset, projectId } from '../env'
 
@@ -54,6 +55,7 @@ export interface SanityProduct {
   longDescription?: string
   previewImage: SanityImageWithDimensions
   detailImage?: SanityImageWithDimensions
+  galleryImages?: RawGalleryImage[]
   artFile?: ArtFile
   etsyListingUrl?: string
   etsyPrintableUrl?: string
@@ -73,6 +75,7 @@ export interface FreeArt {
   previewImage: string
   previewImageOrientation?: ImageOrientation
   detailImage?: string
+  galleryImages?: GalleryImage[]
   artFile?: ArtFile
   etsyListingUrl?: string
   etsyPrintableUrl?: string
@@ -104,6 +107,7 @@ const PRODUCT_PROJECTION = `
     }
   },
   detailImage,
+  galleryImages,
   artFile,
   etsyListingUrl,
   etsyPrintableUrl,
@@ -146,6 +150,11 @@ function toFreeArt(product: SanityProduct): FreeArt {
     detailImage: product.detailImage
       ? urlFor(product.detailImage).width(1200).height(1600).url()
       : undefined,
+    galleryImages: mapGalleryImages(
+      product.galleryImages,
+      (img) => urlFor(img as SanityImageSource).width(1200).url(),
+      product.title,
+    ),
     artFile: product.artFile,
     etsyListingUrl: product.etsyListingUrl,
     etsyPrintableUrl: product.etsyPrintableUrl,

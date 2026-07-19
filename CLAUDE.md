@@ -79,7 +79,7 @@ npm run generate-zips    # [DEPRECATED] Generate ZIP bundles (not used with Clou
 
 ### Sanity Schema
 
-**Product Schema** (`sanity/schemaTypes/product.ts`) — grouped into five tabs (① Artwork, ② Images, ③ The File, ④ Shop & Tags, ⑤ Stats):
+**Product Schema** (`sanity/schemaTypes/product.ts`) — grouped into five tabs (① Details, ② Images, ③ Print File, ④ Shop & Tags, ⑤ Stats):
 ```typescript
 {
   title: string
@@ -151,7 +151,7 @@ DISABLE_DOWNLOAD_LIMIT=true
 
 ### Adding New Art to Sanity
 
-See `docs/ADDING-NEW-ART.md` for the full walkthrough. Short version: `/studio` → **Artworks** → **Create new** → fill in the five numbered tabs (① Artwork, ② Images, ③ The File — one master PNG, ④ Shop & Tags, ⑤ Stats is automatic) → **Publish**.
+See `docs/ADDING-NEW-ART.md` for the full walkthrough. Short version: `/studio` → **Artworks** → **Create new** → fill in the five numbered tabs (① Details, ② Images, ③ Print File — one master PNG, ④ Shop & Tags, ⑤ Stats is automatic) → **Publish**.
 
 ### Testing Downloads
 

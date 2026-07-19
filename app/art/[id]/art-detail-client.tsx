@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Download, Sparkles, Frame, FileDown, CheckCircle2 } from "lucide-react";
 
 import { type FreeArt } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
+import ArtGallery from "@/components/common/ArtGallery/ArtGallery";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
@@ -31,6 +31,14 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
   const printSizes = PRINT_SIZES[ratio ?? "4:5"];
   const hasFile = !!(art.artFile?.cloudinaryUrl || art.artFile?.externalUrl);
 
+  const aspectClass = art.previewImageOrientation
+    ? getCardAspectClass(art.previewImageOrientation.orientation)
+    : "aspect-3/4";
+  const slides = [
+    { url: art.detailImage || art.previewImage, alt: art.title },
+    ...(art.galleryImages ?? []),
+  ];
+
   return (
     <div className="min-h-screen bg-cream">
       {/* Header */}
@@ -51,20 +59,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr]">
           {/* Left Column - Image */}
           <div className="space-y-6">
-            <div className={`relative ${
-              art.previewImageOrientation
-                ? getCardAspectClass(art.previewImageOrientation.orientation)
-                : 'aspect-3/4'
-            } overflow-hidden rounded-md bg-muted shadow-xl`}>
-              <Image
-                src={art.detailImage || art.previewImage}
-                alt={art.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-            </div>
+            <ArtGallery images={slides} title={art.title} aspectClass={aspectClass} />
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">

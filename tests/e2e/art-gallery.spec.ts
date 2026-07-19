@@ -2,11 +2,17 @@ import { test, expect } from "@playwright/test";
 
 // Single-image artworks (the entire existing catalogue) must render with NO
 // carousel chrome. We navigate into the first art card from the gallery.
-test("single-image art page shows no carousel controls", async ({ page }) => {
-  await page.goto("/free-downloads");
-  await page.locator('a[href^="/art/"]').first().click();
-  await expect(page).toHaveURL(/\/art\//);
-  await expect(page.locator("main").getByRole("heading", { level: 1 })).toBeVisible();
+test("single-image art page shows no carousel controls", async ({ page, request }) => {
+  // Grab a real art slug from the gallery HTML, then navigate directly — a
+  // single load avoids the app-router dev-mode chunk churn of chaining navs.
+  const html = await (await request.get("/free-downloads")).text();
+  const slug = html.match(/\/art\/[a-z0-9-]+/)?.[0];
+  expect(slug).toBeTruthy();
+
+  await page.goto(slug!);
+  await expect(
+    page.getByRole("button", { name: /Email me this print/i })
+  ).toBeVisible();
 
   // No prev/next chevrons when there's only one image.
   await expect(page.getByRole("button", { name: /Next photo/i })).toHaveCount(0);

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { getCardAspectClass } from "@/lib/image-utils";
 import EmailGateDialog from "@/components/common/EmailGateDialog/EmailGateDialog";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
+import ArtCard from "@/components/common/ArtCard/ArtCard";
 import { LICENSE_SUMMARY } from "@/config/license";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
@@ -188,33 +189,13 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             </h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {relatedArt.map((relatedItem) => (
-                <Link
+                <ArtCard
                   key={relatedItem.id}
+                  art={relatedItem}
                   href={`/art/${relatedItem.id}`}
-                  className="group block overflow-hidden rounded-2xl bg-card shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
-                >
-                  <div className={`relative ${
-                    relatedItem.previewImageOrientation
-                      ? getCardAspectClass(relatedItem.previewImageOrientation.orientation)
-                      : 'aspect-3/4'
-                  } overflow-hidden bg-muted`}>
-                    <Image
-                      src={relatedItem.previewImage}
-                      alt={relatedItem.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-charcoal group-hover:text-sage-600 transition-colors">
-                      {relatedItem.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                      {relatedItem.description}
-                    </p>
-                  </div>
-                </Link>
+                  subtitle={relatedItem.category}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
               ))}
             </div>
           </section>

@@ -1,18 +1,16 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { Frame } from "lucide-react";
 
 import { getAllProducts } from "@/sanity/lib/client";
 import { generateMetadata as seoMeta } from "@/lib/seo";
-import { getCardAspectClass } from "@/lib/image-utils";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
 import { COLLECTIONS, getCollection } from "@/config/collections";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import FaqAccordion from "@/components/common/FaqAccordion/FaqAccordion";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
+import ArtCard from "@/components/common/ArtCard/ArtCard";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -94,36 +92,13 @@ export default async function CollectionPage({ params }: PageProps) {
               {matchedProducts.map((art) => {
                 const etsyLinks = resolveEtsyLinks(art);
                 return (
-                  <div
+                  <ArtCard
                     key={art.id}
-                    className="group block overflow-hidden rounded-2xl bg-sage-50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-                  >
-                    <Link href={`/art/${art.id}`} className="block">
-                      <div
-                        className={`relative ${
-                          art.previewImageOrientation
-                            ? getCardAspectClass(art.previewImageOrientation.orientation)
-                            : "aspect-[3/4]"
-                        } overflow-hidden bg-muted`}
-                      >
-                        <Image
-                          src={art.previewImage}
-                          alt={art.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                        />
-                      </div>
-                      <div className="space-y-2 p-4 sm:p-5">
-                        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-charcoal sm:text-xl">
-                          {art.title}
-                        </h3>
-                        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                          {art.description}
-                        </p>
-                      </div>
-                    </Link>
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5">
+                    art={art}
+                    href={`/art/${art.id}`}
+                    subtitle={art.category}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                    footer={
                       <EtsyLink
                         href={etsyUrl(etsyLinks.printed, collection.etsyCampaign)}
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-sage-600 hover:text-sage-700"
@@ -133,8 +108,8 @@ export default async function CollectionPage({ params }: PageProps) {
                           ? `Shop ${etsyLinks.styleLabel} prints →`
                           : "Shop prints →"}
                       </EtsyLink>
-                    </div>
-                  </div>
+                    }
+                  />
                 );
               })}
             </div>

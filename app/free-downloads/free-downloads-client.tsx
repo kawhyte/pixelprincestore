@@ -1,21 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Download, Sparkles, Gift, ArrowLeft } from "lucide-react";
+import { Gift, ArrowLeft } from "lucide-react";
 
 import { FreeArt } from "@/sanity/lib/client";
-import { getCardAspectClass } from "@/lib/image-utils";
+import ArtCard from "@/components/common/ArtCard/ArtCard";
 
 // Earth-tone variant assignment
 const variants = ["sage", "clay", "lavender", "sage"] as const;
-
-const variantStyles = {
-  sage: "bg-sage-50 hover:bg-sage-100",
-  clay: "bg-clay-50 hover:bg-clay-100",
-  lavender: "bg-lavender-50 hover:bg-lavender-100",
-  cream: "bg-card hover:bg-secondary",
-};
 
 interface FreeDownloadsClientProps {
   products: FreeArt[];
@@ -87,69 +79,15 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
             {artWithVariants.map((art) => (
-              <Link
+              <ArtCard
                 key={art.id}
+                art={art}
                 href={`/art/${art.id}`}
-                className={`group block overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
-                  variantStyles[art.variant]
-                }`}
-              >
-                {/* Image - Dynamic aspect ratio based on orientation */}
-                <div className={`relative ${
-                  art.previewImageOrientation
-                    ? getCardAspectClass(art.previewImageOrientation.orientation)
-                    : 'aspect-[3/4]'
-                } overflow-hidden bg-muted`}>
-                  <Image
-                    src={art.previewImage}
-                    alt={art.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="flex items-center gap-2 rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white shadow-lg">
-                      <Download className="h-5 w-5" />
-                      <span>View Details</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="space-y-3 p-4 sm:p-5">
-                  <h3 className="line-clamp-2 text-lg font-bold leading-snug text-charcoal sm:text-xl">
-                    {art.title}
-                  </h3>
-                  <p className="text-sm text-sage-500">by {art.artist}</p>
-                  <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                    {art.description}
-                  </p>
-
-                  {/* Tags */}
-                  {art.tags && art.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {art.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-white/60 px-3 py-1 text-xs font-medium text-soft-charcoal"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Print Sizes */}
-                  <div className="border-t border-border/50 pt-3">
-                    <p className="text-xs text-muted-foreground">
-                      Prints at 3 sizes
-                    </p>
-                  </div>
-                </div>
-              </Link>
+                variant={art.variant}
+                subtitle={art.category}
+                overlayLabel="View details"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              />
             ))}
           </div>
         )}

@@ -501,6 +501,8 @@
       <li><label><input type="checkbox" data-t="20e"><span>Lighthouse mobile baselines recorded + Playwright viewport matrix committed</span></label></li>
     </ul>
     <div class="note warn"><span class="ico">📱</span><span><b>Sequencing:</b> depends on plans 14–17 — auditing earlier would mean measuring a UI that's about to change.</span></div>
+    <div class="note win"><span class="ico">✅</span><span><b>Verified (2026-07-18):</b> code audit @375/390px + fixes (about-avatar <code>sizes</code>, mobile-menu body-scroll lock, 44px carousel-dot &amp; dialog-close hit areas, <code>scroll-mt-24</code> blog headings). Permanent Playwright viewport-matrix suite (<code>viewport-matrix.spec.ts</code>, 390/768/1440 — no horizontal overflow, hamburger 44px, dialog opens + 16px email input) green, 2.7s. Lighthouse mobile baselines recorded (prod build): A11y ≥95 / BP 100 / SEO 100 everywhere; Perf 87–98, with <code>/</code> (87) and <code>/blog</code> (89) accepted as LCP-bound (CLS 0, TBT 0, hero already <code>priority</code>+preconnect). No zoom-on-focus findings (all inputs 16px).</span></div>
+    <div class="note tip"><span class="ico">📝</span><span><b>Pending Kenny (20a):</b> real-device pass on an iPhone-class phone — DevTools/Playwright can't reproduce iOS input-zoom or momentum/safe-area behavior. The 16px rule that prevents zoom is verified in code + asserted in the suite; a physical-device sweep is the only remaining acceptance item.</span></div>
   </div>
 </div>
 
@@ -527,8 +529,8 @@
 
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20d":true};
-const AGENT_IN_PROGRESS = {"13g":true,"15b":true,"18e":true,"20a":true,"20c":true,"20e":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20c":true,"20d":true,"20e":true};
+const AGENT_IN_PROGRESS = {"13g":true,"15b":true,"18e":true,"20a":true};
 </script>
 <script>
 (function(){

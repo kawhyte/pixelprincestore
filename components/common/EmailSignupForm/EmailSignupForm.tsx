@@ -50,7 +50,7 @@ export default function EmailSignupForm({ source, className }: EmailSignupFormPr
   if (success) {
     return (
       <p className={`text-base font-medium text-charcoal ${className || ""}`}>
-        You&apos;re in! Watch your inbox for this month&apos;s print.
+        Player 2 has entered your inbox. Watch for this month&apos;s free print.
       </p>
     );
   }

@@ -51,17 +51,26 @@ export default function NotFound() {
 
         <h1 className="mb-2 text-5xl font-bold text-charcoal">404</h1>
         <h2 className="mb-3 text-2xl font-semibold text-charcoal">
-          Looks like this canvas is blank
+          You&apos;ve wandered off the map
         </h2>
         <p className="mb-8 text-soft-charcoal">
-          The page you&apos;re looking for doesn&apos;t exist — but there&apos;s plenty of art waiting for you.
+          This screen doesn&apos;t exist — but there&apos;s a whole gallery of free
+          prints one jump away.
         </p>
-        <Link
-          href="/free-downloads"
-          className="inline-block rounded-2xl bg-sage-500 px-6 py-2.5 font-sans text-sm font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-md"
-        >
-          Browse the Gallery
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/free-downloads"
+            className="inline-block rounded-md bg-sage-500 px-6 py-2.5 font-sans text-sm font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-md"
+          >
+            Browse the gallery
+          </Link>
+          <Link
+            href="/"
+            className="inline-block rounded-md border border-charcoal px-6 py-2.5 font-sans text-sm font-semibold text-charcoal transition-colors hover:bg-charcoal hover:text-cream"
+          >
+            Back to home
+          </Link>
+        </div>
       </div>
     </div>
   );

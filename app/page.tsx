@@ -3,6 +3,7 @@ import Link from "next/link";
 import Hero from "@/components/ui/Hero/Hero";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
+import PixelIcon from "@/components/common/PixelIcon/PixelIcon";
 import { getAllProducts, getFeaturedProduct } from "@/sanity/lib/client";
 import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
 
@@ -26,7 +27,8 @@ export default async function Home() {
       <section className="bg-card py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+              <PixelIcon name="heart" size={24} className="text-sage-500" aria-hidden />
               Browse the free collection
             </h2>
           </div>

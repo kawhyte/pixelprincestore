@@ -12,6 +12,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import PixelIcon from "@/components/common/PixelIcon/PixelIcon";
 import { triggerConfetti } from "@/lib/confetti";
 import { trackEmailSignup, trackDownloadClaimed } from "@/lib/analytics";
 
@@ -92,8 +93,9 @@ export default function EmailGateDialog({
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sage-100">
               <CheckCircle2 className="h-8 w-8 text-sage-600" />
             </div>
-            <h2 className="text-2xl font-bold text-charcoal">
-              Check your inbox!
+            <h2 className="flex items-center justify-center gap-2 text-2xl font-bold text-charcoal">
+              <PixelIcon name="star" size={18} className="text-sage-500" />
+              Player 2 has entered your inbox.
             </h2>
             <p className="text-sm text-soft-charcoal">
               We sent &quot;{artTitle}&quot; to {email}. The link works

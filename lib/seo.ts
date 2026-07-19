@@ -149,6 +149,28 @@ export function generateOrganizationSchema() {
 }
 
 /**
+ * Generate AboutPage Schema JSON-LD (mainEntity → Person) for /about
+ */
+export function generateAboutPageSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    url: `${seoConfig.metadataBase}/about`,
+    mainEntity: {
+      '@type': 'Person',
+      name: 'Kenny Whyte',
+      jobTitle: 'Designer',
+      worksFor: generateOrganizationSchema(),
+      sameAs: [
+        'https://www.meetthewhytes.com/',
+        'https://thepixelprince.etsy.com',
+        'https://pixelprinceprintable.etsy.com',
+      ],
+    },
+  };
+}
+
+/**
  * Generate WebSite Schema JSON-LD with search action
  */
 export function generateWebsiteSchema() {

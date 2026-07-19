@@ -1,5 +1,15 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
-import { Newspaper } from 'lucide-react'
+import { Newspaper, Images, LayoutGrid } from 'lucide-react'
+
+const attributionField = {
+  name: 'attribution',
+  title: 'Photo credit (leave blank if this is your own photo)',
+  type: 'object',
+  fields: [
+    { name: 'credit', type: 'string', title: 'Credit text', description: 'e.g. "Photo by Jane Doe / Unsplash"' },
+    { name: 'sourceUrl', type: 'url', title: 'Source link' },
+  ],
+}
 
 export const post = defineType({
   name: 'post',
@@ -50,7 +60,45 @@ export const post = defineType({
         defineArrayMember({
           type: 'image',
           options: { hotspot: true },
-          fields: [{ name: 'alt', type: 'string', title: 'Alt text' }],
+          fields: [{ name: 'alt', type: 'string', title: 'Alt text' }, attributionField],
+        }),
+        defineArrayMember({
+          name: 'imageRow',
+          type: 'object',
+          title: 'Two photos side by side',
+          icon: Images,
+          fields: [
+            {
+              name: 'images',
+              type: 'array',
+              title: 'Photos',
+              of: [{ type: 'blogImage' }],
+              validation: (Rule) => Rule.length(2).error('Add exactly 2 photos'),
+            },
+          ],
+          preview: {
+            select: { alt: 'images.0.alt' },
+            prepare: ({ alt }) => ({ title: 'Two photos side by side', subtitle: alt || '' }),
+          },
+        }),
+        defineArrayMember({
+          name: 'imageGrid',
+          type: 'object',
+          title: 'Photo grid (2–4)',
+          icon: LayoutGrid,
+          fields: [
+            {
+              name: 'images',
+              type: 'array',
+              title: 'Photos',
+              of: [{ type: 'blogImage' }],
+              validation: (Rule) => Rule.min(2).max(4).error('Add 2 to 4 photos'),
+            },
+          ],
+          preview: {
+            select: { alt: 'images.0.alt' },
+            prepare: ({ alt }) => ({ title: 'Photo grid (2–4)', subtitle: alt || '' }),
+          },
         }),
         defineArrayMember({
           name: 'productEmbed',

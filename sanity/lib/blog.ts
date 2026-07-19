@@ -12,13 +12,41 @@ export interface EmbeddedProduct {
   etsyPrintableUrl?: string
 }
 
+export interface ImageAttribution {
+  credit?: string
+  sourceUrl?: string
+}
+
 export interface PortableImageBlock {
   _type: 'image'
   _key: string
   alt?: string
+  attribution?: ImageAttribution
   asset?: { _ref: string; _type: 'reference' }
   hotspot?: unknown
   crop?: unknown
+}
+
+export interface BlogImageSlot {
+  _type: 'blogImage'
+  _key: string
+  alt?: string
+  attribution?: ImageAttribution
+  asset?: { _ref: string; _type: 'reference' }
+  hotspot?: unknown
+  crop?: unknown
+}
+
+export interface ImageRowBlock {
+  _type: 'imageRow'
+  _key: string
+  images?: BlogImageSlot[]
+}
+
+export interface ImageGridBlock {
+  _type: 'imageGrid'
+  _key: string
+  images?: BlogImageSlot[]
 }
 
 export interface ProductEmbedBlock {
@@ -37,6 +65,8 @@ export interface EmailCaptureBlock {
 export type BodyBlock =
   | { _type: 'block'; _key: string; [key: string]: unknown }
   | PortableImageBlock
+  | ImageRowBlock
+  | ImageGridBlock
   | ProductEmbedBlock
   | EmailCaptureBlock
 

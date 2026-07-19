@@ -3,7 +3,83 @@ import { PortableText, type PortableTextComponents, type PortableTextBlock } fro
 import { urlFor } from "@/sanity/lib/image";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import ProductEmbedCard from "@/components/blog/ProductEmbedCard";
-import type { BodyBlock } from "@/sanity/lib/blog";
+import type { BodyBlock, BlogImageSlot, ImageAttribution } from "@/sanity/lib/blog";
+import { gridColsClass, attributionCredit } from "@/lib/blog-image-layout";
+
+type ImageLike = {
+  asset?: { _ref: string; _type: string };
+  alt?: string;
+  attribution?: ImageAttribution;
+};
+
+function AttributionCaption({ attribution }: { attribution?: ImageAttribution }) {
+  const credit = attributionCredit(attribution);
+  if (!credit) return null;
+  const sourceUrl = attribution?.sourceUrl;
+  return (
+    <figcaption className="mt-2 text-xs text-soft-charcoal/70">
+      {sourceUrl ? (
+        <a
+          href={sourceUrl}
+          target="_blank"
+          rel="noopener nofollow"
+          className="underline hover:text-soft-charcoal"
+        >
+          {credit}
+        </a>
+      ) : (
+        credit
+      )}
+    </figcaption>
+  );
+}
+
+function BodyImage({
+  image,
+  width,
+  height,
+  crop = false,
+  className,
+}: {
+  image: ImageLike;
+  width: number;
+  height: number;
+  // crop=true fills a fixed-aspect container (row/grid, keeps slots aligned);
+  // crop=false preserves the photo's natural ratio (single body image).
+  crop?: boolean;
+  className?: string;
+}) {
+  if (!image?.asset) return null;
+  const alt = image.alt || "";
+  if (crop) {
+    return (
+      <figure className={`my-0 ${className || ""}`}>
+        <div className="aspect-[4/3] overflow-hidden rounded-md">
+          <Image
+            src={urlFor(image).width(width).height(height).url()}
+            alt={alt}
+            width={width}
+            height={height}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <AttributionCaption attribution={image.attribution} />
+      </figure>
+    );
+  }
+  return (
+    <figure className={`my-0 ${className || ""}`}>
+      <Image
+        src={urlFor(image).width(width).url()}
+        alt={alt}
+        width={width}
+        height={height}
+        className="w-full rounded-md"
+      />
+      <AttributionCaption attribution={image.attribution} />
+    </figure>
+  );
+}
 
 function slugifyHeading(block: PortableTextBlock): string {
   const text = (block.children as { text?: string }[] | undefined)
@@ -53,13 +129,31 @@ const components: PortableTextComponents = {
     image: ({ value }) => {
       if (!value?.asset) return null;
       return (
-        <Image
-          src={urlFor(value).width(800).url()}
-          alt={value.alt || ""}
-          width={800}
-          height={450}
-          className="my-8 rounded-md"
-        />
+        <div className="my-8">
+          <BodyImage image={value as ImageLike} width={800} height={450} />
+        </div>
+      );
+    },
+    imageRow: ({ value }) => {
+      const images = (value?.images as BlogImageSlot[] | undefined)?.filter((img) => img?.asset) || [];
+      if (images.length === 0) return null;
+      return (
+        <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {images.map((img) => (
+            <BodyImage key={img._key} image={img} width={600} height={450} crop />
+          ))}
+        </div>
+      );
+    },
+    imageGrid: ({ value }) => {
+      const images = (value?.images as BlogImageSlot[] | undefined)?.filter((img) => img?.asset) || [];
+      if (images.length === 0) return null;
+      return (
+        <div className={`my-8 grid grid-cols-2 gap-3 ${gridColsClass(images.length)}`}>
+          {images.map((img) => (
+            <BodyImage key={img._key} image={img} width={500} height={375} crop />
+          ))}
+        </div>
       );
     },
     productEmbed: ({ value }) => <ProductEmbedCard product={value.product} note={value.note} />,

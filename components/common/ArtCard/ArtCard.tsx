@@ -19,6 +19,8 @@ export interface ArtCardArt {
   title: string;
   previewImage: string;
   previewImageOrientation?: ImageOrientation;
+  /** the single schema-enforced hero print — draws a notched "Featured" tab. */
+  featured?: boolean;
 }
 
 export interface ArtCardProps {
@@ -30,6 +32,10 @@ export interface ArtCardProps {
   subtitle?: string;
   /** small chip over the image's top-left (Juniqe-style). */
   badge?: string;
+  /** value shown in the price slot (bottom-right of the divided row). "" hides the row. */
+  value?: string;
+  /** medium label on the left of the divided value row. */
+  meta?: string;
   /** interactive slot rendered below the card body, outside the link. */
   footer?: React.ReactNode;
 }
@@ -40,6 +46,8 @@ export default function ArtCard({
   sizes,
   subtitle,
   badge,
+  value = "FREE",
+  meta = "Digital print",
   footer,
 }: ArtCardProps) {
   const aspectClass = art.previewImageOrientation
@@ -62,8 +70,16 @@ export default function ArtCard({
             className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
             sizes={sizes}
           />
+          {art.featured && (
+            <span
+              className="absolute left-0 top-3 bg-sage-500 py-1 pl-3 pr-4 text-[11px] font-semibold uppercase tracking-wide text-white shadow-card"
+              style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 9px) 50%, 100% 100%, 0 100%)" }}
+            >
+              Featured
+            </span>
+          )}
           {badge && (
-            <span className="absolute left-2 top-2 rounded-md bg-sage-500 px-2.5 py-1 text-xs font-medium text-white">
+            <span className="absolute right-2 top-2 rounded-md bg-sage-500 px-2.5 py-1 text-xs font-medium text-white">
               {badge}
             </span>
           )}
@@ -74,6 +90,12 @@ export default function ArtCard({
             <p className="mt-0.5 text-xs uppercase tracking-wide text-muted-foreground">
               {subtitle}
             </p>
+          )}
+          {value && (
+            <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">{meta}</span>
+              <span className="text-sm font-semibold text-charcoal">{value}</span>
+            </div>
           )}
         </div>
       </Link>

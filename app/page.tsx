@@ -1,41 +1,85 @@
 import Link from "next/link";
+import Image from "next/image";
+import { ChevronRight, PenTool, CalendarDays, Download, Star } from "lucide-react";
 
 import Hero from "@/components/ui/Hero/Hero";
-import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
-import PixelIcon from "@/components/common/PixelIcon/PixelIcon";
 import { getAllProducts, getFeaturedProduct } from "@/sanity/lib/client";
-import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
+import { COLLECTIONS, matchProductsToCollection } from "@/config/collections";
+import { TRUST_CLAIMS } from "@/config/trust";
+
+const TILE_SLUGS = [
+  { slug: "game-room-wall-art", label: "Game Room Wall Art" },
+  { slug: "map-prints", label: "Map Prints" },
+  { slug: "printable-wall-art", label: "Printable Bundles" },
+];
+
+// Index-aligned with TRUST_CLAIMS order (config/trust.ts).
+const TRUST_ICONS = [PenTool, CalendarDays, Download, Star];
 
 export default async function Home() {
   const products = await getAllProducts();
   const featured = (await getFeaturedProduct()) ?? products[0] ?? null;
-  const totalDownloads = products.reduce((sum, p) => sum + (p.downloads || 0), 0);
+  const heroItems = [
+    featured,
+    ...products.filter((p) => p.id !== featured?.id),
+  ]
+    .filter((p): p is NonNullable<typeof p> => p != null)
+    .slice(0, 3);
   const gridProducts = products.slice(0, 8);
 
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <Hero featured={featured} totalDownloads={totalDownloads} />
+  const tiles = TILE_SLUGS.map(({ slug, label }) => {
+    const collection = COLLECTIONS.find((c) => c.slug === slug)!;
+    const match = matchProductsToCollection(products, collection)[0];
+    const image = match?.previewImage ?? featured?.previewImage ?? null;
+    return { slug, label, image };
+  });
 
-      {/* Free Art Grid */}
-      <section className="bg-card py-20">
+  return (
+    <main className="min-h-screen">
+      {/* 1. Hero */}
+      <Hero items={heroItems} />
+
+      {/* 2. Trust strip */}
+      <section className="border-y border-border bg-card py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-y-8 text-center sm:grid-cols-4 sm:gap-y-0">
+            {TRUST_CLAIMS.map((claim, i) => {
+              const Icon = TRUST_ICONS[i];
+              return (
+                <div
+                  key={claim.label}
+                  className={`flex flex-col items-center gap-2 px-4 ${
+                    i > 0 ? "sm:border-l sm:border-border" : ""
+                  }`}
+                >
+                  <Icon className="size-5 text-charcoal" aria-hidden />
+                  <p className="text-sm font-semibold text-charcoal">{claim.label}</p>
+                  <p className="text-xs text-muted-foreground">{claim.sub}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Free collection grid */}
+      <section className="py-14 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
-              <PixelIcon name="heart" size={24} className="text-sage-500" aria-hidden />
-              Browse the free collection
+            <h2 className="text-[28px] font-semibold text-charcoal">
+              Browse the free prints
             </h2>
           </div>
 
           {gridProducts.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-cream p-12 text-center">
+            <div className="rounded-md border border-border bg-card p-12 text-center">
               <p className="text-lg text-muted-foreground">
                 No free art available yet. Check back soon!
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
               {gridProducts.map((art) => (
                 <ArtCard
                   key={art.id}
@@ -51,75 +95,107 @@ export default async function Home() {
           <div className="mt-16 text-center">
             <Link
               href="/free-downloads"
-              className="inline-block rounded-2xl border-2 border-charcoal bg-transparent px-8 py-4 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream hover:shadow-lg"
+              className="inline-flex h-12 items-center rounded-md border border-charcoal px-8 font-semibold text-charcoal transition-colors hover:bg-charcoal hover:text-cream"
             >
-              See all free downloads
+              See all free prints
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Etsy Band */}
-      <section className="bg-sage-50 py-20">
+      {/* 4. Collection tiles */}
+      <section className="py-14 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
-              Want it printed, framed and shipped?
+            <h2 className="text-[28px] font-semibold text-charcoal">
+              Find your wall
             </h2>
-            <p className="mt-3 text-sm text-soft-charcoal">
-              Printed in the USA · Free US shipping · 7,000+ orders shipped on Etsy
-            </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div className="rounded-2xl bg-cream p-8 text-center shadow-sm">
-              <h3 className="text-xl font-semibold text-charcoal">
-                The Pixel Prince on Etsy
-              </h3>
-              <p className="mt-2 text-sm text-soft-charcoal">
-                Printed prints, maps &amp; personalized pieces
-              </p>
-              <EtsyLink
-                href={etsyUrl(ETSY_MAIN_SHOP, "home")}
-                className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
+          <div className="grid gap-6 sm:grid-cols-3">
+            {tiles.map((tile) => (
+              <Link
+                key={tile.slug}
+                href={`/collections/${tile.slug}`}
+                className="group relative block aspect-[4/3] overflow-hidden rounded-md shadow-card transition-shadow duration-200 hover:shadow-card-hover"
               >
-                Visit the print shop
-              </EtsyLink>
-            </div>
-
-            <div className="rounded-2xl bg-cream p-8 text-center shadow-sm">
-              <h3 className="text-xl font-semibold text-charcoal">
-                Pixel Prince Printables
-              </h3>
-              <p className="mt-2 text-sm text-soft-charcoal">
-                Instant-download bundles
-              </p>
-              <EtsyLink
-                href={etsyUrl(ETSY_PRINTABLES_SHOP, "home")}
-                className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
-              >
-                Browse printables
-              </EtsyLink>
-            </div>
+                {tile.image ? (
+                  <Image
+                    src={tile.image}
+                    alt={tile.label}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-secondary" />
+                )}
+                <div className="absolute inset-x-0 bottom-0 bg-white/95 px-4 py-3">
+                  <p className="truncate text-sm font-medium text-charcoal">
+                    {tile.label}
+                  </p>
+                  <span className="mt-0.5 flex items-center text-sm font-semibold text-sage-500">
+                    Discover
+                    <ChevronRight className="size-4" />
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Trust Strip */}
-      <section className="bg-cream py-16">
+      {/* 5. About teaser */}
+      <section className="bg-card py-14 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-            {/* TODO(KENNY): real photo of Kenny & Rene — placeholder monogram until then */}
-            <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-sage-100 text-2xl font-semibold tracking-tight text-sage-600">
-              PP
+            <div className="flex flex-shrink-0 gap-3">
+              <Image
+                src="/about/avatar_mr.png"
+                alt="Kenny"
+                width={80}
+                height={80}
+                className="h-20 w-20 rounded-full object-cover"
+              />
+              <Image
+                src="/about/avatar_mrs.png"
+                alt="Rene"
+                width={80}
+                height={80}
+                className="h-20 w-20 rounded-full object-cover"
+              />
             </div>
-            <p className="text-base leading-relaxed text-soft-charcoal sm:text-lg">
-              We&apos;re Kenny and Rene — we design every piece ourselves,
-              inspired by the places we&apos;ve traveled and things we&apos;ve experienced.
-            </p>
+            <div className="space-y-3">
+              <p className="text-base leading-relaxed text-soft-charcoal sm:text-lg">
+                We are Kenny and Rene. We design every piece ourselves, inspired
+                by the places we have traveled.
+              </p>
+              <Link
+                href="/about"
+                className="inline-block text-sm font-medium text-sage-500 transition-colors hover:text-sage-400"
+              >
+                More about us
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* 6. Etsy band */}
+      <section className="py-14 lg:py-24">
+        <div className="container mx-auto px-4 text-center">
+          <p className="mx-auto max-w-2xl text-lg text-charcoal">
+            Every design here also comes printed, framed or on canvas, shipped
+            from our Etsy shop.
+          </p>
+          <Link
+            href="/prints"
+            className="mt-6 inline-flex h-12 items-center rounded-md bg-sage-500 px-8 font-semibold text-white transition-colors hover:bg-sage-400"
+          >
+            See print options
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 }

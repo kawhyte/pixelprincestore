@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { ETSY_MAIN_SHOP, ETSY_PRINTABLES_SHOP, etsyUrl } from "@/config/links";
-import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
 import Wordmark from "@/components/common/Wordmark/Wordmark";
 
 export default function Navigation() {
@@ -33,10 +31,16 @@ export default function Navigation() {
             {/* Desktop Navigation - Hidden on mobile */}
             <div className="hidden items-center gap-6 md:flex lg:gap-8">
               <Link
-                href="/"
+                href="/free-downloads"
+                className="rounded-full border border-sage-500 px-5 py-2.5 font-sans text-sm font-semibold text-sage-500 transition-colors hover:bg-sage-500 hover:text-white"
+              >
+                Free Prints
+              </Link>
+              <Link
+                href="/prints"
                 className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
               >
-                Home
+                Prints
               </Link>
               <Link
                 href="/about"
@@ -44,30 +48,6 @@ export default function Navigation() {
               >
                 About
               </Link>
-              <Link
-                href="/blog"
-                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/free-downloads"
-                className="rounded-md border border-sage-500 px-4 py-2 font-sans text-sm font-semibold text-sage-500 transition-colors hover:bg-sage-500 hover:text-white"
-              >
-                Free Downloads
-              </Link>
-              <EtsyLink
-                href={etsyUrl(ETSY_MAIN_SHOP, "nav")}
-                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
-              >
-                Print Shop
-              </EtsyLink>
-              <EtsyLink
-                href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav")}
-                className="font-sans text-sm font-medium text-charcoal transition-colors hover:text-sage-500"
-              >
-                Printables
-              </EtsyLink>
             </div>
 
             {/* Mobile right-side controls */}
@@ -96,11 +76,11 @@ export default function Navigation() {
       >
         <div className="flex flex-col space-y-1 p-4">
           <Link
-            href="/"
+            href="/prints"
             onClick={() => setIsMobileMenuOpen(false)}
             className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
           >
-            Home
+            Prints
           </Link>
           <Link
             href="/about"
@@ -110,32 +90,11 @@ export default function Navigation() {
             About
           </Link>
           <Link
-            href="/blog"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
-          >
-            Blog
-          </Link>
-          <EtsyLink
-            href={etsyUrl(ETSY_MAIN_SHOP, "nav-mobile")}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
-          >
-            Print Shop
-          </EtsyLink>
-          <EtsyLink
-            href={etsyUrl(ETSY_PRINTABLES_SHOP, "nav-mobile")}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="rounded-xl px-4 py-3 font-sans text-base font-medium text-charcoal transition-colors hover:bg-sage-100 hover:text-sage-500"
-          >
-            Printables
-          </EtsyLink>
-          <Link
             href="/free-downloads"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="mt-4 rounded-2xl bg-sage-500 px-6 py-3 text-center font-sans text-base font-semibold text-white transition-all hover:bg-sage-400"
+            className="mt-4 rounded-full bg-sage-500 px-6 py-3 text-center font-sans text-base font-semibold text-white transition-all hover:bg-sage-400"
           >
-            Free Downloads
+            Free Prints
           </Link>
         </div>
       </div>

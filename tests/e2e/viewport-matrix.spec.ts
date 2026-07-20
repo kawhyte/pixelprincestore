@@ -49,11 +49,11 @@ test("nav: mobile menu opens (mobile) / desktop links visible (wide)", async ({ 
     expect(box!.height).toBeGreaterThanOrEqual(44);
     await toggle.click();
     await expect(
-      page.getByRole("link", { name: "Free Downloads" }).last()
+      page.getByRole("link", { name: "Free Prints" }).last()
     ).toBeVisible();
   } else {
     await expect(
-      page.getByRole("navigation").getByRole("link", { name: "Free Downloads" })
+      page.getByRole("navigation").getByRole("link", { name: "Free Prints" })
     ).toBeVisible();
   }
   await expectNoHorizontalOverflow(page);

@@ -6,7 +6,7 @@ import { getAllProducts } from "@/sanity/lib/client";
 import { generateMetadata as seoMeta } from "@/lib/seo";
 import { etsyUrl } from "@/config/links";
 import { resolveEtsyLinks } from "@/config/etsy-categories";
-import { COLLECTIONS, getCollection } from "@/config/collections";
+import { COLLECTIONS, getCollection, matchProductsToCollection } from "@/config/collections";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import FaqAccordion from "@/components/common/FaqAccordion/FaqAccordion";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
@@ -40,14 +40,7 @@ export default async function CollectionPage({ params }: PageProps) {
   if (!collection) notFound();
 
   const products = await getAllProducts();
-  const matchTags = collection.matchTags.map((t) => t.toLowerCase());
-  const matchedProducts =
-    matchTags.length === 0
-      ? products
-      : products.filter((art) => {
-          const haystack = [...(art.tags || []), art.category || ""].map((t) => t.toLowerCase());
-          return matchTags.some((tag) => haystack.some((h) => h.includes(tag)));
-        });
+  const matchedProducts = matchProductsToCollection(products, collection);
 
   const faqSchema = {
     "@context": "https://schema.org",

@@ -1,82 +1,110 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import { FreeArt } from "@/sanity/lib/client";
 
 interface HeroProps {
-  featured: FreeArt | null;
-  totalDownloads?: number;
+  items: FreeArt[];
 }
 
-export default function Hero({ featured, totalDownloads = 0 }: HeroProps) {
+/**
+ * HeroCard — one collage card. If the product has a room/lifestyle mockup
+ * (galleryImages), render it full-bleed like Juniqe. Otherwise the flat poster
+ * is matted inside a white frame on a wall-tone background so it reads as
+ * framed wall art instead of a poster floating in empty space.
+ */
+function HeroCard({ item, featured }: { item: FreeArt; featured?: boolean }) {
+  const mockup = item.galleryImages?.[0]?.url;
+
   return (
-    <section className="relative overflow-hidden bg-cream py-16 lg:py-24">
+    <Link
+      href={`/art/${item.id}`}
+      className="group relative block aspect-[3/4] overflow-hidden rounded-md shadow-card transition-shadow duration-200 hover:shadow-card-hover"
+    >
+      {mockup ? (
+        <Image
+          src={mockup}
+          alt={item.galleryImages?.[0]?.alt || item.title}
+          fill
+          priority={featured}
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className="object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-secondary p-4 lg:p-5">
+          <div className="relative aspect-[4/5] w-full border border-charcoal/15 bg-white p-2">
+            <Image
+              src={item.previewImage}
+              alt={item.title}
+              fill
+              priority={featured}
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="object-contain"
+            />
+          </div>
+        </div>
+      )}
+
+      {featured && (
+        <span className="absolute left-2 top-2 rounded-md bg-sage-500 px-2 py-1 text-[11px] font-medium text-white">
+          Featured this month
+        </span>
+      )}
+
+      <div className="absolute inset-x-0 bottom-0 bg-white/95 px-3 py-2">
+        <p className="truncate text-xs font-medium text-charcoal">{item.title}</p>
+        <span className="mt-0.5 flex items-center text-xs font-semibold text-sage-500">
+          Get it free
+          <ChevronRight className="size-4" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+export default function Hero({ items }: HeroProps) {
+  const [first, second, third] = items;
+
+  return (
+    <section className="relative overflow-hidden bg-cream py-14 lg:py-24">
       <div className="container mx-auto px-4">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Left: Text Content */}
           <div className="space-y-8">
-            {/* Eyebrow — plain small-caps, no pill */}
-            <p className="text-xs font-medium uppercase tracking-widest text-soft-charcoal">
-              A new free print every month
-            </p>
-
-            {/* Headline */}
-            <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-charcoal sm:text-5xl lg:text-7xl">
-              Free retro gaming &amp; map wall art — a new print every month
+            <h1 className="text-[40px] leading-[1.15] font-bold text-charcoal sm:text-5xl lg:text-6xl">
+               Art for your walls. Free, monthly.
             </h1>
 
-            {/* Subheadline */}
-            <p className="text-balance text-lg leading-relaxed text-soft-charcoal sm:text-xl lg:text-2xl">
-              Designed by a human. Download this month&apos;s featured print
-              free, or browse the whole collection. No account, no cost —
-              pick a print and it lands in your inbox.
+            <p className="text-lg text-soft-charcoal">
+              Retro gaming and map art, designed by humans. Pick a print and it
+              lands in your inbox.
             </p>
 
             <div className="space-y-3">
               <EmailSignupForm source="home-hero" />
-              {/* Trust microline above the fold */}
-              <p className="text-xs text-muted-foreground">
-                Free downloads · Printed in the USA · 7,000+ orders shipped on Etsy
-              </p>
               <Link
                 href="/free-downloads"
-                className="inline-block text-sm font-medium text-sage-500 transition-colors hover:text-sage-400"
+                className="inline-flex items-center gap-1 text-sm font-medium text-sage-500 transition-colors hover:text-sage-400"
               >
-                Or just browse the free prints →
+                Or just browse the free prints
+                <ArrowRight className="size-4" />
               </Link>
             </div>
-
-            {totalDownloads >= 100 && (
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-charcoal">
-                  {totalDownloads.toLocaleString()}+
-                </span>{" "}
-                prints downloaded
-              </p>
-            )}
           </div>
 
-          {/* Right: Featured Artwork */}
-          {featured && (
-            <div className="relative">
-              <Link
-                href={`/art/${featured.id}`}
-                className="group relative z-10 block transform transition-transform duration-700 hover:scale-105"
-              >
-                <div className="relative aspect-square w-full overflow-hidden rounded-md shadow-xl">
-                  <Image
-                    src={featured.previewImage}
-                    alt={featured.title}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                  />
+          {/* Right: Staggered collage (Juniqe pattern) */}
+          {items.length > 0 && (
+            <div className="grid grid-cols-2 gap-4 lg:gap-5">
+              <div className="flex flex-col gap-4 lg:gap-5">
+                {first && <HeroCard item={first} featured />}
+                {third && <HeroCard item={third} />}
+              </div>
+              {second && (
+                <div className="flex flex-col gap-4 pt-8 lg:gap-5 lg:pt-16">
+                  <HeroCard item={second} />
                 </div>
-                <span className="absolute left-3 top-3 rounded-md bg-sage-500 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
-                  Featured this month
-                </span>
-              </Link>
+              )}
             </div>
           )}
         </div>

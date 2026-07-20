@@ -126,3 +126,15 @@ export const COLLECTIONS: CollectionDef[] = [
 export function getCollection(slug: string): CollectionDef | undefined {
   return COLLECTIONS.find((c) => c.slug === slug);
 }
+
+export function matchProductsToCollection<T extends { tags?: string[]; category?: string }>(
+  products: T[],
+  collection: CollectionDef
+): T[] {
+  const matchTags = collection.matchTags.map((t) => t.toLowerCase());
+  if (matchTags.length === 0) return products;
+  return products.filter((art) => {
+    const haystack = [...(art.tags || []), art.category || ""].map((t) => t.toLowerCase());
+    return matchTags.some((tag) => haystack.some((h) => h.includes(tag)));
+  });
+}

@@ -5,10 +5,31 @@ import { ArrowLeft } from "lucide-react";
 
 import { FreeArt } from "@/sanity/lib/client";
 import ArtCard from "@/components/common/ArtCard/ArtCard";
+import PixelIcon, {
+  type PixelIconName,
+} from "@/components/common/PixelIcon/PixelIcon";
 
 interface FreeDownloadsClientProps {
   products: FreeArt[];
 }
+
+const STEPS: { icon: PixelIconName; title: string; body: string }[] = [
+  {
+    icon: "heart",
+    title: "Pick a print",
+    body: "Find one that feels like you.",
+  },
+  {
+    icon: "download",
+    title: "Enter your email",
+    body: "We send a download link straight to your inbox.",
+  },
+  {
+    icon: "star",
+    title: "Print it",
+    body: "Any size up to 16×20, at home or your local print shop.",
+  },
+];
 
 export default function FreeDownloadsClient({ products }: FreeDownloadsClientProps) {
   return (
@@ -38,22 +59,25 @@ export default function FreeDownloadsClient({ products }: FreeDownloadsClientPro
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
-        {/* https://thepixelprince.netlify.app/ */}
-        {/* Info Banner */}
-        {/* <div className="mb-12 rounded-2xl border border-sage-200 bg-sage-50 p-6 shadow-sm sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
-              <Sparkles className="h-6 w-6 text-sage-500" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-charcoal sm:text-2xl">How It Works</h2>
-              <p className="mt-2 text-base leading-relaxed text-soft-charcoal sm:text-lg">
-                Browse our collection and download up to{" "}
-                <strong className="text-sage-500">3 sizes per week</strong>. Choose individual sizes or grab them all in a ZIP file. Each piece is available in 4 print-ready sizes, perfect for any frame or space.
-              </p>
-            </div>
+        {/* How the free prints work */}
+        <div className="mb-12">
+          <h2 className="text-center text-2xl font-bold text-charcoal sm:text-3xl">
+            How the free prints work
+          </h2>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-3">
+            {STEPS.map((step, i) => (
+              <div key={step.title} className="text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-sage-50 text-sage-500">
+                  <PixelIcon name={step.icon} size={20} />
+                </div>
+                <h3 className="mt-4 font-semibold text-charcoal">
+                  {i + 1}. {step.title}
+                </h3>
+                <p className="mt-2 text-sm text-soft-charcoal">{step.body}</p>
+              </div>
+            ))}
           </div>
-        </div> */}
+        </div>
 
         {/* Art Grid */}
         {products.length === 0 ? (

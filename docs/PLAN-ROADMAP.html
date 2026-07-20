@@ -674,7 +674,7 @@
 </div>
 
 <div class="step" data-step>
-  <div class="rail"><div class="dot">29</div></div>
+  <div class="rail"><div class="dot">29</div><div class="line"></div></div>
   <div class="card">
     <div class="card-head">
       <div><h2>Blog Skill Update</h2><div class="file">PLAN-29-simple-blog-skill-update.md</div></div>
@@ -689,6 +689,59 @@
       <li><label><input type="checkbox" data-t="29e"><span>Pillar-3 section (IP guardrail + MTW cross-link) added; self-check has the 3 new items</span></label></li>
       <li><label><input type="checkbox" data-t="29f"><span>Deliverables list includes the targetKeyword output</span></label></li>
       <li><label><input type="checkbox" data-t="29g"><span>Dry run with a real keyword confirms the outline checkpoint reflects the new rules</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">30</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>About Page Refine</h2><div class="file">PLAN-30-simple-about-page-refine.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">Makes /about Juniqe-clean: collapses the empty 2-column story grid (the real cause of the left-shove), removes the commerce stats band, moves the how-it-works steps to /free-downloads, reworks the closing CTA copy, and fixes background rhythm plus shadow/radius violations. Two files.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="30a"><span>/about renders hero, then centered story, then reworked CTA; no stats band, no how-it-works section</span></label></li>
+      <li><label><input type="checkbox" data-t="30b"><span>Story is a centered narrow column, not an empty 2-col grid; no left-shove or dead space</span></label></li>
+      <li><label><input type="checkbox" data-t="30c"><span>/free-downloads now shows the 3-step how-it-works block</span></label></li>
+      <li><label><input type="checkbox" data-t="30d"><span>No adjacent sections share a background tone; redundant bg-cream removed</span></label></li>
+      <li><label><input type="checkbox" data-t="30e"><span>Only shadow-card / shadow-card-hover remain; no shadow-sm or shadow-lg; step chips are rounded-md</span></label></li>
+      <li><label><input type="checkbox" data-t="30f"><span>tsc, lint, build, and npm test all green (including the no-em-dash guard)</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">33</div><div class="line"></div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Pixel-Crown Favicon</h2><div class="file">PLAN-33-simple-favicon-pixel-crown.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">Replaces the favicon with a pixel-art crown built from the existing crown PixelIcon, in the accent blue, across every icon size, without changing the metadata wiring. Trivial, high visibility, zero dependencies.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="33a"><span>All six public/ icon files show the pixel crown; /favicon.ico renders in the tab</span></label></li>
+      <li><label><input type="checkbox" data-t="33b"><span>Icon is crisp (not blurred) at 16px and 512px via nearest-neighbor scaling</span></label></li>
+      <li><label><input type="checkbox" data-t="33c"><span>npm run build passes with no duplicate icon link warnings</span></label></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step" data-step>
+  <div class="rail"><div class="dot">32</div></div>
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Blog Content Calendar</h2><div class="file">PLAN-32-simple-blog-content-calendar.md</div></div>
+      <span class="pill sans sev-simple">SIMPLE</span>
+    </div>
+    <p class="why">A ranked, keyword-mapped editorial calendar that feeds the existing (PLAN-29) blog skill: keyword to post angle to targetKeyword to collection link to product embed to required assets. Product-backed, hub-backed clusters go first. Content and process, no app code.</p>
+    <ul class="tasks">
+      <li><label><input type="checkbox" data-t="32a"><span>docs/blog-content-calendar.md exists with the ranked keyword-to-post table</span></label></li>
+      <li><label><input type="checkbox" data-t="32b"><span>Sequencing puts clusters with published products and a live collection hub first</span></label></li>
+      <li><label><input type="checkbox" data-t="32c"><span>At least one worked example row is fully specified end to end</span></label></li>
+      <li><label><input type="checkbox" data-t="32d"><span>Basketball rows link /collections/basketball-wall-art and frame it as coming-soon</span></label></li>
+      <li><label><input type="checkbox" data-t="32e"><span>Rows blocked on a missing product or hero image are clearly marked</span></label></li>
     </ul>
   </div>
 </div>
@@ -716,7 +769,7 @@
 
   Example once populated: const AGENT_VERIFIED = {"1a":true,"1b":true};
 */
-const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20c":true,"20d":true,"20e":true,"21a":true,"21b":true,"21c":true,"21d":true,"21e":true,"21f":true,"22a":true,"22b":true,"22c":true,"22d":true,"22e":true,"22f":true,"22g":true,"23a":true,"23b":true,"23c":true,"23d":true,"23e":true,"23f":true,"23g":true,"24a":true,"24b":true,"24c":true,"24d":true,"24e":true,"24f":true,"24g":true,"24h":true,"24i":true,"25a":true,"25b":true,"25c":true,"25d":true,"25e":true,"25f":true,"25g":true,"25h":true,"26a":true,"26b":true,"26c":true,"26d":true,"26e":true,"26f":true,"27a":true,"27b":true,"27c":true,"27f":true,"27g":true,"28a":true,"28b":true,"28c":true,"28d":true,"28e":true,"28f":true,"28g":true};
+const AGENT_VERIFIED = {"1a":true,"1b":true,"1c":true,"1d":true,"2a":true,"2b":true,"2c":true,"3a":true,"3b":true,"3c":true,"3d":true,"3e":true,"3f":true,"4a":true,"4b":true,"4c":true,"4d":true,"4e":true,"4f":true,"5a":true,"5b":true,"6a":true,"6b":true,"6d":true,"7a":true,"7b":true,"7c":true,"8a":true,"8b":true,"8c":true,"9a":true,"9b":true,"9c":true,"10a":true,"10d":true,"10e":true,"10b":true,"10c":true,"12a":true,"12b":true,"12c":true,"12d":true,"12e":true,"11a":true,"11b":true,"11c":true,"11d":true,"11e":true,"13f":true,"14a":true,"14b":true,"14c":true,"14d":true,"14e":true,"14f":true,"15a":true,"15c":true,"15d":true,"16a":true,"16b":true,"16c":true,"17a":true,"17b":true,"17c":true,"17d":true,"18a":true,"18b":true,"19a":true,"19b":true,"19c":true,"19d":true,"20b":true,"20c":true,"20d":true,"20e":true,"21a":true,"21b":true,"21c":true,"21d":true,"21e":true,"21f":true,"21g":true,"22a":true,"22b":true,"22c":true,"22d":true,"22e":true,"22f":true,"22g":true,"23a":true,"23b":true,"23c":true,"23d":true,"23e":true,"23f":true,"23g":true,"24a":true,"24b":true,"24c":true,"24d":true,"24e":true,"24f":true,"24g":true,"24h":true,"24i":true,"25a":true,"25b":true,"25c":true,"25d":true,"25e":true,"25f":true,"25g":true,"25h":true,"26a":true,"26b":true,"26c":true,"26d":true,"26e":true,"26f":true,"27a":true,"27b":true,"27c":true,"27d":true,"27e":true,"27f":true,"27g":true,"28a":true,"28b":true,"28c":true,"28d":true,"28e":true,"28f":true,"28g":true,"29a":true,"29b":true,"29c":true,"29d":true,"29e":true,"29f":true,"29g":true,"30a":true,"30b":true,"30c":true,"30d":true,"30e":true,"30f":true};
 const AGENT_IN_PROGRESS = {"13g":true,"15b":true,"18e":true,"20a":true};
 </script>
 <script>

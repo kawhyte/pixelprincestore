@@ -4,9 +4,6 @@ import { generateMetadata as buildMetadata, generateAboutPageSchema } from "@/li
 import { ETSY_MAIN_SHOP, etsyUrl } from "@/config/links";
 import EmailSignupForm from "@/components/common/EmailSignupForm/EmailSignupForm";
 import EtsyLink from "@/components/common/EtsyLink/EtsyLink";
-import PixelIcon, {
-  type PixelIconName,
-} from "@/components/common/PixelIcon/PixelIcon";
 
 export const metadata = buildMetadata({
   title: "About Kenny & Rene | The Pixel Prince",
@@ -15,31 +12,6 @@ export const metadata = buildMetadata({
   canonical: "https://www.thepixelprince.com/about",
   noIndex: false,
 });
-
-const STATS: { number: string; label: string }[] = [
-  { number: "18+", label: "countries traveled" },
-  { number: "7,000+", label: "Etsy orders shipped" },
-  { number: "Printed", label: "in the USA" },
-  { number: "Every", label: "NBA arena visited" },
-];
-
-const STEPS: { icon: PixelIconName; title: string; body: string }[] = [
-  {
-    icon: "heart",
-    title: "Pick a print",
-    body: "Browse the free gallery and find one that feels like you.",
-  },
-  {
-    icon: "download",
-    title: "Enter your email",
-    body: "We send a download link straight to your inbox.",
-  },
-  {
-    icon: "star",
-    title: "Print it",
-    body: "Any size up to 16×20, at home or your local print shop.",
-  },
-];
 
 export default function AboutPage() {
   const aboutSchema = generateAboutPageSchema();
@@ -83,10 +55,8 @@ export default function AboutPage() {
       </section>
 
       {/* 2. Story section */}
-      <section className="container mx-auto px-4 pb-16">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          
-
+      <section className="container mx-auto px-4 py-16">
+        <div className="mx-auto max-w-2xl">
           <div className="space-y-4 text-base leading-relaxed text-soft-charcoal">
             <p>
               We&apos;re Kenny and Rene: married, perpetually planning the next
@@ -120,62 +90,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3. Stats/trust band */}
-      <section className="border-y border-border bg-cream py-14">
-        <div className="container mx-auto grid grid-cols-2 gap-8 px-4 text-center sm:grid-cols-4">
-          {STATS.map((stat) => (
-            <div key={stat.label}>
-              <p className="text-3xl font-bold text-charcoal sm:text-4xl">
-                {stat.number}
-              </p>
-              <p className="mt-1 text-sm text-soft-charcoal">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. How the free prints work */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-center text-2xl font-bold text-charcoal sm:text-3xl">
-          How the free prints work
-        </h2>
-        <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-3">
-          {STEPS.map((step, i) => (
-            <div key={step.title} className="text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sage-50 text-sage-500">
-                <PixelIcon name={step.icon} size={20} />
-              </div>
-              <h3 className="mt-4 font-semibold text-charcoal">
-                {i + 1}. {step.title}
-              </h3>
-              <p className="mt-2 text-sm text-soft-charcoal">{step.body}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <a
-            href="/free-downloads"
-            className="inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
-          >
-            Browse the free gallery
-          </a>
-        </div>
-      </section>
-
-      {/* 5. CTA band */}
+      {/* 3. CTA band */}
       <section className="bg-sage-50 py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
-              Take one home
+              Say hi, or take a print home
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-soft-charcoal">
-              Free downloads live here. Printed, framed and shipped lives on
-              Etsy.
+              New free print every month. The printed, framed versions live on
+              our Etsy.
             </p>
           </div>
 
-          <div className="mx-auto max-w-xl rounded-2xl bg-cream p-8 text-center shadow-sm">
+          <div className="mx-auto max-w-xl rounded-2xl bg-cream p-8 text-center shadow-card">
             <h3 className="text-xl font-semibold text-charcoal">
               The Pixel Prince on Etsy
             </h3>
@@ -184,7 +112,7 @@ export default function AboutPage() {
             </p>
             <EtsyLink
               href={etsyUrl(ETSY_MAIN_SHOP, "about")}
-              className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-lg"
+              className="mt-6 inline-block rounded-2xl bg-sage-500 px-6 py-3 font-semibold text-white transition-all hover:bg-sage-400 hover:shadow-card-hover"
             >
               Visit the print shop
             </EtsyLink>

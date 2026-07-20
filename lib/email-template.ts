@@ -12,7 +12,7 @@ export interface BrandedEmailOpts {
   preheader?: string;
   heading: string;
   /**
-   * Trusted internal HTML only — NEVER interpolate raw user input here.
+   * Trusted internal HTML only: NEVER interpolate raw user input here.
    * Escape untrusted values (e.g. an art title) with escapeHtml() first.
    */
   bodyHtml: string;
@@ -84,7 +84,7 @@ ${preheaderHtml}
         ${ctaHtml}
         <tr>
           <td style="padding:20px 32px 28px 32px;background-color:${CARD};border-top:1px solid #eae6da;font-family:${FONT};font-size:12px;color:${MUTED};line-height:1.6;">
-            — Kenny, The Pixel Prince
+            - Kenny, The Pixel Prince
           </td>
         </tr>
       </table>

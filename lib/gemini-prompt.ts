@@ -1,5 +1,5 @@
 // Pure, dependency-free builder for the Gemini description prompt.
-// No env, no network — unit-testable in isolation.
+// No env, no network: unit-testable in isolation.
 
 export interface DescriptionPromptOptions {
   title: string
@@ -24,7 +24,7 @@ export function buildDescriptionPrompt(opts: DescriptionPromptOptions): string {
 
   if (keywords && keywords.length > 0) {
     lines.push(
-      `Naturally weave in one or two of these search phrases where they fit the artwork — never force them, never list them, never repeat a phrase twice: ${keywords.join(
+      `Naturally weave in one or two of these search phrases where they fit the artwork. Never force them, never list them, never repeat a phrase twice: ${keywords.join(
         ', '
       )}. Write for a person shopping for wall art, not for a search engine.`
     )
@@ -33,6 +33,7 @@ export function buildDescriptionPrompt(opts: DescriptionPromptOptions): string {
   lines.push(
     `1. A 'short' catchy one-liner (max 15 words).`,
     `2. A 'long' engaging paragraph (approx 50-80 words) describing the visual style and mood.`,
+    `Never use em dashes.`,
     `Return ONLY valid JSON format: { "short": "...", "long": "..." }`
   )
 

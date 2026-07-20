@@ -1,6 +1,6 @@
 // Single source of truth for SEO keyword phrases used by Studio AI-assist.
 // Category keys MUST match the product schema's `category` values exactly
-// (sanity/schemaTypes/product.ts) — they are the join key.
+// (sanity/schemaTypes/product.ts): they are the join key.
 
 export const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'Video Games': [

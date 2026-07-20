@@ -5,7 +5,7 @@ import path from "path";
 
 const EXTRAS_DIR = path.join(process.cwd(), "assets", "download-extras");
 
-// Everything in EXTRAS_DIR ships in every download — drop-in, no code change
+// Everything in EXTRAS_DIR ships in every download: drop-in, no code change
 // to add/replace extras. README.md is the folder's own docs; never bundle it.
 const EXTRAS_IGNORE = new Set(["README.md", ".DS_Store"]);
 
@@ -24,7 +24,7 @@ export async function buildDownloadZip(opts: {
   }
   const contentType = res.headers.get("content-type") ?? "";
   if (!contentType.startsWith("image/")) {
-    // Legacy Drive links can serve an HTML interstitial — never zip that.
+    // Legacy Drive links can serve an HTML interstitial: never zip that.
     throw new Error(`Master file URL returned ${contentType}, not an image`);
   }
 

@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    // Optional SEO context — sanitized, all backward-compatible
+    // Optional SEO context: sanitized, all backward-compatible
     const category =
       typeof body.category === 'string' ? body.category : undefined
     const tags = Array.isArray(body.tags)

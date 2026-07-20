@@ -77,7 +77,7 @@ export default async function CollectionPage({ params }: PageProps) {
           {matchedProducts.length === 0 ? (
             <div className="rounded-md border border-border bg-card p-12 text-center">
               <p className="text-base text-muted-foreground sm:text-lg">
-                New pieces are coming to this collection — join the list to hear first.
+                New pieces are coming to this collection. Join the list to hear first.
               </p>
             </div>
           ) : (

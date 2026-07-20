@@ -5,7 +5,7 @@ import { getGridCardAspectClass } from "@/lib/image-utils";
 import type { ImageOrientation } from "@/lib/image-utils";
 
 /**
- * ArtCard — the single Juniqe-style gallery card used across home, free-downloads,
+ * ArtCard: the single Juniqe-style gallery card used across home, free-downloads,
  * collections, and the related grid (PLAN-14 Phase C, PLAN-22 anatomy v2).
  *
  * Full-bleed artwork at a fixed aspect (no colored mats), a one-line truncated
@@ -19,14 +19,14 @@ export interface ArtCardArt {
   title: string;
   previewImage: string;
   previewImageOrientation?: ImageOrientation;
-  /** the single schema-enforced hero print — draws a notched "Featured" tab. */
+  /** the single schema-enforced hero print: draws a notched "Featured" tab. */
   featured?: boolean;
 }
 
 export interface ArtCardProps {
   art: ArtCardArt;
   href: string;
-  /** next/image sizes attr — required; callers pass values matching their grid. */
+  /** next/image sizes attr: required; callers pass values matching their grid. */
   sizes: string;
   /** quiet subtitle line under the title (e.g. category). */
   subtitle?: string;

@@ -5,7 +5,7 @@
 export interface HighResAsset {
   cloudinaryUrl?: string;
   cloudinaryPublicId?: string; // For deletion purposes
-  externalUrl?: string; // Legacy only — no new external uploads
+  externalUrl?: string; // Legacy only: no new external uploads
   filename: string;
   width?: number;
   height?: number;

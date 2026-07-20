@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <p className="text-soft-charcoal">
           When you request a free download or subscribe to our list, we collect your
           email address. We also collect anonymous, cookieless analytics via Umami to
-          understand which pages and prints are popular — this data cannot be tied back
+          understand which pages and prints are popular. This data cannot be tied back
           to you personally.
         </p>
       </section>
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
         <p className="text-soft-charcoal">
           We use your email to send you the download link you requested and, if you
           opt in, one monthly email featuring a new free print and shop news. That&apos;s
-          it — we don&apos;t send anything else, and we never sell or share your data with
+          it: we don&apos;t send anything else, and we never sell or share your data with
           third parties.
         </p>
       </section>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
           .
         </p>
         <p className="mt-4 text-soft-charcoal">
-          [KENNY: add your business mailing address here — required by CAN-SPAM]
+          [KENNY: add your business mailing address here, required by CAN-SPAM]
         </p>
       </section>
     </div>

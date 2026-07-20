@@ -19,6 +19,7 @@ const SCHEMA_CATEGORIES = [
 const LEGACY_PROMPT = `You are an art curator. Write two descriptions for a digital artwork titled 'Test Art'.
 1. A 'short' catchy one-liner (max 15 words).
 2. A 'long' engaging paragraph (approx 50-80 words) describing the visual style and mood.
+Never use em dashes.
 Return ONLY valid JSON format: { "short": "...", "long": "..." }`
 
 describe('buildDescriptionPrompt', () => {

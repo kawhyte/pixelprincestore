@@ -16,7 +16,7 @@ export function gridColsClass(count: number): string {
 
 /**
  * The credit string to render, or null when there's nothing to show.
- * Sanity may persist an empty `attribution` object with blank fields —
+ * Sanity may persist an empty `attribution` object with blank fields:
  * only render when `credit` is a non-empty string.
  */
 export function attributionCredit(attribution?: ImageAttribution): string | null {

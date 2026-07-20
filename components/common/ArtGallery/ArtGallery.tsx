@@ -13,7 +13,7 @@ interface ArtGalleryProps {
   images: ArtGallerySlide[];
   /** Fallback alt when a slide carries none. */
   title?: string;
-  /** Aspect ratio class for the frame — the CLS guard. */
+  /** Aspect ratio class for the frame: the CLS guard. */
   aspectClass?: string;
 }
 
@@ -46,7 +46,7 @@ export default function ArtGallery({
     onScroll();
   }, [onScroll]);
 
-  // Single image: render exactly like the pre-carousel markup — no chrome.
+  // Single image: render exactly like the pre-carousel markup, no chrome.
   if (images.length === 1) {
     const only = images[0];
     return (
@@ -102,7 +102,7 @@ export default function ArtGallery({
           ))}
         </div>
 
-        {/* Desktop chevrons — hidden on touch */}
+        {/* Desktop chevrons: hidden on touch */}
         <button
           type="button"
           aria-label="Previous photo"
@@ -123,7 +123,7 @@ export default function ArtGallery({
         </button>
       </div>
 
-      {/* Dots — mobile (44px tall hit area, small visual dot) */}
+      {/* Dots: mobile (44px tall hit area, small visual dot) */}
       <div className="-my-3 flex justify-center gap-1 md:hidden">
         {images.map((_, i) => (
           <button
@@ -143,7 +143,7 @@ export default function ArtGallery({
         ))}
       </div>
 
-      {/* Thumbnails — desktop */}
+      {/* Thumbnails: desktop */}
       <div className="hidden gap-3 md:flex">
         {images.map((img, i) => (
           <button

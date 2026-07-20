@@ -4,7 +4,7 @@ import { emailProvider } from "@/lib/email";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Best-effort per-IP throttle (resets on cold start — acceptable soft limit)
+// Best-effort per-IP throttle (resets on cold start: acceptable soft limit)
 const ipHits = new Map<string, { count: number; windowStart: number }>();
 function ipThrottled(ip: string): boolean {
   const now = Date.now();

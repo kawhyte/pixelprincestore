@@ -9,7 +9,7 @@ export const revalidate = 60;
 export const metadata = seoMeta({
   title: "Blog",
   description:
-    "Practical guides on game room decor, printable wall art, and framing — from a real human designer.",
+    "Practical guides on game room decor, printable wall art, and framing, from a real human designer.",
   canonical: "https://www.thepixelprince.com/blog",
 });
 
@@ -32,7 +32,7 @@ export default async function BlogIndexPage() {
         {posts.length === 0 ? (
           <div className="mt-12 rounded-md border border-border bg-card p-12 text-center">
             <p className="text-base text-muted-foreground sm:text-lg">
-              First post is in the works — join the list and you won&apos;t miss it.
+              First post is in the works. Join the list and you won&apos;t miss it.
             </p>
             <EmailSignupForm source="blog-index" className="mx-auto mt-4 max-w-xl" />
           </div>

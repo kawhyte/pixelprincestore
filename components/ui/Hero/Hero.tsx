@@ -9,7 +9,7 @@ interface HeroProps {
 }
 
 /**
- * HeroCard — one collage card. If the product has a room/lifestyle mockup
+ * HeroCard: one collage card. If the product has a room/lifestyle mockup
  * (galleryImages), render it full-bleed like Juniqe. Otherwise the flat poster
  * is matted inside a white frame on a wall-tone background so it reads as
  * framed wall art instead of a poster floating in empty space.

@@ -16,7 +16,7 @@ export default function Footer() {
           <div className="space-y-4 lg:col-span-2">
             <Wordmark className="text-xl text-cream sm:text-2xl" />
             <p className="max-w-xs text-sm leading-relaxed text-cream/60">
-              Curated digital art for modern living. Free downloads here, ready-to-hang
+              Retro gaming and map art, designed by humans. Free prints here, framed
               prints on Etsy.
             </p>
             <div className="flex gap-4 pt-1">
@@ -139,7 +139,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col items-center justify-between gap-2 text-xs text-cream/50 sm:flex-row">
           <p>© {new Date().getFullYear()} The Pixel Prince. All rights reserved.</p>
-          <p>Designed with care for modern living.</p>
+          <p>Made by two humans in the USA.</p>
         </div>
       </div>
     </footer>

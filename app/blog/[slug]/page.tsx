@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     image: post.hero ? [post.hero] : undefined,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt || post.publishedAt,
-    author: { "@type": "Person", name: "Kenny — The Pixel Prince" },
+    author: { "@type": "Person", name: "Kenny, The Pixel Prince" },
   };
 
   const breadcrumbSchema = {

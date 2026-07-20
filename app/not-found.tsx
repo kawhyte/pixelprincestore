@@ -20,7 +20,7 @@ export default function NotFound() {
           {/* Easel cross brace */}
           <line x1="65" y1="188" x2="135" y2="188" stroke="#2a2a2a" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" />
 
-          {/* Canvas frame — slightly wobbly rect */}
+          {/* Canvas frame: slightly wobbly rect */}
           <path
             d="M42 28 Q43 26 58 26 L142 27 Q144 27 145 29 L146 120 Q145 122 143 122 L57 121 Q55 121 54 119 Z"
             stroke="#2a2a2a"
@@ -54,7 +54,7 @@ export default function NotFound() {
           You&apos;ve wandered off the map
         </h2>
         <p className="mb-8 text-soft-charcoal">
-          This screen doesn&apos;t exist — but there&apos;s a whole gallery of free
+          This screen doesn&apos;t exist. There&apos;s a whole gallery of free
           prints one jump away.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">

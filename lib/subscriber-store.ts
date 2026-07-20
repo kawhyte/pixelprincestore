@@ -3,7 +3,7 @@ import { WEEKLY_DOWNLOAD_LIMIT } from "@/config/free-art";
 
 export interface SubscriberDownload {
   artId: string;
-  sizeId?: string; // legacy only — pre single-file-pipeline records
+  sizeId?: string; // legacy only: pre single-file-pipeline records
   requestedAt: string;
 }
 

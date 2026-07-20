@@ -25,7 +25,7 @@ export default function ArtNotFound() {
           <line x1="118" y1="48" x2="136" y2="20" stroke="#2a2a2a" strokeWidth="2.5" strokeLinecap="round" />
           <path d="M134 18 Q138 14 140 18 Q138 24 134 22 Z" stroke="#4a7bc7" strokeWidth="2" strokeLinejoin="round" />
 
-          {/* Spilled paint pool — tilted jar */}
+          {/* Spilled paint pool: tilted jar */}
           <path
             d="M40 148 Q35 160 50 165 Q80 172 130 168 Q155 165 152 155 Q148 145 120 143 Q80 140 60 145 Z"
             stroke="#4a7bc7"

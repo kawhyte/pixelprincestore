@@ -1,5 +1,5 @@
 /**
- * PixelIcon — tiny 8×8 pixel-grid icons (PLAN-14 E2).
+ * PixelIcon: tiny 8×8 pixel-grid icons (PLAN-14 E2).
  *
  * Each icon is an 8-row pattern of "#"/space cells rendered as unit <rect>s on a
  * viewBox="0 0 8 8" with shape-rendering="crispEdges", so it stays crisp at any

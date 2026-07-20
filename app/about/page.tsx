@@ -9,9 +9,9 @@ import PixelIcon, {
 } from "@/components/common/PixelIcon/PixelIcon";
 
 export const metadata = buildMetadata({
-  title: "About Kenny & Rene — The Pixel Prince",
+  title: "About Kenny & Rene | The Pixel Prince",
   description:
-    "Meet Kenny and Rene, the husband-and-wife duo behind The Pixel Prince — retro gaming and map wall art inspired by world travel and retro nostalgia.",
+    "Meet Kenny and Rene, the husband-and-wife duo behind The Pixel Prince: retro gaming and map wall art inspired by world travel and retro nostalgia.",
   canonical: "https://www.thepixelprince.com/about",
   noIndex: false,
 });
@@ -37,7 +37,7 @@ const STEPS: { icon: PixelIconName; title: string; body: string }[] = [
   {
     icon: "star",
     title: "Print it",
-    body: "Any size up to 16×20 — at home or your local print shop.",
+    body: "Any size up to 16×20, at home or your local print shop.",
   },
 ];
 
@@ -89,14 +89,14 @@ export default function AboutPage() {
 
           <div className="space-y-4 text-base leading-relaxed text-soft-charcoal">
             <p>
-              We&apos;re Kenny and Rene — married, perpetually planning the next
+              We&apos;re Kenny and Rene: married, perpetually planning the next
               trip, and the two people behind every print here. Everything is
               designed by hand in Affinity and Photoshop. No templates, no AI
-              art — just us, arguing pleasantly about color palettes.
+              art, just us, arguing pleasantly about color palettes.
             </p>
             <p>
               Most pieces start somewhere real. We&apos;ve been to 18-plus
-              countries together — Japan, Jakarta, Copenhagen, Jamaica — and we
+              countries together (Japan, Jakarta, Copenhagen, Jamaica) and we
               write about those trips on our travel blog,{" "}
               <a
                 href="https://www.meetthewhytes.com/"
@@ -191,7 +191,7 @@ export default function AboutPage() {
 
             <div className="mt-8 border-t border-border pt-8">
               <p className="mb-4 text-sm text-soft-charcoal">
-                One free print a month. No spam — Player 2&apos;s honor.
+                One free print a month. No spam, Player 2&apos;s honor.
               </p>
               <EmailSignupForm source="about" />
             </div>

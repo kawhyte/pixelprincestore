@@ -6,7 +6,7 @@ import { emailProvider } from "@/lib/email";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Best-effort per-IP throttle (resets on cold start — acceptable soft limit)
+// Best-effort per-IP throttle (resets on cold start: acceptable soft limit)
 const ipHits = new Map<string, { count: number; windowStart: number }>();
 function ipThrottled(ip: string): boolean {
   const now = Date.now();
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const existing = await getSubscriber(email);
     if (isOverWeeklyLimit(existing)) {
       return NextResponse.json(
-        { error: "You've claimed 3 free prints this week — your next one unlocks within 7 days. (A new featured print drops monthly!)" },
+        { error: "You've claimed 3 free prints this week. Your next one unlocks within 7 days. (A new featured print drops monthly!)" },
         { status: 429 }
       );
     }

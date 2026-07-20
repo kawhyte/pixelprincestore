@@ -20,8 +20,8 @@ interface CloudinaryWidgetError {
  * AdminHighResUpload Component
  *
  * Cloudinary-only upload for the artwork's single print file. Files over
- * the 10MB free-plan cap are rejected with a clear re-export instruction —
- * there is no external-link fallback for new uploads.
+ * the 10MB free-plan cap are rejected with a clear re-export instruction.
+ * There is no external-link fallback for new uploads.
  */
 export function AdminHighResUpload({
   onAssetChange,
@@ -107,7 +107,7 @@ export function AdminHighResUpload({
             error.message.includes('too large') ||
             error.message.includes('exceeds')
           )) {
-            setError('Over the 10MB limit — re-export at 3600×4500 px and try again.');
+            setError('Over the 10MB limit. Re-export at 3600×4500 px and try again.');
           } else {
             setError(error.message || 'Upload failed. Please try again.');
           }
@@ -154,7 +154,7 @@ export function AdminHighResUpload({
   return (
     <div className="rounded-lg border-2 border-dashed border-sage-300 bg-cream p-6">
       <p className="mb-4 text-sm text-soft-charcoal">
-        No print file yet — upload one high-res PNG cropped to 4:5 (under 10MB).
+        No print file yet. Upload one high-res PNG cropped to 4:5 (under 10MB).
       </p>
       <button
         onClick={openCloudinaryWidget}

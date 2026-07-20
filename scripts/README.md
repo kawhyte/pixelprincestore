@@ -108,6 +108,51 @@ npm run generate-zips
 
 ---
 
+### `draft-description-rewrites.ts`
+
+Rewrites every artwork's Sanity `description` to one or two short, human sentences
+in Kenny's voice, through a safe pipeline with a **human approval gate**. Gemini
+drafts proposals, Kenny reviews them in a markdown file, and only approved rows
+are patched back (PLAN-27).
+
+**Prerequisites**:
+- `SANITY_API_WRITE_TOKEN` in `.env.local` with **Editor** rights (this is NOT the
+  read-only `SANITY_API_TOKEN` — the write token is required for the `--apply` patch).
+- `GOOGLE_API_KEY` in `.env.local` (Gemini `gemini-2.5-flash`).
+
+**Usage**:
+```bash
+# 1. Draft (read-only, makes zero Sanity mutations):
+npx tsx scripts/draft-description-rewrites.ts
+#    Writes:
+#      docs/info/description-rewrites-review.md    (human-readable table)
+#      docs/info/description-rewrites-review.json  (machine source of truth)
+#    Prints "DRY RUN: no content was changed."
+
+# 2. Kenny reviews. In the JSON, edit any `proposed` text and set
+#    "approved": true on each row to publish. Rows flagged NEEDS-HUMAN failed
+#    automated validation twice — write those by hand before approving.
+
+# 3. Apply — patches ONLY approved rows:
+npx tsx scripts/draft-description-rewrites.ts --apply
+```
+
+**Safeguards**:
+- Default run drafts only; `--apply` is required to change content.
+- Each proposal passes `checkDescription` (`lib/description-rules.ts`): 1-2 sentences,
+  ≤200 chars, no em dashes, no adjective-soup phrases. One Gemini retry on failure.
+- Apply re-fetches each product and **skips** any whose `_updatedAt` changed since
+  drafting (stale guard) or that has an unpublished Studio draft.
+- Re-running draft mode over un-applied approvals is refused unless `--force-redraft`.
+
+**Troubleshooting**:
+- `SANITY_API_WRITE_TOKEN is missing or invalid`: add an Editor-level token; the
+  read token fails only at patch time with a confusing 403.
+- `SKIPPED <slug>: unpublished draft exists`: publish/discard the draft in Studio, then re-draft that row.
+- `SKIPPED <slug>: changed since draft`: the product was edited after drafting; re-run draft mode.
+
+---
+
 ## Future Scripts
 
 Additional utility scripts will be added here as needed:

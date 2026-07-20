@@ -6,6 +6,7 @@ export interface CollectionDef {
   matchTags: string[]; // product matches if any tag or category (lowercased) includes one of these
   faq: { q: string; a: string }[]; // 3–5 entries
   etsyCampaign: string; // utm_campaign value
+  comingSoon?: boolean; // when true and no products match, render the waitlist empty state
 }
 
 export const COLLECTIONS: CollectionDef[] = [
@@ -120,6 +121,35 @@ export const COLLECTIONS: CollectionDef[] = [
       },
     ],
     etsyCampaign: "collection-printable-wall-art",
+  },
+  {
+    slug: "basketball-wall-art",
+    title: "Basketball Wall Art",
+    metaDescription:
+      "Basketball wall art for grown-up spaces: city prints, court diagrams, and fan cave pieces. Free downloads plus printed art on Etsy.",
+    intro: [
+      "Basketball rooms usually get decorated one of two ways: a wall of jerseys and posters, or nothing at all. There is a third way. Art that reads as basketball without a single logo on it: court diagrams, city prints for the places you have watched games, and pieces built around the shapes and colors of the sport itself.",
+      "We have been to NBA arenas all over the country (the full tour lives on our family site, Meet the Whytes), and that trip is what this collection grows from. City map prints for basketball towns, court blueprint pieces, and fan cave art that works in a living room, not just a basement.",
+      "This collection is new and growing. The first pieces here are city prints for basketball towns; dedicated court and arena designs are on the way. If you want to know the moment they land, the email list below is the fastest way.",
+      "Everything follows the same rule as the rest of the site: the free library stays free, and printed versions ship from our Etsy shop when you want the real-paper upgrade.",
+    ],
+    matchTags: ["basketball", "sport", "court", "arena"],
+    faq: [
+      {
+        q: "What basketball art works in an adult space?",
+        a: "Skip the posters and go graphic: a court diagram in black and white, a city map print for your team's town, or a minimalist piece built on the geometry of the game. Framed simply, these read as design first and fandom second, which is why they hold up outside a kid's room.",
+      },
+      {
+        q: "Do these prints use team names or logos?",
+        a: "No. Everything here is built around cities, courts, and the look of the game itself, with no league or team trademarks. A city print for a basketball town says the same thing a logo does, and it stays on your wall through trades, rebrands, and rough seasons.",
+      },
+      {
+        q: "When are the court and arena prints coming?",
+        a: "They are in design now. Join the email list on this page and you will get one email a month with whatever is new, including the first arena-inspired pieces the moment they are ready.",
+      },
+    ],
+    etsyCampaign: "collection-basketball",
+    comingSoon: true,
   },
 ];
 

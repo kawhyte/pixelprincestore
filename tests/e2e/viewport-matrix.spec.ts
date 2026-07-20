@@ -26,7 +26,7 @@ test("home: no horizontal overflow + footer present", async ({ page }) => {
 test("free-downloads: no horizontal overflow", async ({ page }) => {
   await page.goto("/free-downloads");
   await expect(
-    page.getByRole("heading", { name: /Free Wall Art Downloads/i })
+    page.getByRole("heading", { name: /Free printable wall art/i })
   ).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });

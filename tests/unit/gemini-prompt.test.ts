@@ -16,6 +16,11 @@ const SCHEMA_CATEGORIES = [
   'Botanical',
 ]
 
+// Forward-compatible keys (PLAN-28): keyword sets seeded before their schema
+// category exists. keywordsForCategory falls back to globals for unknowns, so
+// these are inert until a matching category is added.
+const FORWARD_COMPATIBLE_CATEGORIES = ['Basketball']
+
 const LEGACY_PROMPT = `You are an art curator. Write two descriptions for a digital artwork titled 'Test Art'.
 1. A 'short' catchy one-liner (max 15 words).
 2. A 'long' engaging paragraph (approx 50-80 words) describing the visual style and mood.
@@ -67,9 +72,9 @@ describe('keywordsForCategory', () => {
 })
 
 describe('CATEGORY_KEYWORDS map keys', () => {
-  it('every key is one of the schema category values', () => {
+  it('every key is a schema category or a documented forward-compatible key', () => {
     for (const key of Object.keys(CATEGORY_KEYWORDS)) {
-      expect(SCHEMA_CATEGORIES).toContain(key)
+      expect([...SCHEMA_CATEGORIES, ...FORWARD_COMPATIBLE_CATEGORIES]).toContain(key)
     }
   })
 })

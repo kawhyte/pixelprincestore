@@ -21,7 +21,7 @@ test("home page renders nav and free-downloads link", async ({ page }) => {
 test("free downloads gallery renders and navigates to art detail", async ({ page }) => {
   await page.goto("/free-downloads");
   await expect(
-    page.getByRole("heading", { name: /Free Wall Art Downloads/i })
+    page.getByRole("heading", { name: /Free printable wall art/i })
   ).toBeVisible();
   const firstCard = page.locator('a[href^="/art/"]').first();
   await firstCard.click();
@@ -57,4 +57,11 @@ test("collection page renders grid, faq and email form", async ({ page }) => {
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toContainText(/game room/i);
   await expect(page.locator("details").first()).toBeVisible();
   await expect(page.locator('input[type="email"]')).toBeVisible();
+});
+
+test("basketball hub renders waitlist and faq", async ({ page }) => {
+  await page.goto("/collections/basketball-wall-art");
+  await expect(page.locator("main").getByRole("heading", { level: 1 })).toContainText(/basketball/i);
+  await expect(page.locator('input[type="email"]').first()).toBeVisible();
+  await expect(page.locator("details").first()).toBeVisible();
 });

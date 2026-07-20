@@ -90,6 +90,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/collections/basketball-wall-art" className={linkClass}>
+                  Basketball Wall Art
+                </Link>
+              </li>
+              <li>
                 <Link href="/collections/printable-wall-art" className={linkClass}>
                   Printable Wall Art
                 </Link>

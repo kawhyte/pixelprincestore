@@ -40,6 +40,16 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
     'plant wall decor',
     'floral art print',
   ],
+  // No Basketball category exists in the product schema yet; this entry
+  // activates when one is added. keywordsForCategory falls back to globals for
+  // unknown categories, so this is forward-compatible plumbing, not dead code.
+  Basketball: [
+    'basketball wall art',
+    'basketball man cave ideas',
+    'basketball room decor for adults',
+    'basketball court blueprint art',
+    'sports man cave wall decor',
+  ],
 }
 
 export const GLOBAL_KEYWORDS: string[] = [

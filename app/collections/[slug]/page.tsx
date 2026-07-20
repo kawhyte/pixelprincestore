@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Frame } from "lucide-react";
 
@@ -74,7 +75,28 @@ export default async function CollectionPage({ params }: PageProps) {
         </div>
 
         <div className="mt-12">
-          {matchedProducts.length === 0 ? (
+          {collection.comingSoon && matchedProducts.length === 0 ? (
+            <div className="max-w-xl">
+              <div className="rounded-md border border-border bg-card p-8">
+                <h2 className="text-2xl font-semibold text-charcoal">
+                  First prints landing soon
+                </h2>
+                <p className="mt-3 text-base text-soft-charcoal">
+                  Join the list and you will hear the day the first basketball prints go live.
+                </p>
+                <EmailSignupForm source="basketball-waitlist" className="mt-4" />
+              </div>
+              <p className="mt-6 text-base text-soft-charcoal">
+                Meanwhile, the game room collection is live:{" "}
+                <Link
+                  href="/collections/game-room-wall-art"
+                  className="font-medium text-sage-600 hover:text-sage-700"
+                >
+                  Game Room Wall Art
+                </Link>
+              </p>
+            </div>
+          ) : matchedProducts.length === 0 ? (
             <div className="rounded-md border border-border bg-card p-12 text-center">
               <p className="text-base text-muted-foreground sm:text-lg">
                 New pieces are coming to this collection. Join the list to hear first.

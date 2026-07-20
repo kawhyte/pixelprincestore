@@ -15,8 +15,28 @@ module.exports = {
   exclude: ['/api/*', '/admin/*'],
   // Additional paths to include
   additionalPaths: async (config) => {
+    // Keep in sync with config/collections.ts COLLECTIONS slugs.
+    const collectionSlugs = [
+      'game-room-wall-art',
+      'retro-gaming-prints',
+      'map-prints',
+      'printable-wall-art',
+      'basketball-wall-art',
+    ]
+    const collectionPaths = await Promise.all(
+      collectionSlugs.map((slug) => config.transform(config, `/collections/${slug}`))
+    )
+
+    // Key static routes next-sitemap does not discover on its own.
+    const staticSlugs = ['/prints']
+    const staticPaths = await Promise.all(
+      staticSlugs.map((path) => config.transform(config, path))
+    )
+
+    // Collections + statics must ship even without Sanity env vars; only the
+    // blog fetch is conditional on them.
     if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || !process.env.NEXT_PUBLIC_SANITY_DATASET) {
-      return []
+      return [...collectionPaths, ...staticPaths]
     }
 
     const { createClient } = await import('next-sanity')
@@ -31,6 +51,10 @@ module.exports = {
       `*[_type == "post" && publishedAt < now()].slug.current`
     )
 
-    return slugs.map((slug) => config.transform(config, `/blog/${slug}`))
+    const blogPaths = await Promise.all(
+      slugs.map((slug) => config.transform(config, `/blog/${slug}`))
+    )
+
+    return [...collectionPaths, ...staticPaths, ...blogPaths]
   },
 }

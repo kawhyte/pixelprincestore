@@ -12,6 +12,7 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
+import StudioIcon from './sanity/components/StudioIcon'
 // PLAN-13 fallback #1: the `buildLegacyTheme` palette in ./sanity/theme.ts is an
 // older theming layer that overrides `scheme` and suppresses the Appearance menu.
 // Removed so the light/dark toggle works. Brand accent colors are sacrificed.
@@ -23,6 +24,7 @@ import {structure} from './sanity/structure'
 export default defineConfig({
   name: 'default',
   title: 'The Pixel Prince — Studio',
+  icon: StudioIcon,
   basePath: '/studio',
   projectId,
   dataset,

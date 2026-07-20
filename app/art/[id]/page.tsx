@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const art = await getProductBySlug(id);
   if (!art) return { title: "Art Not Found" };
   const metadata = seoMeta({
-    title: `${art.title} — Free Printable Wall Art`,
+    title: `${art.title} | Free printable wall art`,
     description: art.description,
     canonical: `https://www.thepixelprince.com/art/${art.id}`,
   });

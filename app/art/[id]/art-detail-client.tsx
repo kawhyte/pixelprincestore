@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Download, Sparkles, Frame, FileDown, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Download, FileDown, CheckCircle2, ArrowUpRight } from "lucide-react";
 
 import { type FreeArt } from "@/sanity/lib/client";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-sage-500"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Free Downloads
+            Back to free prints
           </Link>
         </div>
       </header>
@@ -66,7 +66,7 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
               {art.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-md bg-sage-100 px-3 py-1 text-sm font-medium text-sage-700"
+                  className="rounded-md bg-sage-100 px-3 py-1 text-sm font-medium text-charcoal"
                 >
                   {tag}
                 </span>
@@ -87,40 +87,14 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
             {/* Description */}
             <div className="space-y-4">
               <p className="text-lg leading-relaxed text-soft-charcoal">
-                {art.longDescription || art.description}
-              </p>
-            </div>
-
-            {/* Etsy cross-sell — quiet card */}
-            <div className="space-y-3 rounded-md border border-border bg-card p-6">
-              <h2 className="text-lg font-semibold text-charcoal">
-                Love this style?
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <EtsyLink
-                  href={etsyUrl(etsyLinks.printed, `art-${art.id}`)}
-                  className="flex items-center justify-center gap-2 rounded-md bg-charcoal px-6 py-3 font-semibold text-cream transition-all hover:shadow-md"
-                >
-                  <Frame className="h-5 w-5" />
-                  {etsyLinks.styleLabel ? `Shop ${etsyLinks.styleLabel} prints` : "Shop the print shop"}
-                </EtsyLink>
-                <EtsyLink
-                  href={etsyUrl(etsyLinks.printable, `art-${art.id}`)}
-                  className="flex items-center justify-center gap-2 rounded-md border border-charcoal px-6 py-3 font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
-                >
-                  <FileDown className="h-5 w-5" />
-                  {etsyLinks.styleLabel ? `Printable ${etsyLinks.styleLabel} bundles` : "Shop printable bundles"}
-                </EtsyLink>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Prints & bundles on Etsy — this exact piece stays free below.
+                {art.description || art.longDescription}
               </p>
             </div>
 
             {/* Print Sizes */}
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-charcoal">
-                Prints At 3 Sizes
+                One file, many print sizes
               </h2>
 
               <div className="grid gap-3 sm:grid-cols-3">
@@ -134,43 +108,60 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
                       <span className="font-semibold text-charcoal">{size.label}</span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">{size.cm}</p>
-                    <p className="mt-2 text-xs text-sage-600">{size.fits}</p>
+                    <p className="mt-2 text-xs text-soft-charcoal">{size.fits}</p>
                   </div>
                 ))}
               </div>
               <p className="text-sm text-soft-charcoal">
-                One high-res file covers all three sizes — a step-by-step printing guide is included in your download.
+                One high-res file you can print at any of these sizes. Guide included.
               </p>
             </div>
 
-            {/* Download Button */}
+            {/* Primary CTA */}
             <div className="space-y-3">
               <Button
                 onClick={() => setGateOpen(true)}
                 disabled={!hasFile}
-                className="w-full rounded-md bg-sage-500 py-6 text-lg font-semibold hover:bg-sage-400 disabled:opacity-50"
+                className="w-full rounded-md bg-sage-500 text-base font-semibold hover:bg-sage-400 disabled:opacity-50"
                 size="lg"
               >
                 <Download className="h-5 w-5" />
-                <span className="ml-2">Email me this print — free</span>
+                <span className="ml-2">Email me this print (free)</span>
               </Button>
+              <p className="text-center text-xs text-muted-foreground">
+                One email a month. Unsubscribe anytime.
+              </p>
             </div>
 
-            {/* Info Banner */}
-            <div className="rounded-md border border-sage-200 bg-sage-50 p-6">
+            {/* What's included - quiet box */}
+            <div className="rounded-md border border-border bg-card p-5">
               <h3 className="mb-2 flex items-center gap-2 font-semibold text-charcoal">
-                <Sparkles className="h-5 w-5 text-sage-600" />
-                High-Resolution Printable File
+                <FileDown className="size-5 text-sage-500" />
+                What&apos;s included
               </h3>
               <p className="mb-3 text-sm text-soft-charcoal">
-                Your download includes: the high-res PNG, a printing guide (PDF), and the personal-use license.
+                The high-res PNG, a printing guide (PDF), and the personal-use license.
               </p>
-              <p className="mt-4 border-t border-sage-200 pt-3 text-xs text-muted-foreground">
+              <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
                 {LICENSE_SUMMARY}{" "}
                 <Link href="/terms" className="underline hover:text-sage-500">
                   Full license
                 </Link>
               </p>
+            </div>
+
+            {/* Etsy cross-sell - single quiet card, last */}
+            <div className="space-y-3 rounded-md border border-border bg-card p-5">
+              <p className="text-sm text-charcoal">
+                Prefer framed or canvas art, ready to hang? Browse the Etsy shop.
+              </p>
+              <EtsyLink
+                href={etsyUrl(etsyLinks.printed, `art-${art.id}`)}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-charcoal px-5 text-sm font-semibold text-charcoal transition-all hover:bg-charcoal hover:text-cream"
+              >
+                Browse Etsy shop
+                <ArrowUpRight className="size-5" />
+              </EtsyLink>
             </div>
 
           </div>
@@ -180,10 +171,10 @@ export default function ArtDetailClient({ art, relatedArt }: ArtDetailClientProp
         {relatedArt.length > 0 && (
           <section className="mt-20 border-t border-border pt-12">
             <h2 className="mb-8 text-3xl font-bold text-charcoal">
-              You Might Also Like
+              You might also like
             </h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedArt.map((relatedItem) => (
+              {relatedArt.slice(0, 3).map((relatedItem) => (
                 <ArtCard
                   key={relatedItem.id}
                   art={relatedItem}

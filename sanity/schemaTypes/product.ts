@@ -143,7 +143,7 @@ export const product = defineType({
       name: 'artFile',
       title: 'Print File',
       type: 'object',
-      description: 'Upload ONE high-res PNG cropped to 4:5 (or 5:4 landscape). This single file covers every print size — the download ZIP (file + printing guide + license) builds itself.',
+      description: 'Upload ONE high-res PNG cropped to 4:5 portrait, sized for 16×20 (~4800×6000 px). This single file covers every print size — the download ZIP (file + printing guide + license) builds itself.',
       group: 'file',
       components: { input: HighResAssetInput },
       validation: (Rule) =>
@@ -152,11 +152,10 @@ export const product = defineType({
           if (value.width && value.height) {
             const r = value.width / value.height;
             const ok45 = r >= 0.76 && r <= 0.84;
-            const ok54 = r >= 1.19 && r <= 1.31;
-            if (!ok45 && !ok54)
-              return { message: "This file isn't 4:5 or 5:4 — crop it before uploading so it prints without white edges.", level: 'warning' };
-            if (Math.min(value.width, value.height) < 2400 || Math.max(value.width, value.height) < 3000)
-              return { message: 'Below 2400×3000 px — this will look soft printed at 16×20. Re-export larger if you can.', level: 'warning' };
+            if (!ok45)
+              return { message: "This file isn't 4:5 portrait — crop it before uploading so it prints without white edges.", level: 'warning' };
+            if (value.width < 4800 || value.height < 6000)
+              return { message: 'Below 4800×6000 px — this will look soft printed at 16×20. Re-export larger if you can.', level: 'warning' };
           }
           return true;
         }),

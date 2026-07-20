@@ -29,6 +29,19 @@ test("free downloads gallery renders and navigates to art detail", async ({ page
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toBeVisible();
 });
 
+test("art detail: free CTA appears above the Etsy card", async ({ page }) => {
+  await page.goto("/free-downloads");
+  await page.locator('a[href^="/art/"]').first().click();
+  await expect(page).toHaveURL(/\/art\//);
+  const cta = page.getByRole("button", { name: /Email me this print/i });
+  const etsy = page.locator('main a[href*="etsy"]').first();
+  await expect(cta).toBeVisible();
+  await expect(etsy).toBeVisible();
+  const ctaBox = await cta.boundingBox();
+  const etsyBox = await etsy.boundingBox();
+  expect(ctaBox!.y).toBeLessThan(etsyBox!.y);
+});
+
 test("prints page renders two etsy paths with utm", async ({ page }) => {
   await page.goto("/prints");
   await expect(page.getByRole("heading", { name: /Want it on real paper/i })).toBeVisible();

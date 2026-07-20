@@ -107,7 +107,7 @@ npm run generate-zips    # [DEPRECATED] Generate ZIP bundles (not used with Clou
   downloads: number             // auto-incremented by /api/claim-art
 }
 ```
-Ratio (`4:5` or `5:4`) and print sizes are derived from `artFile.width/height` via `config/print-sizes.ts` (`deriveRatio()`, `PRINT_SIZES`) — never hand-typed.
+Ratio (`4:5` portrait only) and print sizes are derived from `artFile.width/height` via `config/print-sizes.ts` (`deriveRatio()`, `PRINT_SIZES`) — never hand-typed. Upload one 4:5 master sized for 16×20 (~4800×6000 px); it prints at 4×5, 8×10, 16×20.
 
 ### Environment Variables
 
